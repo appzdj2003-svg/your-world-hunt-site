@@ -2,12 +2,15 @@
 """Static site builder for Your World Hunt. Run: python3 _src/build.py  (writes HTML into the repo root)."""
 import json, re, os, html, datetime, urllib.parse, urllib.request, email.utils
 from pathlib import Path
-import scenes, shopdata, kitdata, items as itemimg
+import scenes, shopdata, kitdata, items as itemimg, article2026 as A26
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://hunt.yourworldapps.si/"   # custom domain (CNAME file); the old github.io URL redirects here
 PLAY = "https://play.google.com/store/apps/details?id=com.yourworld.hunt"
 TODAY = datetime.date.today().isoformat()
+# Annual Premium ($33.99/yr vs $4.99 x 12 = $59.88/yr, ~43% savings). Card + JSON-LD stay hidden until the Play base plan is live.
+ANNUAL_PRICE = "33.99"
+ANNUAL_LIVE = False   # flip to True once the ywhunt_premium annual base plan is ACTIVE in Play Console
 CFG = json.loads(re.search(r"/\*CONFIG\*/\s*window\.YW_AFF\s*=\s*(\{.*?\})\s*/\*END\*/", (ROOT/"assets/affiliates.js").read_text(), re.S).group(1))
 E = lambda s: html.escape(s, quote=True)
 enc = lambda s: urllib.parse.quote(s, safe="")
@@ -49,7 +52,7 @@ DISCLOSURE = ('<p class="disclosure"><strong>Disclosure:</strong> We may earn a 
 PLAY_SVG = '<svg viewBox="0 0 28 28" aria-hidden="true"><path fill="#160d05" d="M5 3.5v21l18-10.5z"/></svg>'
 def play_btn(cls="primary"): return f'<a class="btn {cls} play-badge" href="{PLAY}" target="_blank" rel="noopener">{PLAY_SVG if cls=="primary" else ""}Get it on Google Play</a>'
 
-NAV = [("index.html", "Home"), ("features.html", "Features"), ("how-to-use.html", "How-To"), ("guides/", "Guides"), ("gear/", "Gear Lists"), ("deals.html", "Deals"), ("shop/", "Shop")]
+NAV = [("index.html", "Home"), ("features.html", "Features"), ("how-to-use.html", "How-To"), ("guides/", "Guides"), ("gear/", "Gear Lists"), ("deals.html", "Deals"), ("pricing.html", "Pricing"), ("shop/", "Shop")]
 
 def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None, jsonld=None, og_type="website", prio="0.6", absolute=False, hero_extra=""):
     depth = path.count("/")
@@ -74,18 +77,35 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <header class="top"><div class="wrap"><a class="brand" href="{p or './'}"><img src="{p}assets/icon-192.png" width="34" height="34" alt="">Your World Hunt</a><nav class="nav" aria-label="Main">{nav}</nav></div></header>
 <main>{hero}<div class="wrap">{body}</div></main>
 <footer><div class="wrap"><div class="cols">
-<div><h4>Your World Hunt</h4><ul><li><a href="{PLAY}" target="_blank" rel="noopener">Get the app on Google Play</a></li><li><a href="{p}features.html">Features</a></li><li><a href="{p}how-to-use.html">How to use the app</a></li><li><a href="{p}about.html">About</a></li><li><a href="{p}contact.html">Contact</a></li></ul></div>
+<div><h4>Your World Hunt</h4><ul><li><a href="{PLAY}" target="_blank" rel="noopener">Get the app on Google Play</a></li><li><a href="{p}features.html">Features</a></li><li><a href="{p}how-to-use.html">How to use the app</a></li><li><a href="{p}pricing.html">Pricing</a></li><li><a href="{p}about.html">About</a></li><li><a href="{p}contact.html">Contact</a></li></ul></div>
 <div><h4>Field School</h4><ul>{"".join(f'<li><a href="{p}guides/{g["slug"]}.html">{E(g["short"])}</a></li>' for g in GUIDES)}</ul></div>
-<div><h4>Shop</h4><ul><li><a href="{p}shop/">Gear Shop</a></li><li><a href="{p}gear/">Gear lists by hunt</a></li><li><a href="{p}deals.html">Deals &amp; compare</a></li><li><a href="{p}shop/camp-lodging.html">Lodging finder</a></li></ul></div>
+<div><h4>Shop</h4><ul><li><a href="{p}shop/">Gear Shop</a></li><li><a href="{p}guides/{A26.SLUG}.html">2026 season gear checklist</a></li><li><a href="{p}gear/">Gear lists by hunt</a></li><li><a href="{p}deals.html">Deals &amp; compare</a></li><li><a href="{p}shop/camp-lodging.html">Lodging finder</a></li></ul></div>
 <div><h4>Legal</h4><ul><li><a href="{p}privacy.html">Privacy</a></li><li><a href="{p}terms.html">Terms</a></li><li><a href="{p}affiliate-disclosure.html">Affiliate disclosure</a></li></ul></div>
 </div><p class="fine">We may earn a commission from links on this site. As an Amazon Associate I earn from qualifying purchases. Guides are general information only. Always check seasons, limits, licenses and land access rules with your state wildlife agency or the official authority where you hunt. &copy; {datetime.date.today().year} Your World Apps. Google Play is a trademark of Google LLC. Retailer names are trademarks of their owners and are used only to identify where a link goes.</p></div></footer>
 </body></html>'''
+    doc = tag_play(doc, path)
     if 'class="item-' in body and "item-note" not in body:
         doc = doc.replace("</div></main>", ITEM_NOTE + "</div></main>", 1)
     out = ROOT / path
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc)
     if path != "404.html": PAGES.append((url, prio))
+
+def play_ref(slug, section):
+    return PLAY + "&referrer=" + urllib.parse.quote(f"utm_source=huntsite&utm_medium={slug}&utm_campaign={section}", safe="")
+def tag_play(doc, path):
+    """Add Play install-referrer UTM params to every Play link: medium = page slug, campaign = page section."""
+    slug = re.sub(r"[^a-z0-9]+", "-", path.lower().replace(".html", "").replace("/index", "")).strip("-")
+    slug = "home" if slug in ("", "index") else slug
+    foot = doc.find("<footer")
+    def rep(m):
+        a = m.group(0)
+        if m.start() > foot: sec = "footer"
+        elif doc.rfind('class="upsell"', 0, m.start()) > doc.rfind("</div>", 0, m.start()): sec = "upsell"
+        elif "play-badge" in a: sec = "cta"
+        else: sec = "inline"
+        return a.replace(f'href="{PLAY}"', f'href="{E(play_ref(slug, sec))}"')
+    return re.sub(r'<a [^>]*href="' + re.escape(PLAY) + r'"[^>]*>', rep, doc)
 
 def crumbs(p, *items):
     return '<p class="crumbs">' + " / ".join(f'<a href="{p}{h}">{E(t)}</a>' if h is not None else E(t) for t, h in items) + "</p>"
@@ -202,6 +222,7 @@ def build_guides():
     cards = "".join(pcard(f'{g["slug"]}.html', g["scene"], "gi"+str(i), g["title"], g["desc"], "READ GUIDE →", tag="Badge: " + g["badge"], emoji=g["medal"], big=True) for i, g in enumerate(GUIDES))
     body = (crumbs(p, ("Home", ""), ("Guides", None)) +
             '<p>Original, practical articles for hunters at every level. Each one earns a Field School badge. They\'re general advice, not legal advice. <b>Seasons, bag limits, licenses, legal hunting hours, equipment rules and land access are set by your state wildlife agency or the authority where you hunt. Always check with them directly.</b></p>'
+            f'<div class="panel" style="margin-bottom:18px"><p class="stencil" style="margin-top:0;color:var(--amber)">Season checklist</p><p><a href="{A26.SLUG}.html"><b>{E(A26.TITLE)}</b></a>: every category from tree stand safety to waders, with what to look for.</p></div>'
             f'<div class="grid">{cards}</div>')
     page("guides/index.html", "Hunting Guides: Field School", "Practical hunting guides: playing the wind for whitetail, first elk hunt checklist, moon and feeding times, public land basics, waterfowl blind gear, spring turkey setup, first plains-game safari and shot distance.",
          body, "camp", "Field School", "Guides", "Earn every badge. Written by hunters for hunters, with no fluff and no made-up regulations.", prio="0.9")
@@ -218,6 +239,7 @@ def build_guides():
                 f'<article class="article"><p class="meta">Field School · {E(g["badge"])} · about {max(1, round(words/230))} min read · {words} words</p>{src}'
                 f'<div class="callout"><p><b>Regulations:</b> this guide is general information. Seasons, limits, licenses, legal methods, hours and access rules vary by state and country and change often. Check your state wildlife agency or the official authority before you hunt.</p></div>'
                 f'<div class="milestone"><div class="medal">{g["medal"]}</div><div><strong>Badge earned: {E(g["badge"])}</strong><span class="dim">Next up: <a href="{nxt["slug"]}.html">{E(nxt["title"])}</a></span></div></div></article>'
+                f'<div class="upsell gearcta"><p><b>Gear up for this hunt:</b> the {E(KIT[g["kit"]][1])} checklist has every item with compare-stores links, and the 2026 season checklist covers what to look for in each category.</p><div class="btns"><a class="btn primary" href="../gear/{g["kit"]}.html">Open the {E(KIT[g["kit"]][1])}</a><a class="btn" href="../shop/{g["depts"][0]}.html">Shop {E(DEPT[g["depts"][0]][1])}</a><a class="btn" href="{A26.SLUG}.html">2026 gear checklist</a></div></div>'
                 f'<h2>Gear for this guide</h2>{DISCLOSURE.format(p=p)}<div class="grid tight">{dl}<a class="card" href="../gear/{g["kit"]}.html"><span class="ic" style="font-size:1.4rem">✅</span><h3>{E(KIT[g["kit"]][1])}</h3><p>Full checklist</p></a></div>'
                 f'<div class="panel" style="margin-top:20px"><p class="stencil" style="margin-top:0;color:var(--amber)">Plan it in the app</p><p>{g["app"]}</p>{play_btn()}</div>')
         page(f'guides/{g["slug"]}.html', g["title"], g["desc"], body, g["scene"], g["title"], "Field School · " + g["badge"], E(g["desc"]), jsonld=[ld], og_type="article", prio="0.8")
@@ -529,6 +551,7 @@ def build_home():
     body = (DISCLOSURE.format(p=p) +
             f'<h2>Shop by department</h2><div class="dtiles">{dtiles}</div><p><a href="shop/">Shop all departments →</a></p>'
             f'<h2>Featured kits</h2><p class="dim">Packing lists by hunt, with a compare-stores row on every item.</p><div class="dtiles">{kits}</div>'
+            f'<div class="dealband"><b>🦌🦆 2026 season checklist</b><span>Whitetail and waterfowl gear from September to December: why each item matters and what to look for.</span><a class="btn" href="guides/{A26.SLUG}.html">Read the checklist →</a></div>'
             f'<h2>Season essentials</h2>{row(shopdata.SEASON, p)}'
             f'<div class="dealband"><b>🔥 Deals &amp; compare</b><span>Store sale pages, a hunting deals feed and one-tap price comparison. We never invent prices.</span><a class="btn" href="deals.html">See deals →</a></div>'
             f'<section class="appband" id="get-app"><img src="assets/icon-192.png" width="64" height="64" alt=""><div><p class="stencil" style="margin:0;color:var(--amber)">Get the app free</p>'
@@ -618,6 +641,66 @@ def legal_pages():
     nf = (f'<div style="padding:30px 0"><p>This trail goes nowhere. The page may have moved.</p><div class="btns"><a class="btn primary" href="{SITE}">Back to base camp</a><a class="btn" href="{SITE}guides/">Guides</a><a class="btn" href="{SITE}shop/">Gear Shop</a></div></div>')
     page("404.html", "Page Not Found", "That page is off the map.", nf, "camp", "Off the map", "404", absolute=True)
 
+# ---------- pricing ----------
+COMPETITORS = [  # (app, published price, source label, source url) -- verified Oct 9, 2026
+ ("onX Hunt", "Premium $34.99/yr (1 state), $49.99/yr (2 states); Elite $99.99/yr or $14.99/mo", "onX pricing page", "https://www.onxmaps.com/hunt/app/pricing"),
+ ("HuntStand", "Pro $34.99/yr; Ultimate $99.99/yr", "Trail Pro Intel, Aug 2026", "https://www.trailprointel.com/blog/best-hunting-apps-2026"),
+ ("HuntWise", "Pro $59.99/yr or $19.99/mo; Elite $119.99/yr or $39.99/mo", "Trail Pro Intel, Aug 2026", "https://www.trailprointel.com/blog/huntwise-cost-2026"),
+ ("Spartan Forge", "$79.99/yr or $12.99/mo", "Spartan Forge pricing page", "https://spartanforge.ai/pages/pricing")]
+def build_pricing():
+    p = ""
+    annual = (f'<div class="card"><span class="tag">Best value</span><h3>Premium Annual</h3><p class="big">${E(ANNUAL_PRICE)}/year</p><p>Everything in Premium, billed once a year by Google Play. Save about 43% vs paying monthly ($59.88/year).</p>{play_btn()}</div>' if ANNUAL_LIVE and ANNUAL_PRICE else "")
+    rows = "".join(f"<tr><td>{a}</td><td>{f}</td><td>{pr}</td></tr>" for a, f, pr in FREE_VS)
+    comp = "".join(f'<tr><td>{E(a)}</td><td>{E(pr)}</td><td><a href="{u}" target="_blank" rel="noopener nofollow">{E(sl)}</a></td></tr>' for a, pr, sl, u in COMPETITORS)
+    body = (crumbs(p, ("Home", ""), ("Pricing", None)) +
+        '<div class="grid">'
+        f'<div class="card"><span class="tag">Free</span><h3>Free</h3><p class="big">$0</p><p>Hunting map, GPS return, directions, wind, pressure, moon and sun. 1 stand, 2 boat ramps and 2 of each game mark.</p>{play_btn("")}</div>'
+        f'<div class="card"><span class="tag">Premium</span><h3>Premium Monthly</h3><p class="big">$4.99/month</p><p>Unlimited marks, deer feeding times, trail cams, live US LAND overlay, Close-Buddy and GPX export. <b>7-day free trial for eligible new subscribers.</b> Cancel any time in Google Play.</p>{play_btn()}</div>'
+        f'{annual}</div>'
+        '<h2>Add-ons</h2><p>Separate subscriptions, not included in Premium. See current prices in the app or on Google Play.</p><div class="grid tight">'
+        '<div class="card"><h3>🟧 Land Packs</h3><p>Offline public land for the US, Canada, Europe and Australia. The <b>World</b> pack is $8.99/month.</p></div>'
+        '<div class="card"><h3>📏 Sharp Shooter</h3><p>Camera rangefinder <b>estimate</b> and wind hold. Not a laser rangefinder.</p></div>'
+        '<div class="card"><h3>🐕 Dog Pack</h3><p>Tools for hunting with dogs.</p></div></div>'
+        f'<h2>Free vs Premium</h2><div class="tblwrap"><table><thead><tr><th>Feature</th><th>Free</th><th>Premium</th></tr></thead><tbody>{rows}</tbody></table></div>'
+        f'<h2>How it compares</h2><p>Published prices for other popular hunting apps, checked October 9, 2026. Prices change, so confirm with each app before you buy. Features differ between apps.</p>'
+        f'<div class="tblwrap"><table><thead><tr><th>App</th><th>Published price</th><th>Source</th></tr></thead><tbody><tr><td><b>Your World Hunt</b></td><td>Free; Premium $4.99/mo with a 7-day free trial for eligible new subscribers</td><td>Google Play</td></tr>{comp}</tbody></table></div>'
+        '<p class="dim">Billing, trials and cancellation are handled by Google Play. Trial eligibility is decided by Google Play.</p>'
+        f'<div class="btns">{play_btn()}<a class="btn" href="how-to-use.html">How to use the app</a></div>')
+    offers = [{"@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD"},
+              {"@type": "Offer", "name": "Premium Monthly", "price": "4.99", "priceCurrency": "USD", "description": "Monthly subscription with a 7-day free trial for eligible new subscribers"},
+              {"@type": "Offer", "name": "Land Pack World", "price": "8.99", "priceCurrency": "USD", "description": "Monthly add-on subscription"}]
+    if ANNUAL_LIVE and ANNUAL_PRICE: offers.append({"@type": "Offer", "name": "Premium Annual", "price": ANNUAL_PRICE, "priceCurrency": "USD"})
+    ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Your World Hunt AI", "alternateName": "Your World Hunt", "operatingSystem": "Android",
+          "applicationCategory": "SportsApplication", "url": SITE + "pricing.html", "offers": offers}
+    page("pricing.html", "Pricing: Free, Premium & Add-ons", "Your World Hunt pricing: free hunting map app, Premium at $4.99/month with a 7-day free trial for eligible new subscribers, add-ons, and how it compares to other hunting apps.",
+         body, "whitetail", "Pricing", "Free to start", "Start free. Upgrade when you want unlimited marks, feeding times and public land.", jsonld=[ld], prio="0.8")
+
+# ---------- 2026 season article ----------
+def build_article():
+    p = "../"
+    toc = "".join(f'<li><a href="#{s[0]}">{E(s[1])}</a></li>' for s in A26.SECTIONS)
+    secs = ""
+    for sid, h, dept, kit, q, why, look, app in A26.SECTIONS:
+        secs += (f'<h2 id="{sid}">{E(h)}</h2><p><b>Why it matters:</b> {why}</p><p><b>What to look for:</b></p><ul>' + "".join(f"<li>{x}</li>" for x in look) + "</ul>"
+                 f'{rb(q, app)}<p class="dim"><a href="../shop/{dept}.html">Shop {E(DEPT[dept][1])} →</a> · <a href="../gear/{kit}.html">{E(KIT[kit][1])} checklist →</a></p>')
+    tl = "".join(f"<li><b>{m}:</b> {t}</li>" for m, t in A26.TIMELINE)
+    faq = "".join(f"<h3>{E(q)}</h3><p>{E(a)}</p>" for q, a in A26.FAQ)
+    art = (" ".join(f"<p>{x}</p>" for x in A26.INTRO) + f"<h2>The season at a glance</h2><ul>{tl}</ul><h2>Checklist</h2><ol>{toc}</ol>" + secs +
+           f'<div class="upsell"><p><b>Pick the right stand for the wind.</b> Your World Hunt shows wind, pressure, moon and sun times at your stand marks. Free on Google Play; Premium adds deer feeding times with a 7-day free trial for eligible new subscribers.</p>{play_btn()}</div>'
+           f"<h2>FAQ</h2>{faq}")
+    words = len(re.sub(r"<[^>]+>", " ", art).split())
+    ld = {"@context": "https://schema.org", "@type": "Article", "headline": A26.TITLE, "description": A26.DESC, "datePublished": "2026-10-09", "dateModified": TODAY,
+          "author": {"@type": "Organization", "name": "Your World Apps"}, "publisher": {"@type": "Organization", "name": "Your World Apps", "logo": {"@type": "ImageObject", "url": SITE + "assets/icon-512.png"}},
+          "mainEntityOfPage": SITE + f"guides/{A26.SLUG}.html", "image": SITE + "assets/og-image.jpg"}
+    fq = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in A26.FAQ]}
+    bc = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": SITE}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": SITE + "guides/"}, {"@type": "ListItem", "position": 3, "name": A26.SHORT}]}
+    body = (crumbs(p, ("Home", ""), ("Guides", ""), (A26.SHORT, None)) + DISCLOSURE.format(p=p) +
+            f'<article class="article"><p class="meta">Season checklist · about {max(1, round(words/230))} min read · updated {TODAY}</p>{art}'
+            '<div class="callout"><p><b>Regulations:</b> seasons, blaze orange, shot type, legal hours, electronic calls, decoys, cameras and baiting rules vary by state and change often. Check your state wildlife agency before you hunt.</p></div></article>'
+            f'<h2>Keep shopping</h2><div class="grid tight"><a class="card" href="../gear/whitetail.html"><h3>🦌 Whitetail Stand Kit</h3><p>Full checklist</p></a><a class="card" href="../gear/waterfowl.html"><h3>🦆 Waterfowl Blind Kit</h3><p>Full checklist</p></a><a class="card" href="../shop/"><h3>🛒 Gear Shop</h3><p>All departments</p></a><a class="card" href="../deals.html"><h3>🔥 Deals</h3><p>Store sale pages</p></a></div>')
+    page(f"guides/{A26.SLUG}.html", A26.TITLE, A26.DESC, body, "marsh", A26.TITLE, "Season checklist · Sept–Dec", E(A26.DESC), jsonld=[ld, fq, bc], og_type="article", prio="0.9")
+    return words
+
 def seo_files():
     sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "".join(f"<url><loc>{u}</loc><lastmod>{TODAY}</lastmod><priority>{pr}</priority></url>\n" for u, pr in PAGES) + "</urlset>\n"
     (ROOT / "sitemap.xml").write_text(sm)
@@ -626,7 +709,7 @@ def seo_files():
 if __name__ == "__main__":
     import sys
     if "--no-deals" not in sys.argv: fetch_deals()
-    build_guides(); build_shop(); build_gear(); build_deals(); build_home(); build_features(); build_howto(); legal_pages(); seo_files()
+    build_guides(); build_shop(); build_gear(); build_deals(); build_home(); build_features(); build_howto(); legal_pages(); build_pricing(); print("article words:", build_article()); seo_files()
     print("pages:", len(PAGES))
     have = sorted(k for k in USED_KEYS if (ROOT / "assets/items" / f"{k}.webp").exists())
     print(f"item images: {len(have)}/{len(USED_KEYS)} categories present")
