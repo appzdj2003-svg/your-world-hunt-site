@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /_src/
 
-Sitemap: https://appzdj2003-svg.github.io/your-world-hunt-site/sitemap.xml
+Sitemap: https://hunt.yourworldapps.si/sitemap.xml

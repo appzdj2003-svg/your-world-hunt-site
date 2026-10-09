@@ -5,7 +5,7 @@ from pathlib import Path
 import scenes, shopdata, kitdata, items as itemimg
 
 ROOT = Path(__file__).resolve().parent.parent
-SITE = "https://appzdj2003-svg.github.io/your-world-hunt-site/"   # change if a custom domain is added (see README)
+SITE = "https://hunt.yourworldapps.si/"   # custom domain (CNAME file); the old github.io URL redirects here
 PLAY = "https://play.google.com/store/apps/details?id=com.yourworld.hunt"
 TODAY = datetime.date.today().isoformat()
 CFG = json.loads(re.search(r"/\*CONFIG\*/\s*window\.YW_AFF\s*=\s*(\{.*?\})\s*/\*END\*/", (ROOT/"assets/affiliates.js").read_text(), re.S).group(1))
@@ -387,7 +387,7 @@ def legal_pages():
         '<li><b>Your data stays yours.</b> Marks, tracks, trips and Ask Hawk chats stay on your phone by default.</li>'
         '<li><b>Ethics first.</b> Know your range, know your target, get permission, and respect the animal.</li></ul>'
         '<h2>This website</h2><p>The Field School guides here are original articles written for hunters planning real trips. The Gear Shop and gear lists mirror the kits inside the app, with store links that may earn a commission (see the <a href="affiliate-disclosure.html">affiliate disclosure</a>). That helps keep the core of the app free.</p>'
-        f'<p>More apps from the same developer: <a href="https://appzdj2003-svg.github.io/your-world-apps-hub/">Your World Apps</a>.</p><div class="btns">{play_btn()}</div></article>')
+        f'<p>More apps from the same developer: <a href="https://yourworldapps.si/">Your World Apps</a>.</p><div class="btns">{play_btn()}</div></article>')
     page("about.html", "About Your World Hunt", "About Your World Hunt AI and Your World Apps: honest hunting tools, privacy by default, and regulations from the source.", about, "north", "About", "Base camp")
     contact = (crumbs(p, ("Home", ""), ("Contact", None)) + '<article class="article">'
         f'<p>The best way to reach the developer is through the <b>developer contact on the Google Play listing</b>. Open <a href="{PLAY}" target="_blank" rel="noopener">Your World Hunt on Google Play</a>, scroll to <b>App support</b>, and use the email shown there.</p>'
