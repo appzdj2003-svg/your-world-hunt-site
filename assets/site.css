@@ -127,3 +127,29 @@ table{border-collapse:collapse;width:100%;font-size:.95rem} td,th{border:1px sol
 .row>.card.shopcard .item-card{max-height:180px}
 .item-note{font-size:.8rem;margin-top:24px}
 .sortnote{display:block;margin-top:4px}
+/* how-to guide */
+.tier{display:inline-block;font-size:.66rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;border-radius:4px;padding:2px 8px;margin:0 6px 6px 0;vertical-align:middle}
+.tier.free{color:#14170a;background:var(--moss)}
+.tier.prem{color:#1a1208;background:var(--amber)}
+.tier.addon{color:var(--khaki);border:1px solid var(--khaki)}
+.tier.soon{color:#160d05;background:var(--khaki)}
+.feat{background:var(--panel);border:1px solid var(--edge);border-radius:var(--r);padding:18px;margin:18px 0;scroll-margin-top:80px}
+.feat h2{margin:.2em 0 .5em}
+.feat.soonbox{border-style:dashed}
+.steps{counter-reset:s;list-style:none;padding:0;margin:10px 0}
+.steps li{counter-increment:s;position:relative;padding:4px 0 8px 40px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:2px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:.85rem;color:#160d05;background:var(--amber)}
+.upsell{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#3a2414,var(--panelhi));border:1px solid var(--sunset);border-radius:12px;padding:12px 14px;margin-top:12px}
+.upsell p{margin:0;font-weight:700;color:var(--text);flex:1 1 220px}
+.upsell .btn{flex:1 1 auto;max-width:100%;white-space:normal;justify-content:center;text-align:center}
+.jump{display:flex;gap:8px;overflow-x:auto;padding:6px 0 10px;margin-top:14px}
+.jump a{white-space:nowrap;text-decoration:none;font-size:.72rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:7px 10px;border-radius:999px;border:1px solid var(--edge);background:var(--panel);color:var(--khaki)}
+.jump a:hover{border-color:var(--amber)}
+.tblwrap{overflow-x:auto}
+.tblwrap td:nth-child(n+2),.tblwrap th:nth-child(n+2){text-align:center;white-space:nowrap}
+.faq details{background:var(--panel);border:1px solid var(--edge);border-radius:10px;padding:12px 14px;margin:8px 0}
+.faq summary{cursor:pointer;font-weight:800;color:var(--khaki)}
+.faq details p{margin:.6em 0 0}
+.finalcta{text-align:center;margin:36px 0 10px;padding:26px 18px;background:radial-gradient(circle at 50% 0,#4a2a14,var(--panel) 70%);border:2px solid var(--amber);border-radius:var(--r)}
+.finalcta .btns{justify-content:center}
+.card .tier{align-self:flex-start}
