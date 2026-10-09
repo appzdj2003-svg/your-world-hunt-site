@@ -86,6 +86,15 @@ def crumbs(p, *items):
 
 def scene_card(scene, uid): return f'<div class="art">{scenes.svg(scene, uid)}</div>'
 
+def pcard(href, scene, uid, title, sub, cue, tag=None, emoji="", big=False):
+    """Picture card: themed scene art with a bold all-caps title, subtitle and cue overlaid at the bottom; whole card is the link."""
+    t = f'<span class="tag">{E(tag)}</span>' if tag else ""
+    return (f'<a class="pcard{" big" if big else ""}" href="{href}" aria-label="{E(title)}: {E(sub)} ({E(cue.rstrip(" →").lower())})">'
+            '<span class="pc-art">' + scenes.svg(scene, uid).replace('class="hero-art"', 'class="pc-svg"') + '</span>'
+
+            f'<span class="pc-text">{t}<span class="pc-title">{(emoji + " ") if emoji else ""}{E(title)}</span>'
+            f'<span class="pc-sub">{E(sub)}</span><span class="pc-cue">{E(cue)}</span></span></a>')
+
 DEPT = {d[0]: d for d in shopdata.DEPTS}
 KIT = {k[0]: k for k in kitdata.KITS}
 
@@ -105,8 +114,8 @@ def row(items, p):
 
 def build_shop():
     p = "../"
-    tiles = "".join(f'<a class="card dept" href="{d[0]}.html"><span class="ic">{d[2]}</span><h3>{E(d[1])}</h3><p>{E(d[4])}</p></a>' for d in shopdata.DEPTS)
-    hunts = "".join(f'<a class="card" href="../gear/{h[0]}.html">{scene_card(h[3], "sh"+h[0])}<h3>{h[2]} {E(h[1])}</h3><p>Kit checklist with store links</p></a>' for h in shopdata.HUNTS)
+    tiles = "".join(pcard(f"{d[0]}.html", d[3], "sd"+str(i), d[1], d[4], "SHOP NOW →", emoji=d[2]) for i, d in enumerate(shopdata.DEPTS))
+    hunts = "".join(pcard(f"../gear/{h[0]}.html", h[3], "sh"+h[0], h[1], "Kit checklist with store links", "VIEW LIST →", emoji=h[2]) for h in shopdata.HUNTS)
     body = (crumbs(p, ("Home", ""), ("Shop", None)) + DISCLOSURE.format(p=p) + search_form(p) +
         '<p class="dim">The search opens the store you pick in a new tab. Amazon searches carry our Associates tag.</p>'
         f'<h2>Departments</h2><div class="grid tight">{tiles}</div>'
@@ -143,7 +152,7 @@ def lodging_finder():
 BADGES = ["⛺ Base Camp Set", "🗺️ Hunt Plan Drawn", "🎒 Kit Packed", "💰 Funded", "👥 Party Assembled", "🛂 Papers Confirmed"]
 def build_gear():
     p = "../"
-    cards = "".join(f'<a class="card" href="{k[0]}.html">{scene_card(k[3], "gk"+k[0])}<h3>{k[2]} {E(k[1])}</h3><p>{E(k[4])}</p></a>' for k in kitdata.KITS)
+    cards = "".join(pcard(f"{k[0]}.html", k[3], "gk"+k[0], k[1].replace(" Kit", ""), k[4], "VIEW LIST →", emoji=k[2], big=True) for k in kitdata.KITS)
     body = (crumbs(p, ("Home", ""), ("Gear lists", None)) + DISCLOSURE.format(p=p) +
             '<p>These checklists match the kits in the app\'s <b>Kits &amp; Gear</b> hub, so you can plan here and check items off in the app. Every buyable item has a <b>Compare stores</b> row. Licenses, permits and travel papers have no shop links. Always confirm those with the official agency.</p>'
             f'<div class="grid">{cards}</div>')
@@ -171,7 +180,7 @@ def build_gear():
 # ---------- guides ----------
 def build_guides():
     p = "../"
-    cards = "".join(f'<a class="card" href="{g["slug"]}.html">{scene_card(g["scene"], "gi"+str(i))}<span class="tag">{E(g["badge"])}</span><h3>{E(g["title"])}</h3><p>{E(g["desc"])}</p></a>' for i, g in enumerate(GUIDES))
+    cards = "".join(pcard(f'{g["slug"]}.html', g["scene"], "gi"+str(i), g["title"], g["desc"], "READ GUIDE →", tag="Badge: " + g["badge"], emoji=g["medal"], big=True) for i, g in enumerate(GUIDES))
     body = (crumbs(p, ("Home", ""), ("Guides", None)) +
             '<p>Original, practical articles for hunters at every level. Each one earns a Field School badge. They\'re general advice, not legal advice. <b>Seasons, bag limits, licenses, legal hunting hours, equipment rules and land access are set by your state wildlife agency or the authority where you hunt. Always check with them directly.</b></p>'
             f'<div class="grid">{cards}</div>')
@@ -300,8 +309,8 @@ FEATS = [("🗺️", "Hunting maps", "Satellite, streets and topo maps with GPS,
 def build_home():
     p = ""
     feats = "".join(f'<div class="card"><span class="emoji">{e}</span><h3>{t}</h3><p>{d}</p></div>' for e, t, d in FEATS)
-    gcards = "".join(f'<a class="card" href="guides/{g["slug"]}.html">{scene_card(g["scene"], "hg"+str(i))}<span class="tag">{E(g["badge"])}</span><h3>{E(g["title"])}</h3></a>' for i, g in enumerate(GUIDES))
-    hunts = "".join(f'<a class="card" href="gear/{h[0]}.html"><span class="emoji">{h[2]}</span><h3>{E(h[1])}</h3></a>' for h in shopdata.HUNTS)
+    gcards = "".join(pcard(f'guides/{g["slug"]}.html', g["scene"], "hg"+str(i), g["title"], g["desc"], "READ GUIDE →", tag="Badge: " + g["badge"], emoji=g["medal"]) for i, g in enumerate(GUIDES))
+    hunts = "".join(pcard(f"gear/{h[0]}.html", h[3], "hh"+h[0], h[1], "Kit checklist with store links", "VIEW LIST →", emoji=h[2]) for h in shopdata.HUNTS)
     badges = "".join(f'<span class="badge on">{b}</span>' for b in BADGES)
     app_ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Your World Hunt AI", "alternateName": "Your World Hunt",
               "operatingSystem": "Android", "applicationCategory": "SportsApplication", "url": SITE, "downloadUrl": PLAY, "installUrl": PLAY,
