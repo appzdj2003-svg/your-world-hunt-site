@@ -476,7 +476,7 @@
    "Hard rifle case",
    "Lockable hard case (check airline rules)"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "hat-sunglasses",
@@ -485,7 +485,7 @@
   "items": [
    "Wide-brim hat & sunglasses"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "headlamp",
@@ -495,7 +495,7 @@
    "Headlamp",
    "Headlamp + spare batteries"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "hunting-light",
@@ -504,7 +504,7 @@
   "items": [
    "Red / green hunting light (confirm night rules)"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "insect-repellent",
@@ -514,7 +514,7 @@
    "Bug net & repellent",
    "Insect repellent"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "jacket",
@@ -524,7 +524,7 @@
    "Hunting attire per estate customs (ask host)",
    "Insulated jacket"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "knife",
@@ -534,7 +534,7 @@
    "Hunting knife",
    "Knife & sharpener"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "ladder-stand",
@@ -543,7 +543,7 @@
   "items": [
    "Ladder stand"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "lens-cleaning",
@@ -552,7 +552,7 @@
   "items": [
    "Lens cleaning kit"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "locator-calls",
@@ -562,7 +562,7 @@
    "Locator calls (owl / crow)",
    "Owl / crow locator calls"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "lock-box",
@@ -571,7 +571,7 @@
   "items": [
    "Gun safe / lockbox"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "meat-grinder",
@@ -580,7 +580,7 @@
   "items": [
    "Meat grinder"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "moose-call",
@@ -589,7 +589,7 @@
   "items": [
    "Moose call"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "motion-decoy",
@@ -598,7 +598,7 @@
   "items": [
    "Motion decoy"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "pack",
@@ -608,7 +608,7 @@
    "Daypack",
    "Frame pack"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "power-bank",
@@ -618,7 +618,7 @@
    "Phone + power bank",
    "Power bank"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "predator-call",
@@ -628,7 +628,7 @@
    "Predator call",
    "Predator call (hand or electronic)"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "processing-kit",
@@ -637,7 +637,7 @@
   "items": [
    "Game processing kit"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "pull-up-rope",
@@ -646,7 +646,7 @@
   "items": [
    "Pull-up rope"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "quiver",
@@ -655,7 +655,7 @@
   "items": [
    "Arrow quiver"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "rain-gear",
@@ -664,7 +664,7 @@
   "items": [
    "Rain gear"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "rangefinder",
@@ -674,7 +674,7 @@
    "Laser rangefinder",
    "Rangefinder"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "release-aid",
@@ -683,7 +683,7 @@
   "items": [
    "Release aid"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "rubber-boots",
@@ -692,7 +692,7 @@
   "items": [
    "Rubber knee boots"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "safari-clothing",
@@ -701,7 +701,7 @@
   "items": [
    "Neutral khaki / olive / brown clothing (ask outfitter about camo)"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "safety-harness",
@@ -712,7 +712,7 @@
    "Safety harness + lifeline",
    "Tree stand safety harness"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "sat-messenger",
@@ -721,7 +721,7 @@
   "items": [
    "Satellite messenger"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "scent-layers",
@@ -730,7 +730,7 @@
   "items": [
    "Scent-control layers"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "scent-spray",
@@ -742,7 +742,7 @@
    "Scent-free body wash",
    "Scent-free laundry detergent"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "scent-tote",
@@ -751,7 +751,7 @@
   "items": [
    "Clothing storage bag / tote"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "scope-covers",
@@ -760,7 +760,7 @@
   "items": [
    "Scope covers"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "sd-cards",
@@ -770,7 +770,7 @@
    "Trail cam SD cards",
    "Trail cam SD cards & batteries"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "seat-cushion",
@@ -781,7 +781,7 @@
    "Stand seat cushion",
    "Turkey vest + seat cushion"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "sharpener",
@@ -790,7 +790,7 @@
   "items": [
    "Knife sharpener"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "shooting-glasses",
@@ -799,7 +799,7 @@
   "items": [
    "Shooting glasses"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "shooting-sticks",
@@ -811,7 +811,7 @@
    "Shooting sticks",
    "Shooting sticks / bipod"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "skull-mount",
@@ -820,7 +820,7 @@
   "items": [
    "European skull mount kit"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "sleeping-bag",
@@ -829,7 +829,7 @@
   "items": [
    "Sleeping bag"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "sleeping-pad",
@@ -838,7 +838,7 @@
   "items": [
    "Sleeping pad"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "sling",
@@ -847,7 +847,7 @@
   "items": [
    "Rifle sling"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "soft-case",
@@ -856,7 +856,7 @@
   "items": [
    "Soft rifle case"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "spotting-scope",
@@ -866,7 +866,7 @@
    "Spotting scope",
    "Spotting scope + glassing tripod"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "stand-hooks",
@@ -875,7 +875,7 @@
   "items": [
    "Stand accessories"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "sunscreen",
@@ -884,7 +884,7 @@
   "items": [
    "Sunscreen & lip balm"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "tent",
@@ -894,7 +894,7 @@
    "Tent",
    "Tent & sleeping bag"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "trail-camera",
@@ -904,7 +904,7 @@
    "Cellular trail camera",
    "Trail camera"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "trauma-kit",
@@ -913,7 +913,7 @@
   "items": [
    "Tourniquet / trauma kit"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "trekking-poles",
@@ -922,7 +922,7 @@
   "items": [
    "Trekking poles"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "tripod",
@@ -931,7 +931,7 @@
   "items": [
    "Glassing tripod"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "turkey-box-call",
@@ -942,7 +942,7 @@
    "Turkey box call",
    "Turkey calls"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "turkey-decoys",
@@ -952,7 +952,7 @@
    "Decoys",
    "Turkey decoys"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "turkey-mouth-calls",
@@ -961,7 +961,7 @@
   "items": [
    "Turkey mouth calls"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "turkey-slate-call",
@@ -970,7 +970,7 @@
   "items": [
    "Turkey slate / pot call"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "vacuum-sealer",
@@ -979,7 +979,7 @@
   "items": [
    "Vacuum sealer"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "waders",
@@ -988,7 +988,7 @@
   "items": [
    "Waders"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "water-bottle",
@@ -997,7 +997,7 @@
   "items": [
    "Water & snacks"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "water-filter",
@@ -1006,7 +1006,7 @@
   "items": [
    "Water filter"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "whistle",
@@ -1016,7 +1016,7 @@
    "Dog whistle",
    "Whistle"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "wind-checker",
@@ -1026,7 +1026,7 @@
    "Wind checker",
    "Wind checker powder"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "wool-socks",
@@ -1035,6 +1035,6 @@
   "items": [
    "Wool hunting socks"
   ],
-  "done": false
+  "done": true
  }
 ]
