@@ -4,6 +4,8 @@
  *   - in the browser right away (this script rewrites links on page load), and
  *   - in the static HTML the next time `python3 _src/build.py` runs (the build reads this same block).
  * Empty "" = plain, untagged retailer search link. Keep the JSON between the CONFIG markers valid.
+ * "Shop top-rated": Amazon (&s=review-rank) and Sportsman's (&sort=topRating-desc) searches open sorted by
+ * customer rating; both params verified live 2026-10-09. Other stores: unverified, so plain search.
  * Mirrors the app's AffiliateConfig.kt (same retailers, same AvantLink deep-link format).
  */
 /*CONFIG*/
@@ -29,10 +31,10 @@ window.YW_AFF = {
   function avant(u, m) { var w = (A.avantlinkWebsiteId || "").trim(); m = (m || "").trim();
     return w && m ? "https://www.avantlink.com/click.php?tt=cl&mi=" + e(m) + "&pw=" + e(w) + "&url=" + e(u) : u; }
   var R = {
-    amazon: function (q) { var u = "https://www.amazon.com/s?k=" + e(q); return A.amazonTag ? u + "&tag=" + e(A.amazonTag) : u; },
+    amazon: function (q) { var u = "https://www.amazon.com/s?k=" + e(q) + "&s=review-rank"; return A.amazonTag ? u + "&tag=" + e(A.amazonTag) : u; },
     basspro: function (q) { return avant("https://www.basspro.com/SearchDisplay#q=" + e(q), A.avantlinkMerchant.basspro); },
     cabelas: function (q) { return avant("https://www.cabelas.com/SearchDisplay#q=" + e(q), A.avantlinkMerchant.cabelas); },
-    sportsmans: function (q) { return avant("https://www.sportsmans.com/search?q=" + e(q), A.avantlinkMerchant.sportsmans); },
+    sportsmans: function (q) { return avant("https://www.sportsmans.com/search?q=" + e(q) + "&sort=topRating-desc", A.avantlinkMerchant.sportsmans); },
     duluth: function (q) { return raw("https://www.duluthtrading.com/search?q=" + e(q), A.duluthParams); },
     walmart: function (q) { return raw("https://www.walmart.com/search?q=" + e(q), A.walmartParams); },
     academy: function (q) { return raw("https://www.academy.com/search?searchTerm=" + e(q), A.academyParams); },

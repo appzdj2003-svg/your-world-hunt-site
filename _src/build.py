@@ -2,7 +2,7 @@
 """Static site builder for Your World Hunt. Run: python3 _src/build.py  (writes HTML into the repo root)."""
 import json, re, os, html, datetime, urllib.parse, urllib.request, email.utils
 from pathlib import Path
-import scenes, shopdata, kitdata
+import scenes, shopdata, kitdata, items as itemimg
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://appzdj2003-svg.github.io/your-world-hunt-site/"   # change if a custom domain is added (see README)
@@ -24,23 +24,26 @@ def _avant(u, m):
 def link(r, q):
     Q = enc(q)
     return {
-        "amazon": lambda: f"https://www.amazon.com/s?k={Q}" + (f"&tag={enc(CFG['amazonTag'])}" if CFG["amazonTag"] else ""),
+        "amazon": lambda: f"https://www.amazon.com/s?k={Q}&s=review-rank" + (f"&tag={enc(CFG['amazonTag'])}" if CFG["amazonTag"] else ""),
         "basspro": lambda: _avant(f"https://www.basspro.com/SearchDisplay#q={Q}", CFG["avantlinkMerchant"]["basspro"]),
         "cabelas": lambda: _avant(f"https://www.cabelas.com/SearchDisplay#q={Q}", CFG["avantlinkMerchant"]["cabelas"]),
-        "sportsmans": lambda: _avant(f"https://www.sportsmans.com/search?q={Q}", CFG["avantlinkMerchant"]["sportsmans"]),
+        "sportsmans": lambda: _avant(f"https://www.sportsmans.com/search?q={Q}&sort=topRating-desc", CFG["avantlinkMerchant"]["sportsmans"]),
         "duluth": lambda: _raw(f"https://www.duluthtrading.com/search?q={Q}", CFG["duluthParams"]),
         "walmart": lambda: _raw(f"https://www.walmart.com/search?q={Q}", CFG["walmartParams"]),
         "academy": lambda: _raw(f"https://www.academy.com/search?searchTerm={Q}", CFG["academyParams"]),
     }[r]()
 RNAME = {"amazon": "Amazon", "basspro": "Bass Pro", "cabelas": "Cabela's", "sportsmans": "Sportsman's", "duluth": "Duluth", "walmart": "Walmart", "academy": "Academy"}
+SORTED = {"amazon", "sportsmans"}   # stores whose search URL sorts by customer rating (verified)
+LABEL = {"amazon": "Shop top-rated → Amazon", "sportsmans": "Top-rated → Sportsman's"}
+SORT_NOTE = "“Top-rated” buttons open the store's search sorted by customer rating."
 def rb(q, apparel=False):
     order = ["amazon", "basspro", "cabelas", "sportsmans", "walmart", "academy"]
     order = (["duluth"] + order) if apparel else (order + ["duluth"])   # Duluth first for clothing/boots (as in the app)
-    a = "".join(f'<a class="{"amz" if r=="amazon" else ""}" href="{E(link(r,q))}" data-r="{r}" data-q="{E(q)}" target="_blank" rel="sponsored nofollow noopener">{"Shop on Amazon" if r=="amazon" else RNAME[r]}</a>' for r in order)
+    a = "".join(f'<a class="{"amz" if r=="amazon" else ""}" href="{E(link(r,q))}" data-r="{r}" data-q="{E(q)}" target="_blank" rel="sponsored nofollow noopener">{LABEL.get(r, RNAME[r])}</a>' for r in order)
     return f'<div class="rb" role="group" aria-label="Compare stores for {E(q)}">{a}</div>'
 
 DISCLOSURE = ('<p class="disclosure"><strong>Disclosure:</strong> We may earn a commission from links on this site, at no extra cost to you. '
-              '<strong>As an Amazon Associate I earn from qualifying purchases.</strong> Links open each store\'s own search. We never show prices, ratings or reviews, so check details on the retailer\'s site. '
+              '<strong>As an Amazon Associate I earn from qualifying purchases.</strong> Links open each store\'s own search. We never show prices, ratings or reviews, so check details on the retailer\'s site. <span class="sortnote">Shop top-rated → opens the store\'s search sorted by customer rating.</span> '
               '<a href="{p}affiliate-disclosure.html">Details</a></p>')
 
 PLAY_SVG = '<svg viewBox="0 0 28 28" aria-hidden="true"><path fill="#160d05" d="M5 3.5v21l18-10.5z"/></svg>'
@@ -76,6 +79,8 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <div><h4>Legal</h4><ul><li><a href="{p}privacy.html">Privacy</a></li><li><a href="{p}terms.html">Terms</a></li><li><a href="{p}affiliate-disclosure.html">Affiliate disclosure</a></li></ul></div>
 </div><p class="fine">We may earn a commission from links on this site. As an Amazon Associate I earn from qualifying purchases. Guides are general information only. Always check seasons, limits, licenses and land access rules with your state wildlife agency or the official authority where you hunt. &copy; {datetime.date.today().year} Your World Apps. Google Play is a trademark of Google LLC. Retailer names are trademarks of their owners and are used only to identify where a link goes.</p></div></footer>
 </body></html>'''
+    if 'class="item-' in body and "item-note" not in body:
+        doc = doc.replace("</div></main>", ITEM_NOTE + "</div></main>", 1)
     out = ROOT / path
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc)
@@ -98,19 +103,32 @@ def pcard(href, scene, uid, title, sub, cue, tag=None, emoji="", big=False):
 DEPT = {d[0]: d for d in shopdata.DEPTS}
 KIT = {k[0]: k for k in kitdata.KITS}
 
+# ---------- item illustrations ----------
+USED_KEYS, MISSING = {}, {}
+def item_img(label, q, size="card", p="../"):
+    k = itemimg.key_for(label, q)
+    if not k:
+        MISSING.setdefault("(no category)", set()).add(label); return ""
+    USED_KEYS.setdefault(k, set()).add(label)
+    if not (ROOT / "assets/items" / f"{k}.webp").exists():
+        MISSING.setdefault(k, set()).add(label); return ""
+    w = 400 if size == "card" else 112
+    return f'<img class="item-{size}" src="{p}assets/items/{k}.webp" width="{w}" height="{w}" loading="lazy" decoding="async" alt="Illustration of {E(label.lower())}">'
+ITEM_NOTE = '<p class="dim item-note">Item images are illustrations, not the exact products sold.</p>'
+
 # ---------- shop ----------
-def shopcard(name, q, note, flags=""):
-    return f'<div class="card shopcard"><span class="tag">Category</span><h3>{E(name)}</h3><p>{E(note)}</p>{rb(q, "a" in flags)}</div>'
+def shopcard(name, q, note, flags="", p="../"):
+    return f'<div class="card shopcard">{item_img(name, q, "card", p)}<span class="tag">Category</span><h3>{E(name)}</h3><p>{E(note)}</p>{rb(q, "a" in flags)}</div>'
 
 def search_form(p, placeholder="Search hunting gear… e.g. treestand harness"):
     opts = "".join(f'<option value="{r}">{RNAME[r]}</option>' for r in ["amazon", "basspro", "cabelas", "sportsmans", "duluth", "walmart", "academy"])
     return (f'<form class="shop-search" role="search" action="https://www.amazon.com/s" target="_blank">'
             f'<label class="sr" for="q">Search</label><input id="q" name="k" placeholder="{E(placeholder)}" autocomplete="off" required>'
-            f'<input type="hidden" name="tag" value="{E(CFG["amazonTag"])}"><label class="sr" for="r">Store</label><select id="r" name="r" aria-label="Store">{opts}</select>'
+            f'<input type="hidden" name="s" value="review-rank"><input type="hidden" name="tag" value="{E(CFG["amazonTag"])}"><label class="sr" for="r">Store</label><select id="r" name="r" aria-label="Store">{opts}</select>'
             f'<button type="submit">Search</button></form>')
 
 def row(items, p):
-    return '<div class="row">' + "".join(f'<div class="card shopcard"><h3>{E(n)}</h3>{rb(q, "a" in f)}</div>' for n, q, f in items) + "</div>"
+    return '<div class="row">' + "".join(f'<div class="card shopcard">{item_img(n, q, "card", p)}<h3>{E(n)}</h3>{rb(q, "a" in f)}</div>' for n, q, f in items) + "</div>"
 
 def build_shop():
     p = "../"
@@ -118,7 +136,7 @@ def build_shop():
     hunts = "".join(pcard(f"../gear/{h[0]}.html", h[3], "sh"+h[0], h[1], "Kit checklist with store links", "VIEW LIST →", emoji=h[2]) for h in shopdata.HUNTS)
     body = (crumbs(p, ("Home", ""), ("Shop", None)) + DISCLOSURE.format(p=p) + search_form(p) +
         '<p class="dim">The search opens the store you pick in a new tab. Amazon searches carry our Associates tag.</p>'
-        f'<h2>Departments</h2><div class="grid tight">{tiles}</div>'
+        f'<h2>Shop top-rated by department</h2><p class="dim" style="font-size:.85rem">Opens the store\'s search sorted by customer rating.</p><div class="grid tight">{tiles}</div>'
         f'<h2>Shop by hunt</h2><div class="grid tight">{hunts}</div>'
         f'<h2>Season essentials</h2><p class="dim">The same featured row as the app\'s Kits &amp; Gear hub.</p>{row(shopdata.SEASON, p)}'
         f'<h2>Restock</h2><p class="dim">The things that run out mid-season.</p>{row(shopdata.RESTOCK, p)}'
@@ -163,7 +181,7 @@ def build_gear():
         lis = ""
         for it in allitems:
             label, cat, note, q = it[:4]; ap = len(it) > 4
-            lis += f'<li><span class="box" aria-hidden="true"></span><div class="txt"><b>{E(label)}</b><span>{E(cat)}{" · " + E(note) if note else ""}</span></div>{rb(q, ap) if q else ""}</li>'
+            lis += f'<li><span class="box" aria-hidden="true"></span>{item_img(label, q, "thumb", p) if q else ""}<div class="txt"><b>{E(label)}</b><span>{E(cat)}{" · " + E(note) if note else ""}</span></div>{rb(q, ap) if q else ""}</li>'
         g = next(x for x in GUIDES if x["slug"] == guide)
         dl = " · ".join(f'<a href="../shop/{d}.html">{E(DEPT[d][1])}</a>' for d in depts)
         badges = "".join(f'<span class="badge{" on" if i==2 else ""}">{b}</span>' for i, b in enumerate(BADGES))
@@ -271,7 +289,7 @@ SALES = [("Winter clearance", "End-of-season markdowns after hunting seasons clo
 
 def build_deals():
     p = ""
-    compare = "".join(shopcard(n, q, note, f) for n, q, note, f in [
+    compare = "".join(shopcard(n, q, note, f, p="") for n, q, note, f in [
         ("Hunting binoculars", "hunting binoculars", "Same search, every store, one tap each.", ""),
         ("Trail camera", "trail camera", "Compare current listings yourself. We never show prices.", ""),
         ("Waterproof hunting boots", "waterproof hunting boots", "Duluth comes first for boots and clothing.", "a"),
@@ -411,4 +429,11 @@ if __name__ == "__main__":
     if "--no-deals" not in sys.argv: fetch_deals()
     build_guides(); build_shop(); build_gear(); build_deals(); build_home(); build_features(); legal_pages(); seo_files()
     print("pages:", len(PAGES))
+    have = sorted(k for k in USED_KEYS if (ROOT / "assets/items" / f"{k}.webp").exists())
+    print(f"item images: {len(have)}/{len(USED_KEYS)} categories present")
+    import json as _j
+    subj = itemimg.subjects()
+    (Path(__file__).parent / "item_prompts.json").write_text(_j.dumps(
+        [{"key": k, "file": f"_src/items_raw/{k}.png", "prompt": itemimg.STYLE + subj.get(k, k.replace("-", " ")), "items": sorted(USED_KEYS[k]), "done": k in have} for k in sorted(USED_KEYS)], indent=1, ensure_ascii=False))
+    if MISSING.get("(no category)"): print("unmapped items:", sorted(MISSING["(no category)"]))
     for g in GUIDES: print(f'  {g["slug"]}: {g["words"]} words')

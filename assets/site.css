@@ -122,3 +122,8 @@ table{border-collapse:collapse;width:100%;font-size:.95rem} td,th{border:1px sol
 .grid.tight .pcard .pc-title{font-size:.92rem;letter-spacing:.07em}
 .grid.tight .pcard .pc-sub{font-size:.8rem}
 @media (max-width:420px){.grid.tight{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.grid.tight .pcard{min-height:200px}.grid.tight .pcard .pc-text{padding:36px 10px 10px}.grid.tight .pcard .pc-title{font-size:.82rem;letter-spacing:.05em}}
+.shopcard .item-card{display:block;width:calc(100% + 32px);max-width:none;height:auto;aspect-ratio:1/1;max-height:220px;object-fit:cover;margin:-16px -16px 8px;border-bottom:2px solid var(--edge);background:var(--panelhi)}
+.check li .item-thumb{flex:0 0 56px;width:56px;height:56px;border-radius:8px;border:1px solid var(--edge);object-fit:cover}
+.row>.card.shopcard .item-card{max-height:180px}
+.item-note{font-size:.8rem;margin-top:24px}
+.sortnote{display:block;margin-top:4px}

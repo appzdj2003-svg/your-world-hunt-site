@@ -1,0 +1,1040 @@
+[
+ {
+  "key": "antler-plaque",
+  "file": "_src/items_raw/antler-plaque.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: antlers mounted on a wooden plaque",
+  "items": [
+   "Antler mount plaque kit"
+  ],
+  "done": false
+ },
+ {
+  "key": "archery-target",
+  "file": "_src/items_raw/archery-target.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a foam archery block target with arrows",
+  "items": [
+   "Archery target"
+  ],
+  "done": false
+ },
+ {
+  "key": "archery-tools",
+  "file": "_src/items_raw/archery-tools.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: archery tools: broadhead wrench and hex keys",
+  "items": [
+   "Arrow wrench and tools"
+  ],
+  "done": false
+ },
+ {
+  "key": "base-layers",
+  "file": "_src/items_raw/base-layers.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: folded merino wool base layer shirt and leggings",
+  "items": [
+   "Layering system + rain shell",
+   "Merino base layer",
+   "Merino base layers",
+   "Warm layer for cold mornings",
+   "Warm layers + rain gear"
+  ],
+  "done": false
+ },
+ {
+  "key": "batteries",
+  "file": "_src/items_raw/batteries.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: AA and AAA batteries",
+  "items": [
+   "AA / AAA batteries"
+  ],
+  "done": false
+ },
+ {
+  "key": "binocular-harness",
+  "file": "_src/items_raw/binocular-harness.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a chest harness pouch for binoculars",
+  "items": [
+   "Binocular harness"
+  ],
+  "done": false
+ },
+ {
+  "key": "binoculars",
+  "file": "_src/items_raw/binoculars.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a pair of hunting binoculars",
+  "items": [
+   "Binoculars",
+   "Hunting binoculars"
+  ],
+  "done": false
+ },
+ {
+  "key": "blaze-orange",
+  "file": "_src/items_raw/blaze-orange.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a blaze orange vest and hat",
+  "items": [
+   "Blaze orange (confirm local rules)",
+   "Blaze orange for the walk out",
+   "Blaze orange vest and hat"
+  ],
+  "done": false
+ },
+ {
+  "key": "blind-bag",
+  "file": "_src/items_raw/blind-bag.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a waterproof waterfowl blind bag",
+  "items": [
+   "Blind bag"
+  ],
+  "done": false
+ },
+ {
+  "key": "boots",
+  "file": "_src/items_raw/boots.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a pair of rugged leather hunting boots",
+  "items": [
+   "Broken-in mountain boots",
+   "Insulated waterproof boots",
+   "Quiet, broken-in boots",
+   "Waterproof hunting boots"
+  ],
+  "done": false
+ },
+ {
+  "key": "bow-case",
+  "file": "_src/items_raw/bow-case.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a padded bow case",
+  "items": [
+   "Bow case"
+  ],
+  "done": false
+ },
+ {
+  "key": "bow-sling",
+  "file": "_src/items_raw/bow-sling.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a bow sling strap",
+  "items": [
+   "Bow sling / bow holder"
+  ],
+  "done": false
+ },
+ {
+  "key": "broadheads",
+  "file": "_src/items_raw/broadheads.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a closed broadhead storage case",
+  "items": [
+   "Broadhead storage case",
+   "Broadheads"
+  ],
+  "done": false
+ },
+ {
+  "key": "cam-mount",
+  "file": "_src/items_raw/cam-mount.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a trail camera security box and mount",
+  "items": [
+   "Trail cam mount / lock box"
+  ],
+  "done": false
+ },
+ {
+  "key": "camera",
+  "file": "_src/items_raw/camera.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a compact camera",
+  "items": [
+   "Camera"
+  ],
+  "done": false
+ },
+ {
+  "key": "camp-chair",
+  "file": "_src/items_raw/camp-chair.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a folding camp chair",
+  "items": [
+   "Camp chair"
+  ],
+  "done": false
+ },
+ {
+  "key": "camp-stove",
+  "file": "_src/items_raw/camp-stove.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a small backpacking stove with a pot",
+  "items": [
+   "Camp stove"
+  ],
+  "done": false
+ },
+ {
+  "key": "cape-salt",
+  "file": "_src/items_raw/cape-salt.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a bag of salt and a scoop",
+  "items": [
+   "Cape salt for taxidermy"
+  ],
+  "done": false
+ },
+ {
+  "key": "card-reader",
+  "file": "_src/items_raw/card-reader.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a small SD card reader",
+  "items": [
+   "SD card reader for phone"
+  ],
+  "done": false
+ },
+ {
+  "key": "choke-tube",
+  "file": "_src/items_raw/choke-tube.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a single shotgun choke tube and wrench, shown alone",
+  "items": [
+   "Turkey choke (pattern first)"
+  ],
+  "done": false
+ },
+ {
+  "key": "cleaning-kit",
+  "file": "_src/items_raw/cleaning-kit.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a cleaning kit with rods, brushes and patches in a case",
+  "items": [
+   "Cleaning kit",
+   "Gun cleaning kit"
+  ],
+  "done": false
+ },
+ {
+  "key": "climbing-stand",
+  "file": "_src/items_raw/climbing-stand.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a climbing tree stand on a straight tree",
+  "items": [
+   "Climbing stand"
+  ],
+  "done": false
+ },
+ {
+  "key": "compass",
+  "file": "_src/items_raw/compass.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a baseplate compass on a topo map",
+  "items": [
+   "Compass"
+  ],
+  "done": false
+ },
+ {
+  "key": "cooler",
+  "file": "_src/items_raw/cooler.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a large rugged cooler",
+  "items": [
+   "Large cooler"
+  ],
+  "done": false
+ },
+ {
+  "key": "cover-scent",
+  "file": "_src/items_raw/cover-scent.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a small unlabeled scent bottle on a log",
+  "items": [
+   "Cover scents and attractants"
+  ],
+  "done": false
+ },
+ {
+  "key": "deer-calls",
+  "file": "_src/items_raw/deer-calls.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a deer grunt call and rattling antlers",
+  "items": [
+   "Grunt call",
+   "Grunt call / rattling antlers",
+   "Rattling antlers / bag"
+  ],
+  "done": false
+ },
+ {
+  "key": "dog-boots",
+  "file": "_src/items_raw/dog-boots.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: dog boots",
+  "items": [
+   "Dog boots"
+  ],
+  "done": false
+ },
+ {
+  "key": "dog-first-aid",
+  "file": "_src/items_raw/dog-first-aid.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a dog first-aid kit",
+  "items": [
+   "Dog first-aid kit"
+  ],
+  "done": false
+ },
+ {
+  "key": "dog-gps",
+  "file": "_src/items_raw/dog-gps.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a dog GPS tracking collar",
+  "items": [
+   "GPS dog tracking collar"
+  ],
+  "done": false
+ },
+ {
+  "key": "dog-orange-vest",
+  "file": "_src/items_raw/dog-orange-vest.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a hunting dog wearing a blaze orange vest",
+  "items": [
+   "Dog blaze orange vest"
+  ],
+  "done": false
+ },
+ {
+  "key": "dog-stand",
+  "file": "_src/items_raw/dog-stand.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a dog stand platform in a marsh",
+  "items": [
+   "Dog stand / blind platform"
+  ],
+  "done": false
+ },
+ {
+  "key": "dog-vest",
+  "file": "_src/items_raw/dog-vest.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a hunting retriever dog wearing a neoprene vest",
+  "items": [
+   "Dog neoprene vest",
+   "Dog vest & whistle"
+  ],
+  "done": false
+ },
+ {
+  "key": "drag-rope",
+  "file": "_src/items_raw/drag-rope.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a deer drag rope harness",
+  "items": [
+   "Drag rope & gloves"
+  ],
+  "done": false
+ },
+ {
+  "key": "dressing-gloves",
+  "file": "_src/items_raw/dressing-gloves.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: long protective field dressing gloves",
+  "items": [
+   "Field dressing gloves"
+  ],
+  "done": false
+ },
+ {
+  "key": "duck-call",
+  "file": "_src/items_raw/duck-call.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a wooden duck call on a lanyard",
+  "items": [
+   "Duck / goose calls",
+   "Duck call"
+  ],
+  "done": false
+ },
+ {
+  "key": "duck-decoys",
+  "file": "_src/items_raw/duck-decoys.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: duck decoys floating with anchor weights",
+  "items": [
+   "Decoys + weights",
+   "Duck decoys"
+  ],
+  "done": false
+ },
+ {
+  "key": "dummies",
+  "file": "_src/items_raw/dummies.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: retriever training dummies",
+  "items": [
+   "Retriever training dummies"
+  ],
+  "done": false
+ },
+ {
+  "key": "ear-protection",
+  "file": "_src/items_raw/ear-protection.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: electronic hearing protection earmuffs",
+  "items": [
+   "Ear protection"
+  ],
+  "done": false
+ },
+ {
+  "key": "elk-calls",
+  "file": "_src/items_raw/elk-calls.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: an elk bugle tube and a cow call",
+  "items": [
+   "Bugle & cow calls",
+   "Elk bugle and cow calls"
+  ],
+  "done": false
+ },
+ {
+  "key": "emergency-bivy",
+  "file": "_src/items_raw/emergency-bivy.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a folded emergency bivy",
+  "items": [
+   "Emergency blanket / bivy"
+  ],
+  "done": false
+ },
+ {
+  "key": "face-mask-gloves",
+  "file": "_src/items_raw/face-mask-gloves.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a camo face mask and thin gloves",
+  "items": [
+   "Face mask & gloves",
+   "Hunting gloves"
+  ],
+  "done": false
+ },
+ {
+  "key": "fire-starter",
+  "file": "_src/items_raw/fire-starter.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a ferro rod fire starter with tinder",
+  "items": [
+   "Fire starter"
+  ],
+  "done": false
+ },
+ {
+  "key": "first-aid",
+  "file": "_src/items_raw/first-aid.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a red first-aid kit pouch",
+  "items": [
+   "First-aid kit"
+  ],
+  "done": false
+ },
+ {
+  "key": "gaiters",
+  "file": "_src/items_raw/gaiters.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a pair of hiking gaiters",
+  "items": [
+   "Gaiters"
+  ],
+  "done": false
+ },
+ {
+  "key": "game-bags",
+  "file": "_src/items_raw/game-bags.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: breathable cloth game bags",
+  "items": [
+   "Game bags"
+  ],
+  "done": false
+ },
+ {
+  "key": "goose-call",
+  "file": "_src/items_raw/goose-call.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a short-reed goose call",
+  "items": [
+   "Goose call"
+  ],
+  "done": false
+ },
+ {
+  "key": "ground-blind",
+  "file": "_src/items_raw/ground-blind.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a pop-up hunting ground blind in the woods",
+  "items": [
+   "Ground blind"
+  ],
+  "done": false
+ },
+ {
+  "key": "hand-warmers",
+  "file": "_src/items_raw/hand-warmers.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: hand warmer packets",
+  "items": [
+   "Hand warmers"
+  ],
+  "done": false
+ },
+ {
+  "key": "handheld-gps",
+  "file": "_src/items_raw/handheld-gps.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a handheld GPS unit",
+  "items": [
+   "Handheld GPS"
+  ],
+  "done": false
+ },
+ {
+  "key": "hang-on-stand",
+  "file": "_src/items_raw/hang-on-stand.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a hang-on tree stand strapped to a tree trunk",
+  "items": [
+   "Hang-on tree stand"
+  ],
+  "done": false
+ },
+ {
+  "key": "hard-case",
+  "file": "_src/items_raw/hard-case.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a lockable hard gun case, closed",
+  "items": [
+   "Hard rifle case",
+   "Lockable hard case (check airline rules)"
+  ],
+  "done": false
+ },
+ {
+  "key": "hat-sunglasses",
+  "file": "_src/items_raw/hat-sunglasses.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a wide-brim hat with sunglasses",
+  "items": [
+   "Wide-brim hat & sunglasses"
+  ],
+  "done": false
+ },
+ {
+  "key": "headlamp",
+  "file": "_src/items_raw/headlamp.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a headlamp with a red light mode",
+  "items": [
+   "Headlamp",
+   "Headlamp + spare batteries"
+  ],
+  "done": false
+ },
+ {
+  "key": "hunting-light",
+  "file": "_src/items_raw/hunting-light.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a red/green hunting light",
+  "items": [
+   "Red / green hunting light (confirm night rules)"
+  ],
+  "done": false
+ },
+ {
+  "key": "insect-repellent",
+  "file": "_src/items_raw/insect-repellent.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: an insect head net and an unlabeled repellent bottle",
+  "items": [
+   "Bug net & repellent",
+   "Insect repellent"
+  ],
+  "done": false
+ },
+ {
+  "key": "jacket",
+  "file": "_src/items_raw/jacket.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: an insulated hunting jacket in olive and khaki",
+  "items": [
+   "Hunting attire per estate customs (ask host)",
+   "Insulated jacket"
+  ],
+  "done": false
+ },
+ {
+  "key": "knife",
+  "file": "_src/items_raw/knife.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a fixed-blade hunting knife in a leather sheath",
+  "items": [
+   "Hunting knife",
+   "Knife & sharpener"
+  ],
+  "done": false
+ },
+ {
+  "key": "ladder-stand",
+  "file": "_src/items_raw/ladder-stand.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a ladder tree stand against a tree",
+  "items": [
+   "Ladder stand"
+  ],
+  "done": false
+ },
+ {
+  "key": "lens-cleaning",
+  "file": "_src/items_raw/lens-cleaning.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a lens cleaning pen and microfiber cloth",
+  "items": [
+   "Lens cleaning kit"
+  ],
+  "done": false
+ },
+ {
+  "key": "locator-calls",
+  "file": "_src/items_raw/locator-calls.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: owl and crow locator calls",
+  "items": [
+   "Locator calls (owl / crow)",
+   "Owl / crow locator calls"
+  ],
+  "done": false
+ },
+ {
+  "key": "lock-box",
+  "file": "_src/items_raw/lock-box.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a small steel lock box",
+  "items": [
+   "Gun safe / lockbox"
+  ],
+  "done": false
+ },
+ {
+  "key": "meat-grinder",
+  "file": "_src/items_raw/meat-grinder.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a hand-crank meat grinder",
+  "items": [
+   "Meat grinder"
+  ],
+  "done": false
+ },
+ {
+  "key": "moose-call",
+  "file": "_src/items_raw/moose-call.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a birch-bark style moose call cone",
+  "items": [
+   "Moose call"
+  ],
+  "done": false
+ },
+ {
+  "key": "motion-decoy",
+  "file": "_src/items_raw/motion-decoy.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a small predator motion decoy on a stake",
+  "items": [
+   "Motion decoy"
+  ],
+  "done": false
+ },
+ {
+  "key": "pack",
+  "file": "_src/items_raw/pack.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a hunting backpack",
+  "items": [
+   "Daypack",
+   "Frame pack"
+  ],
+  "done": false
+ },
+ {
+  "key": "power-bank",
+  "file": "_src/items_raw/power-bank.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a rugged power bank",
+  "items": [
+   "Phone + power bank",
+   "Power bank"
+  ],
+  "done": false
+ },
+ {
+  "key": "predator-call",
+  "file": "_src/items_raw/predator-call.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a handheld predator call",
+  "items": [
+   "Predator call",
+   "Predator call (hand or electronic)"
+  ],
+  "done": false
+ },
+ {
+  "key": "processing-kit",
+  "file": "_src/items_raw/processing-kit.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a butchering knife roll with saw and boning knife",
+  "items": [
+   "Game processing kit"
+  ],
+  "done": false
+ },
+ {
+  "key": "pull-up-rope",
+  "file": "_src/items_raw/pull-up-rope.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a coiled pull-up rope with a carabiner",
+  "items": [
+   "Pull-up rope"
+  ],
+  "done": false
+ },
+ {
+  "key": "quiver",
+  "file": "_src/items_raw/quiver.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a bow quiver holding arrows",
+  "items": [
+   "Arrow quiver"
+  ],
+  "done": false
+ },
+ {
+  "key": "rain-gear",
+  "file": "_src/items_raw/rain-gear.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a packable rain jacket and pants",
+  "items": [
+   "Rain gear"
+  ],
+  "done": false
+ },
+ {
+  "key": "rangefinder",
+  "file": "_src/items_raw/rangefinder.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a compact handheld laser rangefinder",
+  "items": [
+   "Laser rangefinder",
+   "Rangefinder"
+  ],
+  "done": false
+ },
+ {
+  "key": "release-aid",
+  "file": "_src/items_raw/release-aid.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a bow release aid",
+  "items": [
+   "Release aid"
+  ],
+  "done": false
+ },
+ {
+  "key": "rubber-boots",
+  "file": "_src/items_raw/rubber-boots.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: tall rubber knee boots",
+  "items": [
+   "Rubber knee boots"
+  ],
+  "done": false
+ },
+ {
+  "key": "safari-clothing",
+  "file": "_src/items_raw/safari-clothing.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: neutral khaki safari shirt and trousers, folded",
+  "items": [
+   "Neutral khaki / olive / brown clothing (ask outfitter about camo)"
+  ],
+  "done": false
+ },
+ {
+  "key": "safety-harness",
+  "file": "_src/items_raw/safety-harness.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a full-body tree stand safety harness with a tether",
+  "items": [
+   "Lifeline / safety rope",
+   "Safety harness + lifeline",
+   "Tree stand safety harness"
+  ],
+  "done": false
+ },
+ {
+  "key": "sat-messenger",
+  "file": "_src/items_raw/sat-messenger.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a handheld satellite messenger device",
+  "items": [
+   "Satellite messenger"
+  ],
+  "done": false
+ },
+ {
+  "key": "scent-layers",
+  "file": "_src/items_raw/scent-layers.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: neatly folded hunting layers in a sealed tote",
+  "items": [
+   "Scent-control layers"
+  ],
+  "done": false
+ },
+ {
+  "key": "scent-spray",
+  "file": "_src/items_raw/scent-spray.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: an unbranded spray bottle and wash bottle",
+  "items": [
+   "Scent control spray",
+   "Scent elimination spray",
+   "Scent-free body wash",
+   "Scent-free laundry detergent"
+  ],
+  "done": false
+ },
+ {
+  "key": "scent-tote",
+  "file": "_src/items_raw/scent-tote.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a sealed clothing storage tote",
+  "items": [
+   "Clothing storage bag / tote"
+  ],
+  "done": false
+ },
+ {
+  "key": "scope-covers",
+  "file": "_src/items_raw/scope-covers.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: flip-up lens covers for a riflescope, shown alone",
+  "items": [
+   "Scope covers"
+  ],
+  "done": false
+ },
+ {
+  "key": "sd-cards",
+  "file": "_src/items_raw/sd-cards.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: SD memory cards",
+  "items": [
+   "Trail cam SD cards",
+   "Trail cam SD cards & batteries"
+  ],
+  "done": false
+ },
+ {
+  "key": "seat-cushion",
+  "file": "_src/items_raw/seat-cushion.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a foam hunting seat cushion",
+  "items": [
+   "Seat cushion",
+   "Stand seat cushion",
+   "Turkey vest + seat cushion"
+  ],
+  "done": false
+ },
+ {
+  "key": "sharpener",
+  "file": "_src/items_raw/sharpener.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a compact knife sharpener",
+  "items": [
+   "Knife sharpener"
+  ],
+  "done": false
+ },
+ {
+  "key": "shooting-glasses",
+  "file": "_src/items_raw/shooting-glasses.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: protective shooting glasses",
+  "items": [
+   "Shooting glasses"
+  ],
+  "done": false
+ },
+ {
+  "key": "shooting-sticks",
+  "file": "_src/items_raw/shooting-sticks.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: wooden tripod shooting sticks",
+  "items": [
+   "Bipod",
+   "Practice shooting off sticks before the trip",
+   "Shooting sticks",
+   "Shooting sticks / bipod"
+  ],
+  "done": false
+ },
+ {
+  "key": "skull-mount",
+  "file": "_src/items_raw/skull-mount.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a bleached European deer skull mount",
+  "items": [
+   "European skull mount kit"
+  ],
+  "done": false
+ },
+ {
+  "key": "sleeping-bag",
+  "file": "_src/items_raw/sleeping-bag.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a rolled mummy sleeping bag",
+  "items": [
+   "Sleeping bag"
+  ],
+  "done": false
+ },
+ {
+  "key": "sleeping-pad",
+  "file": "_src/items_raw/sleeping-pad.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a rolled insulated sleeping pad",
+  "items": [
+   "Sleeping pad"
+  ],
+  "done": false
+ },
+ {
+  "key": "sling",
+  "file": "_src/items_raw/sling.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a leather carry sling, shown alone",
+  "items": [
+   "Rifle sling"
+  ],
+  "done": false
+ },
+ {
+  "key": "soft-case",
+  "file": "_src/items_raw/soft-case.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a padded soft long-gun case, closed",
+  "items": [
+   "Soft rifle case"
+  ],
+  "done": false
+ },
+ {
+  "key": "spotting-scope",
+  "file": "_src/items_raw/spotting-scope.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a spotting scope on a short tripod",
+  "items": [
+   "Spotting scope",
+   "Spotting scope + glassing tripod"
+  ],
+  "done": false
+ },
+ {
+  "key": "stand-hooks",
+  "file": "_src/items_raw/stand-hooks.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: screw-in gear hooks and a bow holder",
+  "items": [
+   "Stand accessories"
+  ],
+  "done": false
+ },
+ {
+  "key": "sunscreen",
+  "file": "_src/items_raw/sunscreen.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: an unlabeled sunscreen tube and lip balm",
+  "items": [
+   "Sunscreen & lip balm"
+  ],
+  "done": false
+ },
+ {
+  "key": "tent",
+  "file": "_src/items_raw/tent.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a backpacking tent pitched in the forest",
+  "items": [
+   "Tent",
+   "Tent & sleeping bag"
+  ],
+  "done": false
+ },
+ {
+  "key": "trail-camera",
+  "file": "_src/items_raw/trail-camera.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a trail camera strapped to a tree",
+  "items": [
+   "Cellular trail camera",
+   "Trail camera"
+  ],
+  "done": false
+ },
+ {
+  "key": "trauma-kit",
+  "file": "_src/items_raw/trauma-kit.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a compact trauma kit with tourniquet",
+  "items": [
+   "Tourniquet / trauma kit"
+  ],
+  "done": false
+ },
+ {
+  "key": "trekking-poles",
+  "file": "_src/items_raw/trekking-poles.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: trekking poles",
+  "items": [
+   "Trekking poles"
+  ],
+  "done": false
+ },
+ {
+  "key": "tripod",
+  "file": "_src/items_raw/tripod.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a sturdy glassing tripod",
+  "items": [
+   "Glassing tripod"
+  ],
+  "done": false
+ },
+ {
+  "key": "turkey-box-call",
+  "file": "_src/items_raw/turkey-box-call.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a wooden turkey box call",
+  "items": [
+   "Box, slate & mouth calls",
+   "Turkey box call",
+   "Turkey calls"
+  ],
+  "done": false
+ },
+ {
+  "key": "turkey-decoys",
+  "file": "_src/items_raw/turkey-decoys.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a hen turkey decoy in a field",
+  "items": [
+   "Decoys",
+   "Turkey decoys"
+  ],
+  "done": false
+ },
+ {
+  "key": "turkey-mouth-calls",
+  "file": "_src/items_raw/turkey-mouth-calls.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: small diaphragm turkey mouth calls in a case",
+  "items": [
+   "Turkey mouth calls"
+  ],
+  "done": false
+ },
+ {
+  "key": "turkey-slate-call",
+  "file": "_src/items_raw/turkey-slate-call.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a round turkey slate call with a striker",
+  "items": [
+   "Turkey slate / pot call"
+  ],
+  "done": false
+ },
+ {
+  "key": "vacuum-sealer",
+  "file": "_src/items_raw/vacuum-sealer.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a countertop vacuum sealer with sealed packages",
+  "items": [
+   "Vacuum sealer"
+  ],
+  "done": false
+ },
+ {
+  "key": "waders",
+  "file": "_src/items_raw/waders.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: chest waders",
+  "items": [
+   "Waders"
+  ],
+  "done": false
+ },
+ {
+  "key": "water-bottle",
+  "file": "_src/items_raw/water-bottle.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: an insulated water bottle",
+  "items": [
+   "Water & snacks"
+  ],
+  "done": false
+ },
+ {
+  "key": "water-filter",
+  "file": "_src/items_raw/water-filter.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a backcountry water filter",
+  "items": [
+   "Water filter"
+  ],
+  "done": false
+ },
+ {
+  "key": "whistle",
+  "file": "_src/items_raw/whistle.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a safety whistle on a lanyard",
+  "items": [
+   "Dog whistle",
+   "Whistle"
+  ],
+  "done": false
+ },
+ {
+  "key": "wind-checker",
+  "file": "_src/items_raw/wind-checker.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a squeeze bottle releasing a puff of wind-checker powder",
+  "items": [
+   "Wind checker",
+   "Wind checker powder"
+  ],
+  "done": false
+ },
+ {
+  "key": "wool-socks",
+  "file": "_src/items_raw/wool-socks.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: thick wool hunting socks",
+  "items": [
+   "Wool hunting socks"
+  ],
+  "done": false
+ }
+]
