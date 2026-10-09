@@ -254,7 +254,7 @@
   "items": [
    "Dog boots"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "dog-first-aid",
@@ -263,7 +263,7 @@
   "items": [
    "Dog first-aid kit"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "dog-gps",
@@ -272,7 +272,7 @@
   "items": [
    "GPS dog tracking collar"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "dog-orange-vest",
@@ -281,7 +281,7 @@
   "items": [
    "Dog blaze orange vest"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "dog-stand",
@@ -290,7 +290,7 @@
   "items": [
    "Dog stand / blind platform"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "dog-vest",
@@ -300,7 +300,7 @@
    "Dog neoprene vest",
    "Dog vest & whistle"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "drag-rope",
@@ -309,7 +309,7 @@
   "items": [
    "Drag rope & gloves"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "dressing-gloves",
@@ -318,7 +318,7 @@
   "items": [
    "Field dressing gloves"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "duck-call",
@@ -328,7 +328,7 @@
    "Duck / goose calls",
    "Duck call"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "duck-decoys",
@@ -338,7 +338,7 @@
    "Decoys + weights",
    "Duck decoys"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "dummies",
@@ -347,7 +347,7 @@
   "items": [
    "Retriever training dummies"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "ear-protection",
@@ -356,7 +356,7 @@
   "items": [
    "Ear protection"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "elk-calls",
@@ -366,7 +366,7 @@
    "Bugle & cow calls",
    "Elk bugle and cow calls"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "emergency-bivy",
@@ -375,7 +375,7 @@
   "items": [
    "Emergency blanket / bivy"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "face-mask-gloves",
@@ -385,7 +385,7 @@
    "Face mask & gloves",
    "Hunting gloves"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "fire-starter",
@@ -394,7 +394,7 @@
   "items": [
    "Fire starter"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "first-aid",
@@ -403,7 +403,7 @@
   "items": [
    "First-aid kit"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "gaiters",
@@ -412,7 +412,7 @@
   "items": [
    "Gaiters"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "game-bags",
@@ -421,7 +421,7 @@
   "items": [
    "Game bags"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "goose-call",
@@ -430,7 +430,7 @@
   "items": [
    "Goose call"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "ground-blind",
@@ -439,7 +439,7 @@
   "items": [
    "Ground blind"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "hand-warmers",
@@ -448,7 +448,7 @@
   "items": [
    "Hand warmers"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "handheld-gps",
@@ -457,7 +457,7 @@
   "items": [
    "Handheld GPS"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "hang-on-stand",
@@ -466,7 +466,7 @@
   "items": [
    "Hang-on tree stand"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "hard-case",
