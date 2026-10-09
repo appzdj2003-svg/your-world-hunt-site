@@ -6,7 +6,7 @@
   "items": [
    "Antler mount plaque kit"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "archery-target",
@@ -15,7 +15,7 @@
   "items": [
    "Archery target"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "archery-tools",
@@ -24,7 +24,7 @@
   "items": [
    "Arrow wrench and tools"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "base-layers",
@@ -37,7 +37,7 @@
    "Warm layer for cold mornings",
    "Warm layers + rain gear"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "batteries",
@@ -46,7 +46,7 @@
   "items": [
    "AA / AAA batteries"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "binocular-harness",
@@ -55,7 +55,7 @@
   "items": [
    "Binocular harness"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "binoculars",
@@ -65,7 +65,7 @@
    "Binoculars",
    "Hunting binoculars"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "blaze-orange",
@@ -76,7 +76,7 @@
    "Blaze orange for the walk out",
    "Blaze orange vest and hat"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "blind-bag",
@@ -85,7 +85,7 @@
   "items": [
    "Blind bag"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "boots",
@@ -97,7 +97,7 @@
    "Quiet, broken-in boots",
    "Waterproof hunting boots"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "bow-case",
@@ -106,7 +106,7 @@
   "items": [
    "Bow case"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "bow-sling",
@@ -115,7 +115,7 @@
   "items": [
    "Bow sling / bow holder"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "broadheads",
@@ -125,7 +125,7 @@
    "Broadhead storage case",
    "Broadheads"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "cam-mount",
@@ -134,7 +134,7 @@
   "items": [
    "Trail cam mount / lock box"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "camera",
@@ -143,7 +143,7 @@
   "items": [
    "Camera"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "camp-chair",
@@ -152,7 +152,7 @@
   "items": [
    "Camp chair"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "camp-stove",
@@ -161,7 +161,7 @@
   "items": [
    "Camp stove"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "cape-salt",
@@ -170,7 +170,7 @@
   "items": [
    "Cape salt for taxidermy"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "card-reader",
@@ -179,7 +179,7 @@
   "items": [
    "SD card reader for phone"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "choke-tube",
@@ -188,7 +188,7 @@
   "items": [
    "Turkey choke (pattern first)"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "cleaning-kit",
@@ -198,7 +198,7 @@
    "Cleaning kit",
    "Gun cleaning kit"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "climbing-stand",
@@ -207,7 +207,7 @@
   "items": [
    "Climbing stand"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "compass",
@@ -216,7 +216,7 @@
   "items": [
    "Compass"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "cooler",
@@ -225,7 +225,7 @@
   "items": [
    "Large cooler"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "cover-scent",
@@ -234,7 +234,7 @@
   "items": [
    "Cover scents and attractants"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "deer-calls",
@@ -245,7 +245,7 @@
    "Grunt call / rattling antlers",
    "Rattling antlers / bag"
   ],
-  "done": false
+  "done": true
  },
  {
   "key": "dog-boots",
