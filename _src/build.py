@@ -523,15 +523,26 @@ def build_home():
               "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free download with optional in-app subscriptions"},
               "publisher": {"@type": "Organization", "name": "Your World Apps"}}
     site_ld = {"@context": "https://schema.org", "@type": "WebSite", "name": "Your World Hunt", "url": SITE}
-    body = (f'<h2>Your hunting command center</h2><p>Your World Hunt AI puts the map, the wind, the weather and the plan in one Android app. Mark stands, read public land, watch the pressure trend, plan a trip with Ask Hawk, and pack with built-in gear lists.</p>'
+    dtiles = "".join(f'<a class="dtile" href="shop/{d[0]}.html">{item_img(d[5][0][0], d[5][0][1], "card", "")}<span>{d[2]} {E(d[1])}</span></a>' for d in shopdata.DEPTS)
+    kits = "".join(f'<a class="dtile" href="gear/{k[0]}.html">{next((item_img(it[0], it[3], "card", "") for it in k[7] + kitdata.ESSENTIALS if len(it) > 3 and it[3] and item_img(it[0], it[3], "card", "")), "")}<span>{k[2]} {E(k[1])}</span></a>' for k in kitdata.KITS)
+    body = (DISCLOSURE.format(p=p) +
+            f'<h2>Shop by department</h2><div class="dtiles">{dtiles}</div><p><a href="shop/">Shop all departments →</a></p>'
+            f'<h2>Featured kits</h2><p class="dim">Packing lists by hunt, with a compare-stores row on every item.</p><div class="dtiles">{kits}</div>'
+            f'<h2>Season essentials</h2>{row(shopdata.SEASON, p)}'
+            f'<div class="dealband"><b>🔥 Deals &amp; compare</b><span>Store sale pages, a hunting deals feed and one-tap price comparison. We never invent prices.</span><a class="btn" href="deals.html">See deals →</a></div>'
+            f'<section class="appband" id="get-app"><img src="assets/icon-192.png" width="64" height="64" alt=""><div><p class="stencil" style="margin:0;color:var(--amber)">Get the app free</p>'
+            f'<h2 style="margin:.2em 0;color:var(--text)">Your World Hunt for Android</h2><p>The hunting app behind this shop: maps, public land, wind, pressure, moon and feeding times, a camera rangefinder estimate, and gear checklists in one place.</p>'
+            f'<p class="dim"><b>Premium: 7-day free trial</b> for eligible new subscribers, then billed by Google Play. Cancel any time.</p>'
+            f'<div class="btns">{play_btn()}<a class="btn" href="how-to-use.html">How to use the app</a></div></div></section>'
+            f'<h2>Field School guides</h2><div class="grid">{gcards}</div>'
+            f'<h2>Your hunting command center</h2><p>Your World Hunt AI puts the map, the wind, the weather and the plan in one Android app. Mark stands, read public land, watch the pressure trend, plan a trip with Ask Hawk, and pack with built-in gear lists.</p>'
             f'<div class="grid">{feats}</div>{shots(p)}<div class="btns">{play_btn()}<a class="btn" href="features.html">All features</a></div>'
             f'<h2>New to the app?</h2><div class="grid">{pcard("how-to-use.html", "north", "hhow", "How to use Your World Hunt", "Quick start, every tool step by step, and Free vs Premium.", "OPEN THE GUIDE →", tag="App guide", emoji="🧭", big=True)}</div>'
             f'<h2>Plan like an expedition</h2><div class="panel"><p>Every trip in <b>Plan a Hunt</b> earns badges as it comes together:</p><div class="badges">{badges}</div><p class="dim" style="margin:0">🏆 Expedition Ready when all six are lit.</p></div>'
-            f'<h2>Field School guides</h2><div class="grid">{gcards}</div>'
-            f'<h2>Gear Shop</h2>{DISCLOSURE.format(p=p)}{search_form(p)}<div class="grid tight">{hunts}</div><p><a href="shop/">Shop all departments →</a> · <a href="deals.html">Deals &amp; compare →</a></p>')
-    page("index.html", "Your World Hunt: Hunting Maps, Public Land, Wind & Trip Planner", "Your World Hunt AI for Android: hunting maps with public land, wind, pressure, moon and feeding times, a camera rangefinder, Plan a Hunt with Ask Hawk, and gear lists. Free on Google Play.",
-         body, "whitetail", "Your World Hunt", "Android · Free on Google Play", "Maps, public land, wind and weather, moon and feeding times, and a trip planner that thinks like an outfitter.",
-         jsonld=[app_ld, site_ld], prio="1.0", hero_extra=f'<div class="btns">{play_btn()}<a class="btn" href="how-to-use.html">How to use the app</a><a class="btn" href="guides/">Read the guides</a></div>')
+            f'<h2>Gear lists by hunt</h2><div class="grid tight">{hunts}</div>')
+    page("index.html", "Your World Hunt: Hunting Gear Shop, Maps, Public Land & Wind App", "Shop hunting gear by department and compare Amazon, Bass Pro, Cabela's and more in one tap. Plus Your World Hunt AI for Android: hunting maps, public land, wind, moon and feeding times. Free on Google Play.",
+         body, "whitetail", "The Hunter's Gear Shop", "Your World Hunt · Outfitter's Counter", "Every department a hunter needs, compared across the big stores in one tap. From the makers of the Your World Hunt app.",
+         jsonld=[app_ld, site_ld], prio="1.0", hero_extra=search_form(p) + f'<div class="btns"><a class="btn primary" href="shop/">Shop all departments</a><a class="btn" href="deals.html">Deals</a><a class="btn" href="#get-app">Get the app free</a></div>')
 
 def build_features():
     p = ""
