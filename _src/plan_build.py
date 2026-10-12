@@ -44,10 +44,10 @@ def build(page, PAGES, DISCLOSURE, play_btn):
         return f'<section class="wz-step" data-step="{i}" aria-labelledby="h{i}" hidden><p class="wz-k">Step {i+1} of 6</p><h2 id="h{i}" tabindex="-1">{title}</h2><p class="wz-sub">{sub}</p>{inner}</section>'
     hawk = ('<section class="hawk" id="hawk" aria-labelledby="hawkh"><div class="hawk-head"><span class="hawk-ico" aria-hidden="true">🦅</span><div><p class="wz-k">Ask Hawk</p>'
      '<h2 id="hawkh">Hawk Quick Plan</h2><p class="dim">Tell Hawk your trip in one sentence and it fills in the planner. Simple rule-based reading in your browser, not a full AI, so check what it understood.</p></div></div>'
-     '<form id="hawkform" class="hawk-in" onsubmit="return false"><label class="sr" for="hawkq">Describe your trip</label><textarea id="hawkq" rows="2" maxlength="300" placeholder="Whitetail bow hunt near Andrews, SC, Nov 8-10, 3 of us, camping"></textarea>'
+     '<form id="hawkform" class="hawk-in" onsubmit="return false"><label class="sr" for="hawkq">Describe your trip</label><textarea id="hawkq" rows="2" maxlength="300" placeholder="Mule deer bow hunt near Gunnison, CO, Sep 8-12, 3 of us, camping"></textarea>'
      '<div class="hawk-btns"><button type="button" class="round mic" id="hawkmic" hidden aria-label="Speak your trip">🎙️</button><button type="button" class="btn primary" id="hawkgo">Plan it →</button></div></form>'
      '<div class="chips hawk-ex" aria-label="Examples">' + "".join(f'<button type="button" class="chipbtn" data-ex="{x}">{x}</button>' for x in [
-       "Whitetail bow hunt near Andrews, SC, Nov 8-10, 3 of us, camping", "Duck hunt this weekend near Stuttgart, AR with my son",
+       "Mule deer bow hunt near Gunnison, CO, Sep 8-12, 3 of us, camping", "Duck hunt this weekend near Stuttgart, AR with my son",
        "Elk rifle hunt in Bozeman, Montana Oct 20-25, me and 2 buddies, cabin, $1500", "Turkey hunt next Friday near Macon, GA, solo, shotgun"]) + '</div>'
      '<div id="hawkreview" class="hawk-review" hidden aria-live="polite"></div></section>')
     body = (hawk +
