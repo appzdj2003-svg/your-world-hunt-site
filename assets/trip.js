@@ -1,28 +1,25 @@
-/* /trip landing: open the trip in the Android app, else show a summary + Get the app. */
+/* /trip landing: open the trip in the Android app, else show a summary card + Get the app. */
 (function () {
   const $ = id => document.getElementById(id), T = window.YWTrip;
-  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const nice = s => new Date(Date.parse(s + "T12:00:00Z")).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
   document.addEventListener("DOMContentLoaded", async () => {
-    const tok = location.hash.slice(1);
-    $("play").href = T.PLAY;
-    if (!tok) { $("sum").innerHTML = '<p>No trip in this link. <a href="plan.html">Plan an expedition →</a></p>'; return; }
+    const tok = location.hash.slice(1); $("play").href = T.PLAY;
+    if (!tok) { $("sum").innerHTML = '<div class="empty">🧭 No trip in this link. <a href="plan.html">Plan a trip →</a></div>'; return; }
     let t;
-    try { t = await T.decode(tok); } catch (e) { $("sum").innerHTML = '<p>This trip link looks incomplete or damaged. Ask for the link again, or <a href="plan.html">plan a new one</a>.</p>'; return; }
-    const intent = T.intentUrl(tok), android = /Android/i.test(navigator.userAgent);
-    $("openapp").href = android ? intent : "ywhunt://trip#" + tok;
-    $("openwrap").hidden = !android;
-    if (android) setTimeout(() => { location.href = intent; }, 400);
-    const B = window.YW_BUDGET || {}, L = window.YW_LODGING || {}, M = window.YW_METHODS || {}, TY = window.YW_TYPES || {};
+    try { t = await T.decode(tok); } catch (e) { $("sum").innerHTML = '<div class="empty">⚠️ This trip link looks incomplete or damaged. Ask for the link again, or <a href="plan.html">plan a new trip</a>.</div>'; return; }
+    const android = /Android/i.test(navigator.userAgent), intent = T.intentUrl(tok);
+    if (android) { $("openapp").href = intent; $("openapp").hidden = false; setTimeout(() => { location.href = intent; }, 400); }
+    const B = window.YW_BUDGET || {}, L = window.YW_LODGING || {}, M = window.YW_METHODS || {}, TY = window.YW_TYPES || {}, x = TY[t.t] || { emoji: "🧭", title: t.t };
     const end = new Date(Date.parse(t.sd + "T12:00:00Z") + (t.d - 1) * 864e5).toISOString().slice(0, 10);
-    const row = (k, v) => v ? `<tr><th>${k}</th><td>${v}</td></tr>` : "";
-    const total = (t.bu || []).reduce((a, l) => a + l[2], 0);
-    $("sum").innerHTML = `<h2>${esc(t.n || "Expedition")}</h2><div class="tblwrap"><table><tbody>` +
-      row("Type", TY[t.t] ? esc(TY[t.t].emoji + " " + TY[t.t].title) : esc(t.t)) +
-      row("Where", esc(t.loc || "") + (t.la != null ? ` <span class=dim>(${t.la}, ${t.lo})</span>` : "")) +
-      row("Dates", `${t.sd} → ${end} (${t.d} day${t.d > 1 ? "s" : ""})`) + row("Species", esc((t.sp || []).join(", "))) +
-      row("Method", esc(M[t.m] || "")) + row("Crew", esc((t.cr || []).join(", "))) + row("Lodging", esc(L[t.lt] || "")) +
-      row("Budget (your estimates)", (t.bu || []).map(l => `${esc(B[l[0]] || l[1])}: $${l[2]}`).join("<br>") + (total ? `<br><b>Total: $${Math.round(total * 100) / 100}</b>` : "")) +
-      row("Notes", esc(t.no || "").replace(/\n/g, "<br>")) + `</tbody></table></div>` +
-      (t.g && t.g.length ? `<h3>Gear checklist</h3><ul class="gearsum">${t.g.map(g => `<li>${g[2] ? "☑" : "☐"} ${esc(g[0])}</li>`).join("")}</ul>` : "");
+    const fact = (ic, k, v) => v ? `<div class="fact"><span class="ic">${ic}</span><span><small>${k}</small>${v}</span></div>` : "";
+    const total = (t.bu || []).reduce((a, l) => a + l[2], 0), packed = (t.g || []).filter(g => g[2]).length;
+    $("sum").innerHTML = `<div class="tc-head"><span class="tc-emoji">${x.emoji}</span><div><p class="wz-k">${esc(x.title)}</p><h2>${esc(t.n || "Expedition")}</h2>
+      <p class="dim">${nice(t.sd)} → ${nice(end)} · ${t.d} day${t.d > 1 ? "s" : ""}</p></div></div><div class="facts">` +
+      fact("📍", "Where", esc(t.loc || "") + (t.la != null ? `<br><span class="dim">${t.la}, ${t.lo}</span>` : "")) + fact("🦌", "Species", esc((t.sp || []).join(", "))) +
+      fact("🎯", "Method", esc(M[t.m] || "")) + fact("👥", "Crew", (t.cr || []).length ? esc(["You"].concat(t.cr).join(", ")) : "") + fact("🏕️", "Lodging", esc(L[t.lt] || "")) +
+      fact("💵", "Budget (their estimates)", total ? `$${(Math.round(total * 100) / 100).toLocaleString()}<br><span class="dim">${(t.bu || []).map(l => esc(B[l[0]] || l[1]) + " $" + l[2]).join(" · ")}</span>` : "") + `</div>` +
+      (t.no ? `<div class="tc-notes"><small>Notes</small><p>${esc(t.no).replace(/\n/g, "<br>")}</p></div>` : "") +
+      (t.g && t.g.length ? `<details class="tc-gear"><summary>🎒 Gear checklist · ${packed}/${t.g.length} packed</summary><ul>${t.g.map(g => `<li class="${g[2] ? "on" : ""}">${g[2] ? "✓" : "○"} ${esc(g[0])}</li>`).join("")}</ul></details>` : "");
   });
 })();

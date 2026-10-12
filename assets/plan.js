@@ -1,133 +1,221 @@
-/* Plan an Expedition (web). Mirrors the app's Plan a Hunt Trip model; see tripcodec.js. */
+/* Trip Planner wizard (web). Data model = app's Plan a Hunt Trip; link format v1 via tripcodec.js. Vanilla JS. */
 (function () {
-  const $ = id => document.getElementById(id), T = window.YWTrip, KITS = window.YW_KITS || {}, TYPEINFO = window.YW_TYPES || {};
-  const LS = "ywhunt.webTrip.v1";
-  let geo = null, gear = [];
-  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const $ = id => document.getElementById(id), T = window.YWTrip, KITS = window.YW_KITS || {}, TY = window.YW_TYPES || {};
+  const MET = window.YW_METHODS || {}, LOD = window.YW_LODGING || {}, BUD = window.YW_BUDGET || {};
+  const LS = "ywhunt.webTrip.v1", STEPS = 6, DAY = 864e5;
+  const MICON = { RIFLE: "🎯", SHOTGUN: "💥", BOW: "🏹", CROSSBOW: "🏹", MUZZLELOADER: "🔥", OTHER: "🧰" };
+  const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const amz = q => "https://www.amazon.com/s?k=" + encodeURIComponent(q) + "&s=review-rank&tag=yourworldapps-20";
+  const iso = ms => new Date(ms).toISOString().slice(0, 10), dms = s => Date.parse(s + "T12:00:00Z");
+  const nice = s => new Date(dms(s)).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
+  const today = () => { const d = new Date(); return iso(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate(), 12)); };
 
-  function fillSelect(el, list, labels) { el.innerHTML = list.map(v => `<option value="${v}">${esc(labels[v] || v)}</option>`).join(""); }
-  function speciesChips() {
-    const info = TYPEINFO[$("t").value] || { sp: [] }, cur = new Set(readSpecies());
-    $("spchips").innerHTML = info.sp.map(s => `<label class="chip"><input type="checkbox" value="${esc(s)}"${cur.has(s) ? " checked" : ""}> ${esc(s)}</label>`).join("");
+  let st = { v: 1, src: "web", n: "", t: "LOCAL", sp: [], loc: "", la: null, lo: null, sd: iso(dms(today()) + 7 * DAY), d: 3, m: "", cr: [], lt: "", bu: {}, g: [], no: "" };
+  let step = 0, scored = null, scoreKey = "";
+
+  /* ---------- persistence ---------- */
+  let saveT;
+  function save() { clearTimeout(saveT); saveT = setTimeout(() => { try { localStorage.setItem(LS, JSON.stringify(Object.assign({ step }, st))); flash(); } catch (e) {} }, 250); renderSummary(); }
+  function flash() { const s = $("saved"); s.textContent = "✓ Autosaved in this browser"; s.classList.add("on"); setTimeout(() => s.classList.remove("on"), 1200); }
+  function load() {
+    try { const o = JSON.parse(localStorage.getItem(LS) || "null"); if (!o || o.v !== 1) return;
+      if (Array.isArray(o.bu)) { const m = {}; o.bu.forEach(l => m[l[0]] = l[2]); o.bu = m; }   // older saves
+      if (o.g && o.g.length && o.g[0].length < 5) { const q = new Map((KITS[o.t] || []).map(k => [k[0], k[2]])); o.g = o.g.map(g => [g[0], g[1], g[2], q.has(g[0]) ? 0 : 1, q.get(g[0]) || null]); }
+      step = Math.min(STEPS - 1, +o.step || 0); delete o.step; st = Object.assign(st, o);
+    } catch (e) {}
   }
-  function readSpecies() {
-    const a = [...document.querySelectorAll("#spchips input:checked")].map(i => i.value);
-    $("spx").value.split(",").map(s => s.trim()).filter(Boolean).forEach(s => a.includes(s) || a.push(s));
-    return a;
-  }
-  function loadKit(keepChecked) {
-    const kit = KITS[$("t").value] || KITS.CUSTOM || [], was = new Map(gear.map(g => [g[0], g[2]]));
-    const custom = gear.filter(g => g[3]);
-    gear = kit.map(([label, cat, q]) => [label, cat, keepChecked && was.get(label) ? 1 : 0, 0, q]).concat(custom);
-    renderGear();
-  }
-  function renderGear() {
-    $("gearlist").innerHTML = gear.map((g, i) => `<li><label><input type="checkbox" data-i="${i}"${g[2] ? " checked" : ""}> <b>${esc(g[0])}</b> <span class="dim">${esc(g[1])}</span></label>` +
-      (g[4] ? ` <a class="amzlink" href="${esc(amz(g[4]))}" target="_blank" rel="sponsored nofollow noopener">Amazon →</a>` : "") + `</li>`).join("");
-  }
-  function budgetRows(lines) {
-    $("budget").innerHTML = T.BUDGET.map(c => { const l = (lines || []).find(x => x[0] === c);
-      return `<label>${esc(window.YW_BUDGET[c])}<input type="number" min="0" step="1" inputmode="decimal" data-c="${c}" value="${l ? l[2] : ""}" placeholder="0"></label>`; }).join("");
-  }
+  /** Same v1 schema as before (see docs/web-trip-link.md). */
   function collect() {
-    const bu = [...document.querySelectorAll("#budget input")].filter(i => +i.value > 0).map(i => [i.dataset.c, window.YW_BUDGET[i.dataset.c], Math.round(+i.value * 100) / 100]);
-    const t = { v: 1, src: "web", n: $("n").value.trim() || ((TYPEINFO[$("t").value] || {}).title || "Expedition"), t: $("t").value, sp: readSpecies(),
-      loc: $("loc").value.trim(), sd: $("sd").value, d: +$("d").value || 1, m: $("m").value || null,
-      cr: $("cr").value.split(",").map(s => s.trim()).filter(Boolean).slice(0, 20), lt: $("lt").value || null, bu,
-      g: gear.map(g => [g[0], g[1], g[2] ? 1 : 0]), no: $("no").value.trim().slice(0, 1500) };
-    if (geo && geo.label === t.loc) { t.la = +geo.lat.toFixed(5); t.lo = +geo.lon.toFixed(5); }
+    const t = { v: 1, src: "web", n: st.n.trim() || ((TY[st.t] || {}).title || "Expedition"), t: st.t, sp: st.sp, loc: st.loc.trim(), sd: st.sd, d: st.d, m: st.m || null,
+      cr: st.cr.map(s => s.trim()).filter(Boolean).slice(0, 20), lt: st.lt || null,
+      bu: T.BUDGET.filter(c => +st.bu[c] > 0).map(c => [c, BUD[c], Math.round(+st.bu[c] * 100) / 100]),
+      g: st.g.map(g => [g[0], g[1], g[2] ? 1 : 0]), no: st.no.trim().slice(0, 1500) };
+    if (st.la != null) { t.la = +(+st.la).toFixed(5); t.lo = +(+st.lo).toFixed(5); }
     return t;
   }
-  function apply(t) {
-    $("n").value = t.n || ""; $("t").value = t.t; speciesChips();
-    const known = new Set((TYPEINFO[t.t] || { sp: [] }).sp);
-    document.querySelectorAll("#spchips input").forEach(i => i.checked = (t.sp || []).includes(i.value));
-    $("spx").value = (t.sp || []).filter(s => !known.has(s)).join(", ");
-    $("loc").value = t.loc || ""; geo = t.la != null ? { label: t.loc, lat: t.la, lon: t.lo } : null; showGeo();
-    $("sd").value = t.sd; $("d").value = t.d; $("m").value = t.m || ""; $("cr").value = (t.cr || []).join(", "); $("lt").value = t.lt || "";
-    budgetRows(t.bu); $("no").value = t.no || "";
-    const kit = KITS[t.t] || [], q = new Map(kit.map(k => [k[0], k[2]]));
-    gear = (t.g || []).map(g => [g[0], g[1], g[2], q.has(g[0]) ? 0 : 1, q.get(g[0])]); if (!gear.length) loadKit(false); else renderGear();
-  }
-  function showGeo() { $("geoinfo").textContent = geo ? `📍 ${geo.label} (${geo.lat.toFixed(4)}, ${geo.lon.toFixed(4)})` : "No coordinates yet. Search a place to score best days."; }
-  async function search() {
-    const q = $("loc").value.trim(); if (q.length < 2) return;
-    $("georesults").innerHTML = "<li class=dim>Searching…</li>";
-    try {
-      const r = await fetch("https://geocoding-api.open-meteo.com/v1/search?count=6&language=en&format=json&name=" + encodeURIComponent(q)).then(r => r.json());
-      const res = r.results || [];
-      $("georesults").innerHTML = res.length ? res.map((x, i) => `<li><button type="button" class="btn" data-i="${i}">${esc([x.name, x.admin1, x.country].filter(Boolean).join(", "))}</button></li>`).join("") : "<li class=dim>No matches. Try a nearby town.</li>";
-      $("georesults").onclick = e => { const b = e.target.closest("button"); if (!b) return; const x = res[+b.dataset.i];
-        geo = { label: [x.name, x.admin1, x.country].filter(Boolean).join(", "), lat: x.latitude, lon: x.longitude }; $("loc").value = geo.label; $("georesults").innerHTML = ""; showGeo(); save(); };
-    } catch (e) { $("georesults").innerHTML = "<li class=dim>Place search is unavailable right now. You can still type a place name.</li>"; }
+
+  /* ---------- wizard ---------- */
+  function go(i, focus) {
+    step = Math.max(0, Math.min(STEPS - 1, i));
+    document.querySelectorAll(".wz-step").forEach(s => { const on = +s.dataset.step === step; s.hidden = !on; s.classList.toggle("in", on); });
+    document.querySelectorAll(".wz-dot").forEach((b, j) => { b.classList.toggle("cur", j === step); b.classList.toggle("done", j < step); b.setAttribute("aria-current", j === step ? "step" : "false"); });
+    $("wzfill").style.width = ((step + 1) / STEPS * 100) + "%";
+    $("back").disabled = step === 0; $("next").hidden = step === STEPS - 1;
+    if (step === 5) bestDays();
+    if (focus) { $("h" + step).focus({ preventScroll: true }); $("wz").scrollIntoView({ behavior: "smooth", block: "start" }); }
+    save();
   }
 
-  /* ---- Best days (estimate). Same point scale as the app's TripLogic; the app also adds solunar feeding-window alignment, which the web does not. ---- */
-  function moon(dateStr) {
-    const ms = Date.parse(dateStr + "T12:00:00Z"), syn = 29.530588853, age = (((ms - Date.UTC(2000, 0, 6, 18, 14)) / 864e5) % syn + syn) % syn;
-    const ph = age / syn, illum = Math.round((1 - Math.cos(2 * Math.PI * ph)) / 2 * 100), near = Math.min(ph, Math.abs(ph - 0.5), 1 - ph);
+  /* ---------- step 1: where ---------- */
+  function renderGeo() {
+    $("geoinfo").innerHTML = st.la != null
+      ? `<span class="big" aria-hidden="true">📍</span><div><b>${esc(st.loc || "My location")}</b><br><span class="dim">${(+st.la).toFixed(4)}, ${(+st.lo).toFixed(4)} · forecast ready</span></div><button type="button" class="btn link" id="clrgeo">Change</button>`
+      : st.loc ? `<span class="big" aria-hidden="true">✏️</span><div><b>${esc(st.loc)}</b><br><span class="dim">No coordinates, so best days will use the moon only. Search to add the forecast.</span></div>`
+      : `<span class="big" aria-hidden="true">🗺️</span><div class="dim">No place yet. You can skip this step and add it later.</div>`;
+    const c = $("clrgeo"); if (c) c.onclick = () => { st.la = st.lo = null; st.loc = ""; $("loc").value = ""; renderGeo(); save(); $("loc").focus(); };
+  }
+  async function search() {
+    const q = $("loc").value.trim(); if (q.length < 2) { $("georesults").innerHTML = '<p class="dim">Type at least 2 letters.</p>'; return; }
+    $("georesults").innerHTML = '<div class="skel"></div><div class="skel"></div>';
+    try {
+      const r = await fetch("https://geocoding-api.open-meteo.com/v1/search?count=6&language=en&format=json&name=" + encodeURIComponent(q)).then(r => { if (!r.ok) throw 0; return r.json(); });
+      const res = r.results || [];
+      $("georesults").innerHTML = res.length ? res.map((x, i) => `<button type="button" class="result" data-i="${i}"><b>${esc(x.name)}</b><span class="dim">${esc([x.admin1, x.country].filter(Boolean).join(", "))}</span></button>`).join("")
+        : '<p class="empty">🤷 No matches. Try a nearby town or a simpler name.</p>';
+      $("georesults").onclick = e => { const b = e.target.closest(".result"); if (!b) return; const x = res[+b.dataset.i];
+        st.loc = [x.name, x.admin1, x.country].filter(Boolean).join(", "); st.la = x.latitude; st.lo = x.longitude; $("loc").value = st.loc; $("georesults").innerHTML = ""; renderGeo(); save(); };
+    } catch (e) { $("georesults").innerHTML = '<p class="empty">⚠️ Place search isn\'t reachable right now. Your typed name is kept; try again later for the forecast.</p>'; }
+  }
+  function myLoc() {
+    if (!navigator.geolocation) { $("georesults").innerHTML = '<p class="empty">Your browser can\'t share location. Search instead.</p>'; return; }
+    $("georesults").innerHTML = '<p class="dim">📡 Finding you…</p>';
+    navigator.geolocation.getCurrentPosition(p => { st.la = p.coords.latitude; st.lo = p.coords.longitude; if (!$("loc").value.trim()) st.loc = "My location"; else st.loc = $("loc").value.trim();
+      $("georesults").innerHTML = ""; renderGeo(); save(); },
+      () => { $("georesults").innerHTML = '<p class="empty">Location was blocked or unavailable. Search for a place instead.</p>'; }, { timeout: 10000 });
+  }
+
+  /* ---------- step 2: when ---------- */
+  function renderDates() {
+    $("sd").value = st.sd; $("ed").value = iso(dms(st.sd) + (st.d - 1) * DAY); $("ed").min = st.sd; $("ed").max = iso(dms(st.sd) + 29 * DAY);
+    $("dayscount").textContent = `🗓️ ${st.d} day${st.d > 1 ? "s" : ""} · ${nice(st.sd)} → ${nice($("ed").value)}`;
+  }
+  function setRange(sd, ed) { const d = Math.round((dms(ed) - dms(sd)) / DAY) + 1; st.sd = sd; st.d = Math.max(1, Math.min(30, d)); scored = null; renderDates(); save(); }
+
+  /* ---------- step 3: hunt ---------- */
+  function renderHunt() {
+    $("types").innerHTML = T.TYPES.map(k => { const x = TY[k] || { title: k, emoji: "🧭", tag: "" };
+      return `<button type="button" role="radio" aria-checked="${st.t === k}" class="tcard${st.t === k ? " on" : ""}" data-t="${k}"><span class="ico">${x.emoji}</span><b>${esc(x.title)}</b><small>${esc(x.tag)}</small></button>`; }).join("");
+    const sugg = (TY[st.t] || { sp: [] }).sp, all = sugg.concat(st.sp.filter(s => !sugg.includes(s)));
+    $("spchips").innerHTML = all.map(s => `<button type="button" class="chipbtn${st.sp.includes(s) ? " on" : ""}" aria-pressed="${st.sp.includes(s)}" data-s="${esc(s)}">${st.sp.includes(s) ? "✓ " : ""}${esc(s)}</button>`).join("");
+    $("methods").innerHTML = T.METHODS.map(k => `<button type="button" role="radio" aria-checked="${st.m === k}" class="tcard${st.m === k ? " on" : ""}" data-m="${k}"><span class="ico">${MICON[k]}</span><b>${esc(MET[k])}</b></button>`).join("");
+  }
+  function setType(k) {
+    st.t = k; const was = new Map(st.g.map(g => [g[0], g[2]])), custom = st.g.filter(g => g[3]);
+    st.g = (KITS[k] || []).map(([l, c, q]) => [l, c, was.get(l) ? 1 : 0, 0, q]).concat(custom);
+    renderHunt(); renderGear(); save();
+  }
+
+  /* ---------- step 4: crew & stay ---------- */
+  function renderCrew() {
+    $("party").textContent = 1 + st.cr.length; $("minus").disabled = !st.cr.length; $("plus").disabled = st.cr.length >= 20;
+    $("crewnames").innerHTML = st.cr.map((n, i) => `<label class="lbl">Hunter ${i + 2}<input data-c="${i}" value="${esc(n)}" maxlength="40" placeholder="Name"></label>`).join("");
+    $("lodging").innerHTML = T.LODGING.map(k => `<button type="button" class="chipbtn${st.lt === k ? " on" : ""}" aria-pressed="${st.lt === k}" data-l="${k}">${esc(LOD[k])}</button>`).join("");
+    $("budget").innerHTML = T.BUDGET.map(c => `<label class="lbl">${esc(BUD[c])}<span class="money"><span>$</span><input type="number" min="0" step="1" inputmode="decimal" data-b="${c}" value="${st.bu[c] || ""}" placeholder="0"></span></label>`).join("");
+    budTotal();
+  }
+  function budTotal() { const t = T.BUDGET.reduce((a, c) => a + (+st.bu[c] || 0), 0), p = 1 + st.cr.length;
+    $("budtotal").textContent = t ? `Total $${t.toLocaleString()} · about $${Math.round(t / p).toLocaleString()} per hunter` : "Leave blank to skip."; }
+
+  /* ---------- step 5: gear ---------- */
+  function renderGear() {
+    const cats = [...new Set(st.g.map(g => g[1]))];
+    $("gearlist").innerHTML = cats.map(c => `<div class="kitcard"><h3>${esc(c)}</h3><ul>` + st.g.map((g, i) => g[1] !== c ? "" :
+      `<li class="${g[2] ? "on" : ""}"><label><input type="checkbox" data-i="${i}"${g[2] ? " checked" : ""}><span>${esc(g[0])}</span></label>` +
+      (g[4] ? `<a class="amz" href="${esc(amz(g[4]))}" target="_blank" rel="sponsored nofollow noopener" aria-label="Shop ${esc(g[0])} on Amazon">Amazon ↗</a>` : "") +
+      (g[3] ? `<button type="button" class="x" data-del="${i}" aria-label="Remove ${esc(g[0])}">✕</button>` : "") + `</li>`).join("") + `</ul></div>`).join("") || '<p class="empty">No gear yet.</p>';
+    const n = st.g.filter(g => g[2]).length; $("packed").innerHTML = `🎒 ${n} of ${st.g.length} packed <span class="meter"><span style="width:${st.g.length ? n / st.g.length * 100 : 0}%"></span></span>`;
+  }
+
+  /* ---------- step 6: best days (estimate; same point scale as app TripLogic, without solunar) ---------- */
+  function moon(ds) {
+    const syn = 29.530588853, age = (((dms(ds) - Date.UTC(2000, 0, 6, 18, 14)) / DAY) % syn + syn) % syn, ph = age / syn;
+    const illum = Math.round((1 - Math.cos(2 * Math.PI * ph)) / 2 * 100), near = Math.min(ph, Math.abs(ph - 0.5), 1 - ph);
     const fav = (near <= 0.08 || illum <= 12 || illum >= 88) ? "Good" : (near <= 0.16 || illum <= 28 || illum >= 72) ? "Fair" : "Poor";
+    const ic = ["🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘"][Math.round(ph * 8) % 8];
     const name = ph < 0.03 || ph > 0.97 ? "New moon" : ph < 0.22 ? "Waxing crescent" : ph < 0.28 ? "First quarter" : ph < 0.47 ? "Waxing gibbous" : ph < 0.53 ? "Full moon" : ph < 0.72 ? "Waning gibbous" : ph < 0.78 ? "Last quarter" : "Waning crescent";
-    return { fav, illum, name, pts: { Good: 40, Fair: 26, Poor: 12 }[fav] };
+    return { fav, illum, name, ic, pts: { Good: 40, Fair: 26, Poor: 12 }[fav] };
   }
   const windPts = k => k < 5 ? 9 : k <= 20 ? 15 : k <= 32 ? 9 : 2, presPts = t => ({ RISING: 15, STEADY: 10, FALLING: 7 }[t]), rainPts = p => p <= 40 ? 10 : p <= 70 ? 5 : 0;
   const stars = s => s >= 85 ? 5 : s >= 70 ? 4 : s >= 50 ? 3 : s >= 30 ? 2 : 1;
+  const wx = c => c == null ? "" : c === 0 ? "☀️" : c <= 2 ? "🌤️" : c === 3 ? "☁️" : c <= 48 ? "🌫️" : c <= 67 ? "🌧️" : c <= 77 ? "❄️" : c <= 82 ? "🌦️" : c <= 86 ? "🌨️" : "⛈️";
   async function bestDays() {
-    const t = collect(), out = $("days");
-    if (!t.sd) { out.innerHTML = "<p class=dim>Pick a start date first.</p>"; return; }
-    let fc = {};
-    if (geo) try {
-      const u = `https://api.open-meteo.com/v1/forecast?latitude=${geo.lat}&longitude=${geo.lon}&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&hourly=pressure_msl&timezone=auto&forecast_days=16`;
-      const r = await fetch(u).then(r => r.json());
-      (r.daily.time || []).forEach((d, i) => fc[d] = { tmax: r.daily.temperature_2m_max[i], tmin: r.daily.temperature_2m_min[i], rain: r.daily.precipitation_probability_max[i], wind: r.daily.wind_speed_10m_max[i] });
+    const key = [st.sd, st.d, st.la, st.lo].join("|"); if (scored && key === scoreKey) return;
+    const out = $("days"); out.innerHTML = Array.from({ length: Math.min(st.d, 4) }, () => '<div class="day skel tall"></div>').join("");
+    let fc = {}, err = false;
+    if (st.la != null) try {
+      const u = `https://api.open-meteo.com/v1/forecast?latitude=${st.la}&longitude=${st.lo}&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max&hourly=pressure_msl&timezone=auto&forecast_days=16`;
+      const r = await fetch(u).then(r => { if (!r.ok) throw 0; return r.json(); });
+      r.daily.time.forEach((d, i) => fc[d] = { code: r.daily.weather_code[i], tmax: r.daily.temperature_2m_max[i], tmin: r.daily.temperature_2m_min[i], rain: r.daily.precipitation_probability_max[i], wind: r.daily.wind_speed_10m_max[i] });
       const ht = r.hourly.time, hp = r.hourly.pressure_msl;
-      Object.keys(fc).forEach(d => { const a = hp[ht.indexOf(d + "T06:00")], b = hp[ht.indexOf(d + "T18:00")];
-        if (a != null && b != null) fc[d].trend = b - a >= 1 ? "RISING" : b - a <= -1 ? "FALLING" : "STEADY"; });
-    } catch (e) { fc = {}; }
-    const rows = [];
-    for (let i = 0; i < t.d; i++) {
-      const dt = new Date(Date.parse(t.sd + "T12:00:00Z") + i * 864e5).toISOString().slice(0, 10), mo = moon(dt), f = fc[dt];
-      let pts = mo.pts, max = 40; const why = [`${mo.name} (${mo.illum}% lit), moon rating ${mo.fav}`];
+      Object.keys(fc).forEach(d => { const a = hp[ht.indexOf(d + "T06:00")], b = hp[ht.indexOf(d + "T18:00")]; if (a != null && b != null) fc[d].trend = b - a >= 1 ? "RISING" : b - a <= -1 ? "FALLING" : "STEADY"; });
+    } catch (e) { err = true; }
+    const days = [];
+    for (let i = 0; i < st.d; i++) {
+      const ds = iso(dms(st.sd) + i * DAY), mo = moon(ds), f = fc[ds]; let pts = mo.pts, max = 40; const why = [`${mo.name}, ${mo.illum}% lit (moon ${mo.fav.toLowerCase()})`];
       if (f) {
-        why.push(`Temps ${Math.round(f.tmin * 9 / 5 + 32)}–${Math.round(f.tmax * 9 / 5 + 32)}°F`);
-        if (f.wind != null) { pts += windPts(f.wind); max += 15; why.push(`Max wind ${Math.round(f.wind * 0.621)} mph`); }
-        if (f.trend) { pts += presPts(f.trend); max += 15; why.push(`Pressure ${f.trend.toLowerCase()} through the day`); }
-        if (f.rain != null) { pts += rainPts(f.rain); max += 10; why.push(`Rain chance ${f.rain}%`); }
-      } else why.push(geo ? "Beyond the 16-day forecast: moon only" : "No place picked: moon only");
-      const s = Math.round(pts * 100 / max);
-      rows.push(`<tr><td>Day ${i + 1}<br><span class=dim>${dt}</span></td><td class="stars">${"★".repeat(stars(s))}${"☆".repeat(5 - stars(s))}</td><td>${why.map(esc).join(" · ")}</td></tr>`);
+        if (f.wind != null) { pts += windPts(f.wind); max += 15; why.push(`Wind up to ${Math.round(f.wind * 0.621)} mph`); }
+        if (f.trend) { pts += presPts(f.trend); max += 15; why.push(`Pressure ${f.trend.toLowerCase()}`); }
+        if (f.rain != null) { pts += rainPts(f.rain); max += 10; why.push(`${f.rain}% rain chance`); }
+      }
+      const s = Math.round(pts * 100 / max); days.push({ ds, i, s, mo, f, why, full: !!f });
     }
-    out.innerHTML = `<div class="tblwrap"><table><thead><tr><th>Day</th><th>Estimate</th><th>Why</th></tr></thead><tbody>${rows.join("")}</tbody></table></div><p class="dim">Estimate only, from the Open-Meteo forecast (up to 16 days out) and moon phase. The app adds solunar feeding windows, so its stars can differ. Always check the latest forecast before you go.</p>`;
+    const pool = days.some(d => d.full) ? days.filter(d => d.full) : days, best = pool.reduce((a, b) => b.s > a.s ? b : a, pool[0]);
+    scored = days; scoreKey = key; st._best = best ? best.ds : null;
+    const note = st.la == null ? '<p class="empty">🗺️ No place picked, so this uses the moon only. <button type="button" class="btn link" data-go="0">Add a place</button></p>'
+      : err ? '<p class="empty">⚠️ The forecast couldn\'t load right now, so this uses the moon only. Try again later.</p>'
+      : days.some(d => !d.full) ? '<p class="dim">Days beyond the 16-day forecast use the moon only.</p>' : "";
+    out.innerHTML = note + '<div class="dayrow">' + days.map(d => `<article class="day${d === best ? " best" : ""}">${d === best ? '<span class="bestbadge">Best bet · estimate</span>' : ""}
+      <p class="dname">Day ${d.i + 1} · ${nice(d.ds)}</p><div class="dicons"><span title="Weather">${d.f ? wx(d.f.code) : ""}</span><span title="${esc(d.mo.name)}">${d.mo.ic}</span></div>
+      ${d.f ? `<p class="temp">${Math.round(d.f.tmax * 9 / 5 + 32)}° <span class="dim">/ ${Math.round(d.f.tmin * 9 / 5 + 32)}°F</span></p>` : '<p class="temp dim">No forecast yet</p>'}
+      <p class="stars" aria-label="${stars(d.s)} of 5 stars, estimate">${"★".repeat(stars(d.s))}<span>${"☆".repeat(5 - stars(d.s))}</span></p><ul>${d.why.map(w => `<li>${esc(w)}</li>`).join("")}</ul></article>`).join("") + '</div>';
+    renderSummary();
   }
 
-  /* ---- Save / send ---- */
-  function save() { try { localStorage.setItem(LS, JSON.stringify(collect())); } catch (e) {} }
   async function send() {
     const t = collect();
-    if (!t.sd) { alert("Pick a start date first."); return; }
-    save();
-    let tok; try { tok = await T.encode(t); } catch (e) { alert("This browser can't build the link (needs a recent Chrome, Edge, Firefox or Safari)."); return; }
-    const url = T.webUrl(tok);
-    $("sendbox").hidden = false; $("tlink").value = url; $("open").href = url;
-    $("tlen").textContent = url.length > 1800 ? `Long link (${url.length} characters). If the QR won't scan, uncheck some gear or shorten notes.` : `${url.length} characters`;
+    let tok; try { tok = await T.encode(t); } catch (e) { $("sendbox").hidden = false; $("sendbox").innerHTML = '<p class="empty">⚠️ This browser can\'t build the link. Try a recent Chrome, Edge, Firefox or Safari.</p>'; return; }
+    const url = T.webUrl(tok); $("sendbox").hidden = false; $("tlink").value = url; $("open").href = url;
+    $("tlen").textContent = url.length > 1800 ? `Long link (${url.length} characters). If the QR won't scan, untick some gear or shorten notes.` : "";
     try { const q = qrcode(0, "L"); q.addData(url); q.make(); $("qr").innerHTML = q.createSvgTag({ cellSize: 4, margin: 4, scalable: true }); }
-    catch (e) { $("qr").innerHTML = "<p class=dim>Too much for a QR code. Use Copy link or Open on this phone instead.</p>"; }
-    $("sendbox").scrollIntoView({ behavior: "smooth" });
+    catch (e) { $("qr").innerHTML = '<p class="empty">Too much for a QR code. Use Copy link instead.</p>'; }
+    $("sendbox").scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
+  /* ---------- summary ---------- */
+  function renderSummary() {
+    const x = TY[st.t] || {}, ed = iso(dms(st.sd) + (st.d - 1) * DAY), n = st.g.filter(g => g[2]).length, bt = T.BUDGET.reduce((a, c) => a + (+st.bu[c] || 0), 0);
+    const row = (ic, k, v, s) => `<li><button type="button" data-go="${s}"><span class="ic">${ic}</span><span><small>${k}</small>${v || '<i class="dim">Not set</i>'}</span></button></li>`;
+    $("sum").innerHTML = `<p class="sumtitle">${x.emoji || "🧭"} ${esc(st.n.trim() || x.title || "Expedition")}</p><ul class="sumlist">` +
+      row("📍", "Where", esc(st.loc), 0) + row("📅", "When", `${nice(st.sd)} → ${nice(ed)} · ${st.d}d`, 1) +
+      row("🎯", "Hunt", esc([x.title, st.sp.join(", "), MET[st.m]].filter(Boolean).join(" · ")), 2) +
+      row("🏕️", "Crew & stay", `${1 + st.cr.length} hunter${st.cr.length ? "s" : ""}${st.lt ? " · " + esc(LOD[st.lt]) : ""}${bt ? ` · $${bt.toLocaleString()} budget` : ""}`, 3) +
+      row("🎒", "Gear", `${n}/${st.g.length} packed`, 4) + row("⭐", "Best day (estimate)", st._best ? nice(st._best) : "", 5) + "</ul>";
+    $("sumshort").textContent = `${st.loc ? st.loc.split(",")[0] + " · " : ""}${st.d}d · ${n}/${st.g.length} gear`;
+  }
+
+  /* ---------- wire up ---------- */
   document.addEventListener("DOMContentLoaded", () => {
-    fillSelect($("t"), T.TYPES, Object.fromEntries(Object.entries(TYPEINFO).map(([k, v]) => [k, v.emoji + " " + v.title])));
-    $("sd").value = new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10);
-    let saved = null; try { saved = JSON.parse(localStorage.getItem(LS) || "null"); } catch (e) {}
-    if (saved && saved.v === 1) apply(saved); else { budgetRows([]); speciesChips(); loadKit(false); showGeo(); }
-    $("t").onchange = () => { speciesChips(); loadKit(true); save(); };
-    $("gosearch").onclick = search; $("loc").onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); search(); } };
-    $("gearlist").onchange = e => { const i = e.target.dataset.i; if (i != null) { gear[i][2] = e.target.checked ? 1 : 0; save(); } };
-    $("addgear").onclick = () => { const v = $("newgear").value.trim(); if (v) { gear.push([v, "Custom", 1, 1, null]); $("newgear").value = ""; renderGear(); save(); } };
-    $("plan").addEventListener("input", save);
-    $("score").onclick = bestDays; $("send").onclick = send; $("print").onclick = () => window.print();
-    $("copy").onclick = async () => { try { await navigator.clipboard.writeText($("tlink").value); $("copy").textContent = "Copied ✓"; } catch (e) { $("tlink").select(); } };
-    $("reset").onclick = () => { if (confirm("Clear this plan?")) { localStorage.removeItem(LS); location.reload(); } };
+    load(); if (!st.g.length) st.g = (KITS[st.t] || []).map(([l, c, q]) => [l, c, 0, 0, q]);
+    $("loc").value = st.loc; $("n").value = st.n; $("no").value = st.no; $("sd").min = today();
+    renderGeo(); renderDates(); renderHunt(); renderCrew(); renderGear(); go(step);
+    document.addEventListener("click", e => { const g = e.target.closest("[data-go]"); if (g) { go(+g.dataset.go, true); document.body.classList.remove("sheet-open"); $("sumtoggle").setAttribute("aria-expanded", "false"); } });
+    $("next").onclick = () => go(step + 1, true); $("back").onclick = () => go(step - 1, true);
+    $("reset").onclick = () => { if (confirm("Start over? This clears the plan saved in this browser.")) { localStorage.removeItem(LS); location.reload(); } };
+    $("sumtoggle").onclick = () => { const o = document.body.classList.toggle("sheet-open"); $("sumtoggle").setAttribute("aria-expanded", String(o)); };
+    $("gosearch").onclick = search; $("myloc").onclick = myLoc;
+    $("loc").onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); search(); } };
+    $("loc").oninput = () => { if (st.la == null) { st.loc = $("loc").value; renderGeo(); save(); } };
+    $("sd").onchange = () => { if ($("sd").value) setRange($("sd").value, iso(dms($("sd").value) + (st.d - 1) * DAY)); };
+    $("ed").onchange = () => { if ($("ed").value && $("ed").value >= st.sd) setRange(st.sd, $("ed").value); else renderDates(); };
+    $("quick").onclick = e => { const b = e.target.closest("[data-q]"); if (!b) return; const t0 = dms(today()), q = b.dataset.q;
+      if (q === "wknd") { const dow = new Date(t0).getUTCDay(), sat = t0 + ((6 - dow + 7) % 7) * DAY; setRange(iso(sat), iso(sat + DAY)); }
+      else if (q === "opener") setRange(iso(t0 + 14 * DAY), iso(t0 + 16 * DAY)); else setRange(iso(t0), iso(t0 + (+q - 1) * DAY)); };
+    $("types").onclick = e => { const b = e.target.closest("[data-t]"); if (b) setType(b.dataset.t); };
+    $("methods").onclick = e => { const b = e.target.closest("[data-m]"); if (b) { st.m = st.m === b.dataset.m ? "" : b.dataset.m; renderHunt(); save(); } };
+    $("spchips").onclick = e => { const b = e.target.closest("[data-s]"); if (!b) return; const s = b.dataset.s; st.sp = st.sp.includes(s) ? st.sp.filter(x => x !== s) : st.sp.concat(s); renderHunt(); save(); };
+    const addSp = () => { const v = $("spx").value.trim(); if (v && !st.sp.includes(v)) { st.sp.push(v); renderHunt(); save(); } $("spx").value = ""; };
+    $("addsp").onclick = addSp; $("spx").onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); addSp(); } };
+    $("plus").onclick = () => { st.cr.push(""); renderCrew(); save(); const ins = $("crewnames").querySelectorAll("input"); ins[ins.length - 1].focus(); };
+    $("minus").onclick = () => { st.cr.pop(); renderCrew(); save(); };
+    $("crewnames").oninput = e => { const i = e.target.dataset.c; if (i != null) { st.cr[i] = e.target.value; save(); } };
+    $("lodging").onclick = e => { const b = e.target.closest("[data-l]"); if (b) { st.lt = st.lt === b.dataset.l ? "" : b.dataset.l; renderCrew(); save(); } };
+    $("budget").oninput = e => { const c = e.target.dataset.b; if (c) { st.bu[c] = e.target.value; budTotal(); save(); } };
+    $("gearlist").onchange = e => { const i = e.target.dataset.i; if (i != null) { st.g[i][2] = e.target.checked ? 1 : 0; renderGear(); save(); } };
+    $("gearlist").onclick = e => { const d = e.target.closest("[data-del]"); if (d) { st.g.splice(+d.dataset.del, 1); renderGear(); save(); } };
+    const addG = () => { const v = $("newgear").value.trim(); if (v) { st.g.push([v, "Custom", 1, 1, null]); renderGear(); save(); } $("newgear").value = ""; };
+    $("addgear").onclick = addG; $("newgear").onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); addG(); } };
+    $("n").oninput = () => { st.n = $("n").value; save(); }; $("no").oninput = () => { st.no = $("no").value; save(); };
+    $("send").onclick = send; $("print").onclick = () => window.print();
+    $("copy").onclick = async () => { try { await navigator.clipboard.writeText($("tlink").value); $("copy").textContent = "Copied ✓"; setTimeout(() => $("copy").textContent = "Copy link", 1800); } catch (e) { $("tlink").select(); } };
   });
 })();
