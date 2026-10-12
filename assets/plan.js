@@ -371,18 +371,6 @@
       const chip = $("hawkreview").querySelector(".hchips"); if (chip) hawkReview();
     });
   }
-<<<<<<< Updated upstream
-  function hawkMic() {
-    if (/Tesla/i.test(navigator.userAgent)) { const t = $("hawktesla"); if (t) t.hidden = false; return; }
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition; if (!SR) return;
-    const btn = $("hawkmic"); btn.hidden = false;
-    btn.onclick = () => { const rec = new SR(); rec.lang = navigator.language || "en-US"; rec.interimResults = true; btn.classList.add("live"); btn.setAttribute("aria-label", "Listening…");
-      rec.onresult = e => { $("hawkq").value = [...e.results].map(x => x[0].transcript).join(" "); };
-      rec.onend = () => { btn.classList.remove("live"); btn.setAttribute("aria-label", "Speak your trip"); if ($("hawkq").value.trim()) hawkRun(); };
-      rec.onerror = () => btn.classList.remove("live"); rec.start(); };
-  }
-=======
->>>>>>> Stashed changes
 
   /* ---------- wire up ---------- */
   document.addEventListener("DOMContentLoaded", () => {

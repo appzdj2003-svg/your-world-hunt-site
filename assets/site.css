@@ -299,11 +299,7 @@ body.planpage .hero{min-height:200px}
 .hc-x{width:40px;height:40px;flex:none;border:0;border-radius:50%;background:var(--panelhi);color:var(--khaki);font-size:1.5rem;line-height:1;cursor:pointer}
 .hc-main:hover .ed,.hc-main:focus-visible .ed,.hc-x:hover,.hc-x:focus-visible{background:var(--amber);color:#15130D}
 .hc-main:focus-visible,.hc-x:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
-<<<<<<< Updated upstream
-.hawk-tesla{margin:-4px 0 12px;font-size:.92rem;opacity:.85}
-=======
 /* voice + Ask Hawk */
 .mic.listening{background:#D93636;border-color:#D93636;color:#fff;animation:micpulse 1s infinite}@keyframes micpulse{50%{box-shadow:0 0 0 10px rgba(217,54,54,.28)}}
 .vmsg{margin:8px 0 0;color:var(--khaki);font-size:.9rem}.vnote{margin-top:8px}.fromapp{margin:0 0 10px;padding:10px 12px;border-radius:12px;background:rgba(138,154,75,.15);border:1px solid var(--moss)}
 .asklog{display:grid;gap:10px;margin-bottom:14px}.msg{padding:12px 14px;border-radius:14px;border:1px solid var(--edge);background:var(--panel)}.msg.me{background:var(--panelhi);margin-left:15%}.msg p{margin:4px 0}
->>>>>>> Stashed changes
