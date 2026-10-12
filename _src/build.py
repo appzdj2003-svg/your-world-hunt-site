@@ -52,7 +52,7 @@ DISCLOSURE = ('<p class="disclosure"><strong>Disclosure:</strong> We may earn a 
 PLAY_SVG = '<svg viewBox="0 0 28 28" aria-hidden="true"><path fill="#160d05" d="M5 3.5v21l18-10.5z"/></svg>'
 def play_btn(cls="primary"): return f'<a class="btn {cls} play-badge" href="{PLAY}" target="_blank" rel="noopener">{PLAY_SVG if cls=="primary" else ""}Get it on Google Play</a>'
 
-NAV = [("index.html", "Home"), ("features.html", "Features"), ("how-to-use.html", "How-To"), ("guides/", "Guides"), ("gear/", "Gear Lists"), ("plan.html", "Plan"), ("deals.html", "Deals"), ("pricing.html", "Pricing"), ("shop/", "Shop")]
+NAV = [("index.html", "Home"), ("features.html", "Features"), ("how-to-use.html", "How-To"), ("guides/", "Guides"), ("gear/", "Gear Lists"), ("plan.html", "Trip Planner"), ("deals.html", "Deals"), ("pricing.html", "Pricing"), ("shop/", "Shop")]
 
 def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None, jsonld=None, og_type="website", prio="0.6", absolute=False, hero_extra=""):
     depth = path.count("/")
