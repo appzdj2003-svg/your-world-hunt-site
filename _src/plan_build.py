@@ -46,6 +46,7 @@ def build(page, PAGES, DISCLOSURE, play_btn):
      '<h2 id="hawkh">Hawk Quick Plan</h2><p class="dim">Tell Hawk your trip in one sentence and it fills in the planner. Simple rule-based reading in your browser, not a full AI, so check what it understood.</p></div></div>'
      '<form id="hawkform" class="hawk-in" onsubmit="return false"><label class="sr" for="hawkq">Describe your trip</label><textarea id="hawkq" rows="2" maxlength="300" placeholder="Mule deer bow hunt near Gunnison, CO, Sep 8-12, 3 of us, camping"></textarea>'
      '<div class="hawk-btns"><button type="button" class="round mic" id="hawkmic" hidden aria-label="Speak your trip">🎙️</button><button type="button" class="btn primary" id="hawkgo">Plan it →</button></div></form>'
+     '<p class="hawk-tesla dim" id="hawktesla" hidden>In a Tesla, tap the box, then press the steering-wheel mic and speak.</p>'
      '<div class="chips hawk-ex" aria-label="Examples">' + "".join(f'<button type="button" class="chipbtn" data-ex="{x}">{x}</button>' for x in [
        "Mule deer bow hunt near Gunnison, CO, Sep 8-12, 3 of us, camping", "Duck hunt this weekend near Stuttgart, AR with my son",
        "Elk rifle hunt in Bozeman, Montana Oct 20-25, me and 2 buddies, cabin, $1500", "Turkey hunt next Friday near Macon, GA, solo, shotgun"]) + '</div>'

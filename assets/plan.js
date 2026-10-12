@@ -353,6 +353,7 @@
     });
   }
   function hawkMic() {
+    if (/Tesla/i.test(navigator.userAgent)) { const t = $("hawktesla"); if (t) t.hidden = false; return; }
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition; if (!SR) return;
     const btn = $("hawkmic"); btn.hidden = false;
     btn.onclick = () => { const rec = new SR(); rec.lang = navigator.language || "en-US"; rec.interimResults = true; btn.classList.add("live"); btn.setAttribute("aria-label", "Listening…");

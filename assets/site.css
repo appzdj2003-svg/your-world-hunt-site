@@ -299,3 +299,4 @@ body.planpage .hero{min-height:200px}
 .hc-x{width:40px;height:40px;flex:none;border:0;border-radius:50%;background:var(--panelhi);color:var(--khaki);font-size:1.5rem;line-height:1;cursor:pointer}
 .hc-main:hover .ed,.hc-main:focus-visible .ed,.hc-x:hover,.hc-x:focus-visible{background:var(--amber);color:#15130D}
 .hc-main:focus-visible,.hc-x:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+.hawk-tesla{margin:-4px 0 12px;font-size:.92rem;opacity:.85}
