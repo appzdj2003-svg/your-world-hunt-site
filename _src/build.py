@@ -2,7 +2,7 @@
 """Static site builder for Your World Hunt. Run: python3 _src/build.py  (writes HTML into the repo root)."""
 import json, re, os, html, datetime, urllib.parse, urllib.request, email.utils
 from pathlib import Path
-import scenes, shopdata, kitdata, items as itemimg, article2026 as A26
+import scenes, shopdata, kitdata, plan_build, items as itemimg, article2026 as A26
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = "https://hunt.yourworldapps.si/"   # custom domain (CNAME file); the old github.io URL redirects here
@@ -52,7 +52,7 @@ DISCLOSURE = ('<p class="disclosure"><strong>Disclosure:</strong> We may earn a 
 PLAY_SVG = '<svg viewBox="0 0 28 28" aria-hidden="true"><path fill="#160d05" d="M5 3.5v21l18-10.5z"/></svg>'
 def play_btn(cls="primary"): return f'<a class="btn {cls} play-badge" href="{PLAY}" target="_blank" rel="noopener">{PLAY_SVG if cls=="primary" else ""}Get it on Google Play</a>'
 
-NAV = [("index.html", "Home"), ("features.html", "Features"), ("how-to-use.html", "How-To"), ("guides/", "Guides"), ("gear/", "Gear Lists"), ("deals.html", "Deals"), ("pricing.html", "Pricing"), ("shop/", "Shop")]
+NAV = [("index.html", "Home"), ("features.html", "Features"), ("how-to-use.html", "How-To"), ("guides/", "Guides"), ("gear/", "Gear Lists"), ("plan.html", "Plan"), ("deals.html", "Deals"), ("pricing.html", "Pricing"), ("shop/", "Shop")]
 
 def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None, jsonld=None, og_type="website", prio="0.6", absolute=False, hero_extra=""):
     depth = path.count("/")
@@ -566,7 +566,7 @@ def build_home():
             f'<h2>Gear lists by hunt</h2><div class="grid tight">{hunts}</div>')
     page("index.html", "Your World Hunt: Hunting Gear Shop, Maps, Public Land & Wind App", "Shop hunting gear by department and compare Amazon, Bass Pro, Cabela's and more in one tap. Plus Your World Hunt AI for Android: hunting maps, public land, wind, moon and feeding times. Free on Google Play.",
          body, "whitetail", "The Hunter's Gear Shop", "Your World Hunt · Outfitter's Counter", "Every department a hunter needs, compared across the big stores in one tap. From the makers of the Your World Hunt app.",
-         jsonld=[app_ld, site_ld], prio="1.0", hero_extra=search_form(p) + f'<div class="btns"><a class="btn primary" href="shop/">Shop all departments</a><a class="btn" href="deals.html">Deals</a><a class="btn" href="#get-app">Get the app free</a></div>')
+         jsonld=[app_ld, site_ld], prio="1.0", hero_extra=search_form(p) + f'<div class="btns"><a class="btn primary" href="shop/">Shop all departments</a><a class="btn" href="deals.html">Deals</a><a class="btn" href="plan.html">Plan an expedition</a><a class="btn" href="#get-app">Get the app free</a></div>')
 
 def build_features():
     p = ""
@@ -709,7 +709,7 @@ def seo_files():
 if __name__ == "__main__":
     import sys
     if "--no-deals" not in sys.argv: fetch_deals()
-    build_guides(); build_shop(); build_gear(); build_deals(); build_home(); build_features(); build_howto(); legal_pages(); build_pricing(); print("article words:", build_article()); seo_files()
+    build_guides(); build_shop(); build_gear(); build_deals(); build_home(); build_features(); build_howto(); legal_pages(); build_pricing(); plan_build.build(page, PAGES, DISCLOSURE, play_btn); print("article words:", build_article()); seo_files()
     print("pages:", len(PAGES))
     have = sorted(k for k in USED_KEYS if (ROOT / "assets/items" / f"{k}.webp").exists())
     print(f"item images: {len(have)}/{len(USED_KEYS)} categories present")

@@ -1,0 +1,10 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.yourworld.hunt",
+    "sha256_cert_fingerprints": [
+      "84:71:36:1E:B6:5F:E8:79:2D:63:54:E6:7C:55:82:75:98:3F:8F:BE:15:FA:17:36:AE:BE:5E:12:84:97:53:85"
+    ]
+  }
+}]

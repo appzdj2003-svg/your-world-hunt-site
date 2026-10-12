@@ -166,3 +166,18 @@ table{border-collapse:collapse;width:100%;font-size:.95rem} td,th{border:1px sol
 .appband{display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;margin:30px 0;padding:22px 18px;border:2px solid var(--amber);border-radius:var(--r);background:radial-gradient(circle at 0 0,#4a2a14,var(--panel) 70%)}
 .appband img{border-radius:14px;border:1px solid var(--edge)}
 .appband>div{flex:1 1 260px}
+/* Plan an Expedition */
+.planform fieldset{border:1px solid var(--edge);border-radius:var(--r);background:var(--panel);margin:0 0 16px;padding:14px 16px}
+.planform legend{color:var(--amber);font-weight:900;letter-spacing:.1em;text-transform:uppercase;padding:0 6px}
+.planform label{display:block;margin:8px 0;color:var(--khaki);font-size:.92rem}
+.planform input,.planform select,.planform textarea,.sendbox input{display:block;width:100%;margin-top:4px;padding:9px 10px;border-radius:10px;border:1px solid var(--edge);background:var(--void);color:var(--text);font:inherit}
+.planform .row{display:flex;gap:8px;align-items:center}.planform .row input{flex:1}
+.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0 14px}.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:0 12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}.chip{display:inline-flex!important;align-items:center;gap:6px;margin:0!important;padding:5px 10px;border:1px solid var(--edge);border-radius:99px;background:var(--panelhi)}
+.chip input,.gearlist input{width:auto!important;display:inline!important;margin:0!important}
+.gearlist{list-style:none;padding:0;columns:2 280px}.gearlist li{break-inside:avoid;margin:2px 0}.gearlist label{display:inline!important}
+.amzlink{font-size:.8rem;color:var(--sunset)}.georesults{list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.stars{color:var(--amber);white-space:nowrap}.sendgrid{display:grid;grid-template-columns:minmax(180px,260px) 1fr;gap:18px}
+.qr{background:#fff;border-radius:10px;padding:6px}.qr svg{width:100%;height:auto;display:block}
+@media(max-width:640px){.sendgrid{grid-template-columns:1fr}}
+@media print{header.top,footer,.hero svg,.noprint,.disclosure,.amzlink{display:none!important}body{background:#fff;color:#000}.planform fieldset{background:#fff;border-color:#999}.planform input,.planform select,.planform textarea{background:#fff;color:#000}h2,.planform legend{color:#000}}
