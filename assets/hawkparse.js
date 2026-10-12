@@ -13,6 +13,7 @@
     [/\b(turkeys?|gobblers?)\b/, "TURKEY", "Turkey"],
     [/\b(ducks?|waterfowl|mallards?|teal)\b/, "WATERFOWL", "Duck"], [/\b(geese|goose)\b/, "WATERFOWL", "Canada goose"],
     [/\b(hogs?|pigs?|boars?|feral swine)\b/, "LOCAL", "Hog"], [/\bbears?\b/, "LOCAL", "Bear"],
+    [/\b(pheasants?|ringnecks?|roosters?|quail|grouse|chukars?|partridges?|huns|upland)\b/, "CUSTOM", "Pheasant"],
     [/\bdoves?\b/, "CUSTOM", "Dove"], [/\b(coyotes?|predators?)\b/, "CUSTOM", "Coyote"], [/\bsquirrels?\b/, "LOCAL", "Squirrel"],
     [/\b(safari|kudu|impala|plains game)\b/, "SAFARI", "Kudu"], [/\b(red stag|stag|roe deer)\b/, "EUROPE", "Red stag"],
   ];
@@ -76,7 +77,12 @@
     const raw = String(text || "").trim(), s = raw.toLowerCase();
     const t0 = today ? Date.parse(today + "T12:00:00Z") : (d => U(d.getFullYear(), d.getMonth(), d.getDate()))(new Date());
     const r = { sp: [], understood: [], missing: [] };
-    const p = place(raw); if (p) Object.assign(r, p);
+    let p = place(raw);
+    if (!p || (!p.state && !STATES[p.name.toUpperCase()] && !Object.values(STATES).includes(p.name))) {   // a bare state name anywhere ("North Dakota, duck hunting")
+      const nm = Object.values(STATES).sort((a, b) => b.length - a.length).find(n => new RegExp(`\\b${n}\\b`, "i").test(raw));
+      if (nm) p = p ? Object.assign(p, { state: nm, loc: p.loc + ", " + nm }) : { loc: nm, name: nm, state: nm };
+    } else if (!p.state) { const n = STATES[p.name.toUpperCase()] || p.name; if (Object.values(STATES).includes(n)) p.state = n; }
+    if (p) { Object.assign(r, p); r.st = Object.keys(STATES).find(k => STATES[k] === r.state) || null; }
     const dt = dates(s, t0); if (dt) Object.assign(r, dt);
     for (const [re, t, sp] of GAME) if (re.test(s)) { r.t = r.t || t; if (!r.sp.includes(sp)) r.sp.push(sp); }
     if (r.sp.includes("Mule deer")) r.sp = r.sp.filter(x => x !== "Whitetail");

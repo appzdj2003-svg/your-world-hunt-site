@@ -21,6 +21,13 @@ const cases = [
  ["going hunting", { missing: ["loc", "sd", "t"] }],
  ["teal hunt in Louisiana this weekend, me and a couple buddies, camper", { loc: "Louisiana", t: "WATERFOWL", party: 3, lt: "RV_PARKS" }],
  ["Squirrel and hog hunt next week near Ocala, FL", { loc: "Ocala, FL", sd: "2026-10-19", d: 3, t: "LOCAL", sp: ["Hog", "Squirrel"] }],
+ ["North Dakota, duck hunting, in cabin camping", { loc: "North Dakota", state: "North Dakota", st: "ND", t: "WATERFOWL", sp: ["Duck"], lt: "CABINS" }],
+ ["pheasant and duck hunt in south dakota, cabin", { state: "South Dakota", st: "SD", lt: "CABINS", t: "WATERFOWL", sp: ["Duck", "Pheasant"] }],
+ ["elk hunt near Meeker, Colorado", { loc: "Meeker, Colorado", state: "Colorado", st: "CO", t: "WESTERN", sp: ["Elk"] }],
+ ["goose hunting near Devils Lake in North Dakota", { name: "Devils Lake", state: "North Dakota", st: "ND", sp: ["Canada goose"] }],
+ ["Turkey hunt in Arkansas, staying in a cabin", { loc: "Arkansas", st: "AR", t: "TURKEY", lt: "CABINS" }],
+ ["deer hunting minnesota tent", { state: "Minnesota", st: "MN", t: "LOCAL", lt: "CAMPSITES" }],
+ ["I want to duck hunt in north dakota, Oct 15-25, 2 of us, cabin camping", { loc: "North Dakota", state: "North Dakota", st: "ND", sd: "2026-10-15", d: 11, party: 2, lt: "CABINS", t: "WATERFOWL" }],
 ];
 let pass = 0;
 for (const [s, exp] of cases) {

@@ -275,3 +275,27 @@ body.planpage .hero{min-height:200px}
 @media print{header.top,footer,.hero,.noprint,.disclosure,.amz,.wz-top,.wz-foot,.sumtoggle,.btns,.upsell,.sendbox{display:none!important}body{background:#fff;color:#000}
  .wz-step{display:block!important;box-shadow:none;border:0;background:#fff;color:#000;padding:0}.wz-step h2,.wz-sub,.dim{color:#000}.wz-sum{position:static;box-shadow:none;background:#fff;color:#000;max-height:none}.sumbody{display:block!important}.sumlist button{color:#000}
  .day,.kitcard,.tcard,.pickcard,.pill{background:#fff!important;color:#000;border-color:#999}.wz input,.wz textarea{background:#fff;color:#000}}
+/* Trip Planner: top spots */
+.spots-card{margin:16px 0;padding:16px;border:1px solid var(--edge);border-radius:var(--r);background:var(--panel)}
+.spots-card .wz-k{margin:0 0 2px;font-size:1.05rem}
+.chiprow{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.chiprow .chip{border:1px solid var(--edge);background:var(--panelhi);color:var(--text);border-radius:999px;padding:7px 14px;font:inherit;font-size:.9rem;cursor:pointer;min-height:38px}
+.chiprow .chip.on{background:var(--amber);border-color:var(--amber);color:#15130D;font-weight:700}
+.spotlist{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px}
+@media(min-width:760px){.spotlist{grid-template-columns:1fr 1fr}}
+.spot{padding:12px 14px;border:1px solid var(--edge);border-radius:12px;background:var(--void)}
+.spot.priv{border-style:dashed}.spot.sel{border-color:var(--moss);box-shadow:0 0 0 2px var(--moss) inset}
+.spot-h{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.spot-h .dist{color:var(--amber);font-weight:700;white-space:nowrap}
+.spot p{margin:2px 0;font-size:.88rem}.spot .tags{color:var(--khaki)}.privnote{color:var(--sunset)}
+.spot-a{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.btn.sm{padding:6px 12px;font-size:.85rem;min-height:36px}
+.spots-card .fine{font-size:.78rem;margin-top:12px}.spots-card .empty{margin:10px 0}
+.hkback{display:block;width:100%;margin:14px 0 4px}
+.clr-wrap{position:relative;display:block;flex:1 1 auto;min-width:0}.clr-wrap>input,.clr-wrap>textarea{width:100%;padding-right:48px}
+.clr-x{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;border-radius:50%;background:var(--panelhi);color:var(--khaki);font-size:1.5rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.clr-wrap.ta .clr-x{top:6px;transform:none}.clr-x:hover,.clr-x:focus-visible{background:var(--amber);color:#15130D;outline:2px solid var(--amber);outline-offset:1px}.clr-x[hidden]{display:none}
+.hchip{padding:4px 4px 4px 0;gap:2px;cursor:default}
+.hchip .hc-main{display:flex;gap:10px;align-items:center;flex:1;min-width:0;min-height:48px;padding:6px 6px 6px 12px;background:none;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer;border-radius:12px}
+.hchip .hc-main .ed{margin-left:auto;width:40px;height:40px;flex:none;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--panelhi);color:var(--khaki)}
+.hc-x{width:40px;height:40px;flex:none;border:0;border-radius:50%;background:var(--panelhi);color:var(--khaki);font-size:1.5rem;line-height:1;cursor:pointer}
+.hc-main:hover .ed,.hc-main:focus-visible .ed,.hc-x:hover,.hc-x:focus-visible{background:var(--amber);color:#15130D}
+.hc-main:focus-visible,.hc-x:focus-visible{outline:2px solid var(--amber);outline-offset:1px}

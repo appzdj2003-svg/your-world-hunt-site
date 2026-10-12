@@ -32,9 +32,61 @@
       bu: T.BUDGET.filter(c => +st.bu[c] > 0).map(c => [c, BUD[c], Math.round(+st.bu[c] * 100) / 100]),
       g: st.g.map(g => [g[0], g[1], g[2] ? 1 : 0]), no: st.no.trim().slice(0, 1500) };
     if (st.la != null) { t.la = +(+st.la).toFixed(5); t.lo = +(+st.lo).toFixed(5); }
+    if (st.ds && st.ds.la != null) t.ds = { n: st.ds.n, la: st.ds.la, lo: st.ds.lo, k: st.ds.k, pv: st.ds.pv, u: st.ds.u };   // destination pin for app directions
     return t;
   }
 
+  /* ---------- clear (X) buttons in every text field ---------- */
+  function addClear(el) {
+    if (el.dataset.clr || el.readOnly || !/^(text|search|)$/.test(el.type === "textarea" ? "" : el.type || "")) return;
+    el.dataset.clr = 1;
+    const w = document.createElement("span"); w.className = "clr-wrap" + (el.tagName === "TEXTAREA" ? " ta" : "");
+    el.parentNode.insertBefore(w, el); w.appendChild(el);
+    const b = document.createElement("button"); b.type = "button"; b.className = "clr-x"; b.setAttribute("aria-label", "Clear"); b.title = "Clear"; b.innerHTML = "&times;"; w.appendChild(b);
+    const sync = () => { b.hidden = !el.value; }; el.addEventListener("input", sync); sync(); el._clrSync = sync;
+    b.onclick = () => {
+      el.value = ""; el.dispatchEvent(new Event("input", { bubbles: true })); el.dispatchEvent(new Event("change", { bubbles: true })); sync(); el.focus();
+      if (el.id === "hawkq") { hk = null; hkEdit = false; const r = $("hawkreview"); r.innerHTML = ""; r.hidden = true; hkBar(); }
+      if (el.id === "loc") $("georesults").innerHTML = "";
+      if (el.id === "hkloc") { const m = $("hklocmsg"); if (m) m.textContent = ""; }
+    };
+  }
+  function clearAll(root) { (root || document).querySelectorAll("#wz input, #wz textarea, #hawk input, #hawk textarea, #hawkreview input").forEach(addClear); }
+  setInterval(() => document.querySelectorAll("[data-clr]").forEach(e => e._clrSync && e._clrSync()), 600);   // values set by code
+  new MutationObserver(() => clearAll()).observe(document.body, { childList: true, subtree: true });
+  setTimeout(clearAll, 0);
+  /* ---------- editing a Hawk chip: return to the Hawk summary ---------- */
+  let hkEdit = false;
+  function hkBar() {
+    let b = $("hkback");
+    if (!b) { b = document.createElement("button"); b.type = "button"; b.id = "hkback"; b.className = "btn primary big hkback"; b.textContent = "✓ Save & back to Hawk";
+      b.onclick = () => backToHawk(); const f = document.querySelector(".wz-foot"); f.parentNode.insertBefore(b, f); }
+    b.hidden = !(hkEdit && hk);
+  }
+  function hkLocChanged() {   // place changed outside the sentence: spots recompute from the new pin
+    if (!hk) return; hk.center = null; hk.locOk = st.la != null || !!st.loc;
+    hk.r = Object.assign({}, hk.r, { name: null, st: null, state: null, loc: st.loc });
+  }
+  function hkClear(f) {   // X on a Hawk chip: unset that field
+    const r = hk.r;
+    if (f === "loc") { st.loc = ""; st.la = st.lo = null; st.ds = null; hk.locOk = false; hk.center = null; Object.assign(r, { loc: null, name: null, state: null, st: null }); $("loc").value = ""; }
+    if (f === "sd") r.sd = null;
+    if (f === "t") { r.t = null; r.sp = []; st.sp = []; hk.center = null; }
+    if (f === "m") st.m = "";
+    if (f === "party") { st.cr = []; r.party = null; }
+    if (f === "lt") st.lt = "";
+    if (f === "bu") { st.bu = {}; r.budget = null; }
+    scored = null; refreshAll(); hawkReview();
+    const q = $("hawkreview").querySelector(`[data-hkclr="${f}"]`) || $("hawkreview").querySelector(".hchip.need .hc-main"); if (q) q.focus({ preventScroll: true });
+  }
+  function backToHawk(placeChanged) {
+    if (!hk) return; hkEdit = false;
+    if (placeChanged || (hk.loc0 !== st.loc + "|" + st.la)) hkLocChanged();
+    const es = hk.editStep;   // only the step that was edited fills its chip back in
+    if (es === 1 && st.sd) hk.r.sd = st.sd; if (es === 2 && st.t) hk.r.t = st.t; if (es === 3 && hk.r.party === null) hk.r.party = 1 + st.cr.length;
+    hawkReview(); hkBar();
+    $("hawkreview").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
   /* ---------- wizard ---------- */
   function go(i, focus) {
     step = Math.max(0, Math.min(STEPS - 1, i));
@@ -43,6 +95,7 @@
     $("wzfill").style.width = ((step + 1) / STEPS * 100) + "%";
     $("back").disabled = step === 0; $("next").hidden = step === STEPS - 1;
     if (step === 5) bestDays();
+    hkBar();
     if (focus) { $("h" + step).focus({ preventScroll: true }); $("wz").scrollIntoView({ behavior: "smooth", block: "start" }); }
     save();
   }
@@ -53,7 +106,7 @@
       ? `<span class="big" aria-hidden="true">📍</span><div><b>${esc(st.loc || "My location")}</b><br><span class="dim">${(+st.la).toFixed(4)}, ${(+st.lo).toFixed(4)} · forecast ready</span></div><button type="button" class="btn link" id="clrgeo">Change</button>`
       : st.loc ? `<span class="big" aria-hidden="true">✏️</span><div><b>${esc(st.loc)}</b><br><span class="dim">No coordinates, so best days will use the moon only. Search to add the forecast.</span></div>`
       : `<span class="big" aria-hidden="true">🗺️</span><div class="dim">No place yet. You can skip this step and add it later.</div>`;
-    const c = $("clrgeo"); if (c) c.onclick = () => { st.la = st.lo = null; st.loc = ""; $("loc").value = ""; renderGeo(); save(); $("loc").focus(); };
+    const c = $("clrgeo"); if (c) c.onclick = () => { st.la = st.lo = null; st.ds = null; st.loc = ""; $("loc").value = ""; renderGeo(); save(); $("loc").focus(); };
   }
   async function search() {
     const q = $("loc").value.trim(); if (q.length < 2) { $("georesults").innerHTML = '<p class="dim">Type at least 2 letters.</p>'; return; }
@@ -64,14 +117,14 @@
       $("georesults").innerHTML = res.length ? res.map((x, i) => `<button type="button" class="result" data-i="${i}"><b>${esc(x.name)}</b><span class="dim">${esc([x.admin1, x.country].filter(Boolean).join(", "))}</span></button>`).join("")
         : '<p class="empty">🤷 No matches. Try a nearby town or a simpler name.</p>';
       $("georesults").onclick = e => { const b = e.target.closest(".result"); if (!b) return; const x = res[+b.dataset.i];
-        st.loc = [x.name, x.admin1, x.country].filter(Boolean).join(", "); st.la = x.latitude; st.lo = x.longitude; $("loc").value = st.loc; $("georesults").innerHTML = ""; renderGeo(); save(); };
+        st.loc = [x.name, x.admin1, x.country].filter(Boolean).join(", "); st.la = x.latitude; st.lo = x.longitude; $("loc").value = st.loc; $("georesults").innerHTML = ""; st.ds = null; renderGeo(); save(); if (hkEdit) backToHawk(true); };
     } catch (e) { $("georesults").innerHTML = '<p class="empty">⚠️ Place search isn\'t reachable right now. Your typed name is kept; try again later for the forecast.</p>'; }
   }
   function myLoc() {
     if (!navigator.geolocation) { $("georesults").innerHTML = '<p class="empty">Your browser can\'t share location. Search instead.</p>'; return; }
     $("georesults").innerHTML = '<p class="dim">📡 Finding you…</p>';
     navigator.geolocation.getCurrentPosition(p => { st.la = p.coords.latitude; st.lo = p.coords.longitude; if (!$("loc").value.trim()) st.loc = "My location"; else st.loc = $("loc").value.trim();
-      $("georesults").innerHTML = ""; renderGeo(); save(); },
+      $("georesults").innerHTML = ""; st.ds = null; renderGeo(); save(); if (hkEdit) backToHawk(true); },
       () => { $("georesults").innerHTML = '<p class="empty">Location was blocked or unavailable. Search for a place instead.</p>'; }, { timeout: 10000 });
   }
 
@@ -203,35 +256,101 @@
     st.bu = r.budget ? { OTHER: r.budget } : {};
     if (r.sd) { st.sd = r.sd; st.d = r.d; }
     if (r.loc) {
-      st.loc = r.loc; st.la = st.lo = null;
-      try { const g = await geocode(r.name, r.state) || (r.state ? null : await geocode(r.loc)); if (g) { st.loc = [g.name, g.admin1, g.country].filter(Boolean).join(", "); st.la = g.latitude; st.lo = g.longitude; hk.locOk = true; } } catch (e) { hk.geoErr = true; }
+      st.loc = r.loc; st.la = st.lo = null; st.ds = null;
+      if (!(r.st && r.name === r.state)) try { const g = await geocode(r.name, r.state) || (r.state ? null : await geocode(r.loc)); if (g) { st.loc = [g.name, g.admin1, g.country].filter(Boolean).join(", "); st.la = g.latitude; st.lo = g.longitude; hk.locOk = true; } } catch (e) { hk.geoErr = true; }
+    }
+    if (r.loc && !hk.locOk && r.st && r.name === r.state) {   // a state alone: use its centroid
+      try { if (!SP) SP = await fetch("assets/spots.json").then(x => x.json()); const c = SP.states[r.st]; if (c) { st.loc = r.state; st.la = c[0]; st.lo = c[1]; hk.locOk = true; } } catch (e) {}
     }
     refreshAll(); hawkReview();
   }
   function hawkReview() {
     const r = hk.r, x = TY[st.t] || {}, ed = iso(dms(st.sd) + (st.d - 1) * DAY);
-    const chip = (ic, k, v, s, ok) => `<button type="button" class="hchip${ok ? "" : " need"}" data-go="${s}" aria-label="Edit ${k}"><span>${ic}</span><span><small>${k}</small>${v}</span><span class="ed" aria-hidden="true">✎</span></button>`;
+    const NS = '<i class="dim">Not set</i>';
+    const chip = (ic, k, v, s, ok, f) => `<div class="hchip${ok ? "" : " need"}"><button type="button" class="hc-main" data-go="${s}" aria-label="Edit ${k}"><span>${ic}</span><span><small>${k}</small>${ok ? v : NS}</span><span class="ed" aria-hidden="true">✎</span></button>` +
+      (ok && f ? `<button type="button" class="hc-x" data-hkclr="${f}" aria-label="Clear ${k}" title="Clear ${k}">&times;</button>` : "") + `</div>`;
     const needLoc = !hk.locOk, needDate = !r.sd, needType = !r.t;
     let ask = "";
     if (needLoc) ask += `<div class="ask"><p><b>Where's the hunt?</b> ${r.loc ? `Hawk couldn't find “${esc(r.loc)}” on the map.` : "Hawk didn't catch a place."}</p><div class="addrow"><input id="hkloc" placeholder="Town, park or area (e.g. Gunnison, CO)" value="${esc(r.loc || "")}" aria-label="Where's the hunt"><button type="button" class="btn" id="hklocgo">Find</button></div><p class="dim" id="hklocmsg"></p></div>`;
     if (needDate) ask += `<div class="ask"><p><b>When are you going?</b></p><div class="daterange"><label>First day<input type="date" id="hksd" value="${st.sd}"></label><span class="arrow">→</span><label>Last day<input type="date" id="hked" value="${ed}"></label></div></div>`;
     if (needType) ask += `<div class="ask"><p><b>What are you hunting?</b></p><div class="chips">${T.TYPES.map(k => `<button type="button" class="chipbtn" data-hkt="${k}">${(TY[k] || {}).emoji || ""} ${esc((TY[k] || {}).title || k)}</button>`).join("")}</div></div>`;
     $("hawkreview").innerHTML = `<p class="hk-said">🦅 Here's what Hawk understood. Tap any chip to change it.</p><div class="hchips">` +
-      chip("📍", "Where", esc(st.loc || "Not set"), 0, !needLoc) + chip("📅", "When", `${nice(st.sd)} → ${nice(ed)} · ${st.d}d`, 1, !needDate) +
-      chip(x.emoji || "🎯", "Hunt", esc(x.title || "Not set") + (st.sp.length ? " · " + esc(st.sp.join(", ")) : ""), 2, !needType) +
-      (st.m ? chip("🏹", "Method", esc(MET[st.m]), 2, true) : "") + chip("👥", "Hunters", String(1 + st.cr.length), 3, true) +
-      (st.lt ? chip("🏕️", "Stay", esc(LOD[st.lt]), 3, true) : "") + (r.budget ? chip("💵", "Budget", "$" + r.budget.toLocaleString(), 3, true) : "") + `</div>` +
+      chip("📍", "Where", esc(st.loc), 0, !needLoc && !!st.loc, "loc") + chip("📅", "When", `${nice(st.sd)} → ${nice(ed)} · ${st.d}d`, 1, !needDate, "sd") +
+      chip(x.emoji || "🎯", "Hunt", esc(x.title || "") + (st.sp.length ? " · " + esc(st.sp.join(", ")) : ""), 2, !needType, "t") +
+      (st.m ? chip("🏹", "Method", esc(MET[st.m]), 2, true, "m") : "") + chip("👥", "Hunters", String(1 + st.cr.length), 3, r.party !== null, "party") +
+      chip("🏕️", "Stay", esc(LOD[st.lt] || ""), 3, !!st.lt, "lt") + (r.budget ? chip("💵", "Budget", "$" + r.budget.toLocaleString(), 3, true, "bu") : "") + `</div>` +
       (ask ? `<div class="asks"><p class="wz-k">Hawk needs a little more</p>${ask}</div>` : "") +
-      `<div class="btns"><button type="button" class="btn primary big" id="hkdone">${ask ? "Continue anyway → Best days" : "Looks good → Best days & send"}</button><button type="button" class="btn link" data-go="0">Walk through every step</button></div>`;
+      `<div id="hkspots" class="spots"></div><div class="btns"><button type="button" class="btn primary big" id="hkdone">${ask ? "Continue anyway → Best days" : "Looks good → Best days & send"}</button><button type="button" class="btn link" data-go="0">Walk through every step</button></div>`;
     const lg = $("hklocgo"); if (lg) { const f = async () => { const v = $("hkloc").value.trim(); if (!v) return; $("hklocmsg").textContent = "Searching…";
       const p = window.HawkParse.parse("in " + v.replace(/^./, c => c.toUpperCase())); let g = null;
       try { g = await geocode(p.name || v, p.state) || await geocode(v.split(",")[0]); } catch (e) {}
-      if (g) { st.loc = [g.name, g.admin1, g.country].filter(Boolean).join(", "); st.la = g.latitude; st.lo = g.longitude; hk.locOk = true; refreshAll(); hawkReview(); }
+      if (g) { st.loc = [g.name, g.admin1, g.country].filter(Boolean).join(", "); st.la = g.latitude; st.lo = g.longitude; hk.locOk = true; st.ds = null; hkLocChanged(); refreshAll(); hawkReview(); }
       else $("hklocmsg").textContent = "Still couldn't find it. Try the nearest town."; };
       lg.onclick = f; $("hkloc").onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); f(); } }; }
     const hs = $("hksd"); if (hs) { const f = () => { const a = $("hksd").value, b = $("hked").value; if (a && b && b >= a) { hk.r.sd = a; setRange(a, b); } }; hs.onchange = f; $("hked").onchange = f; }
     $("hawkreview").querySelectorAll("[data-hkt]").forEach(b => b.onclick = () => { hk.r.t = b.dataset.hkt; setType(b.dataset.hkt); hawkReview(); });
     $("hkdone").onclick = () => go(5, true);
+    $("hawkreview").querySelectorAll("[data-hkclr]").forEach(b => b.onclick = () => hkClear(b.dataset.hkclr));
+    renderSpots();
+  }
+  /* ---------- Top spots near the area (static, official-source dataset: assets/spots.json) ---------- */
+  let SP = null, PL = null, spR = 50, spF = "both";
+  const SPTAG = { "Duck": ["duck"], "Canada goose": ["goose"], "Whitetail": ["big", "deer"], "Mule deer": ["big", "deer"], "Elk": ["big"], "Pronghorn": ["big"], "Moose": ["big"],
+    "Caribou": ["big"], "Bear": ["big"], "Hog": ["big", "hog"], "Turkey": ["turkey"], "Pheasant": ["upland"], "Dove": ["dove"], "Squirrel": ["small"], "Coyote": ["small"] };
+  const TGL = { duck: "ducks", goose: "geese", big: "big game", deer: "deer", hog: "hogs", turkey: "turkey", upland: "upland birds", dove: "doves", small: "small game" };
+  const KIND = { NWR: "National Wildlife Refuge", WMD: "Wetland Management District (WPAs)", NF: "National Forest", PRIV: "Private lodge / outfitter" };
+  const mi = (a, b, c, d) => { const r = Math.PI / 180, x = Math.sin((c - a) * r / 2) ** 2 + Math.cos(a * r) * Math.cos(c * r) * Math.sin((d - b) * r / 2) ** 2; return 7917.5 * Math.asin(Math.sqrt(x)); };
+  async function spotCenter() {
+    const r = hk.r, ab = r.st;
+    if (!SP) SP = await fetch("assets/spots.json").then(x => x.json());
+    if (ab && r.name && r.name !== r.state) {
+      if (!PL) PL = await fetch("assets/places.json").then(x => x.json()).catch(() => ({}));
+      const c = (PL[ab] || {})[r.name]; if (c) return { la: c[0], lo: c[1], label: r.name + ", " + ab };
+    }
+    if (ab && r.name === r.state && SP.states[ab]) return { la: SP.states[ab][0], lo: SP.states[ab][1], label: r.state, stateOnly: ab };
+    if (st.la != null) return { la: +st.la, lo: +st.lo, label: (st.loc || "").split(",")[0] };
+    if (ab && SP.states[ab]) return { la: SP.states[ab][0], lo: SP.states[ab][1], label: r.state, stateOnly: ab };
+    return null;
+  }
+  async function renderSpots() {
+    const box = $("hkspots"); if (!box || !hk) return;
+    let c; try { c = hk.center || (hk.center = await spotCenter()); } catch (e) { box.innerHTML = '<p class="dim">Top spots couldn\'t load. Check your connection.</p>'; return; }
+    if (!c) { box.innerHTML = ""; return; }
+    const want = [...new Set(st.sp.flatMap(x => SPTAG[x] || []))];
+    const all = SP.spots.map(x => Object.assign({}, x, { mi: mi(c.la, c.lo, x.la, x.lo), hit: want.filter(t => x.tg.includes(t)).length }))
+      .filter(x => spF === "both" || (spF === "pub" ? !x.pv : x.pv))
+      .filter(x => !want.length || x.hit || x.k === "NF");
+    const inR = x => x.mi <= spR || (c.stateOnly && spR >= 100 && x.s.split("/").includes(c.stateOnly));
+    const list = all.filter(inR).sort((a, b) => (b.hit > 0) - (a.hit > 0) || a.mi - b.mi).slice(0, 25);
+    const wider = [10, 25, 50, 100, 200].find(r => r > spR && all.some(x => x.mi <= r || (c.stateOnly && r >= 100 && x.s.split("/").includes(c.stateOnly))));
+    const chips = [10, 25, 50, 100, 200].map(r => `<button type="button" class="chip${r === spR ? " on" : ""}" data-spr="${r}" aria-pressed="${r === spR}">${r} mi</button>`).join("");
+    const flt = [["pub", "Public"], ["priv", "Private / guided"], ["both", "Both"]].map(([k, l]) => `<button type="button" class="chip${k === spF ? " on" : ""}" data-spf="${k}" aria-pressed="${k === spF}">${l}</button>`).join("");
+    const what = want.length ? st.sp.join(", ").toLowerCase() : "hunting";
+    const item = x => {
+      const sel = st.ds && st.ds.n === x.n, tags = x.tg.map(t => TGL[t]).filter(Boolean);
+      const dir = `https://www.google.com/maps/dir/?api=1&destination=${x.la},${x.lo}`;
+      return `<li class="spot${x.pv ? " priv" : ""}${sel ? " sel" : ""}"><div class="spot-h"><b>${esc(x.n)}</b><span class="dist">${x.mi < 1 ? "<1" : Math.round(x.mi)} mi</span></div>` +
+        `<p class="dim">${KIND[x.k]} · ${esc(x.s)}${x.pv ? " · " + esc(x.at) : ""}</p>` +
+        (x.pv ? `<p class="privnote">🔒 Private land. Booking or permission required.</p>` : "") +
+        (tags.length ? `<p class="tags">${x.pv ? "Lists" : "Refuge lists hunting for"}: ${tags.join(", ")}</p>` : x.k === "NF" ? `<p class="tags">Most National Forest land is open to hunting under state rules.</p>` : "") +
+        `<div class="spot-a"><button type="button" class="btn ${sel ? "" : "primary"} sm" data-spadd="${esc(x.n)}">${sel ? "✓ In trip" : "Add to trip"}</button>` +
+        `<a class="btn sm" href="${dir}" target="_blank" rel="noopener">🧭 Directions</a>` +
+        `<a class="btn link sm" href="${esc(x.u)}" target="_blank" rel="noopener">${x.pv ? "Official website" : "Check regulations"} ↗</a></div></li>`;
+    };
+    box.innerHTML = `<div class="spots-card"><p class="wz-k">🎯 Top spots near ${esc(c.label)}</p><p class="dim">Places listed for ${esc(what)}, nearest first.</p>` +
+      `<div class="chiprow" role="group" aria-label="Radius">${chips}</div><div class="chiprow" role="group" aria-label="Land type">${flt}</div>` +
+      (list.length ? `<ul class="spotlist">${list.map(item).join("")}</ul>` :
+        `<p class="empty">No listed spots within ${spR} miles.${wider ? ` <button type="button" class="btn link" data-spr="${wider}">Widen to ${wider} mi →</button>` : ""}</p>`) +
+      `<p class="dim fine">Public spots: U.S. Fish &amp; Wildlife Service refuge hunt data and U.S. Forest Service boundaries. Private spots link to each business's own website; we don't rate or price them. ` +
+      `Pins are the refuge, forest or business location, not a specific parking spot. Seasons, permits and open areas change: always check the refuge and your state wildlife agency before you go.</p></div>`;
+    box.querySelectorAll("[data-spr]").forEach(b => b.onclick = () => { spR = +b.dataset.spr; renderSpots(); });
+    box.querySelectorAll("[data-spf]").forEach(b => b.onclick = () => { spF = b.dataset.spf; renderSpots(); });
+    box.querySelectorAll("[data-spadd]").forEach(b => b.onclick = () => {
+      const x = list.find(y => y.n === b.dataset.spadd); if (!x) return;
+      st.ds = { n: x.n, la: x.la, lo: x.lo, k: x.k, pv: x.pv, u: x.u }; st.loc = x.n + ", " + x.s; st.la = x.la; st.lo = x.lo; hk.locOk = true;
+      scored = null; $("loc").value = st.loc; renderGeo(); save(); renderSpots();
+      const chip = $("hawkreview").querySelector(".hchips"); if (chip) hawkReview();
+    });
   }
   function hawkMic() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition; if (!SR) return;
@@ -247,7 +366,7 @@
     load(); if (!st.g.length) st.g = (KITS[st.t] || []).map(([l, c, q, im]) => [l, c, 0, 0, q, im]);
     $("loc").value = st.loc; $("n").value = st.n; $("no").value = st.no; $("sd").min = today();
     renderGeo(); renderDates(); renderHunt(); renderCrew(); renderGear(); go(step);
-    document.addEventListener("click", e => { const g = e.target.closest("[data-go]"); if (g) { go(+g.dataset.go, true); document.body.classList.remove("sheet-open"); $("sumtoggle").setAttribute("aria-expanded", "false"); } });
+    document.addEventListener("click", e => { const g = e.target.closest("[data-go]"); if (g) { hkEdit = !!(hk && g.closest("#hawkreview .hchips")); if (hk && hkEdit) { hk.loc0 = st.loc + "|" + st.la; hk.editStep = +g.dataset.go; } go(+g.dataset.go, true); document.body.classList.remove("sheet-open"); $("sumtoggle").setAttribute("aria-expanded", "false"); } });
     $("next").onclick = () => go(step + 1, true); $("back").onclick = () => go(step - 1, true);
     $("reset").onclick = () => { if (confirm("Start over? This clears the plan saved in this browser.")) { localStorage.removeItem(LS); location.reload(); } };
     $("sumtoggle").onclick = () => { const o = document.body.classList.toggle("sheet-open"); $("sumtoggle").setAttribute("aria-expanded", String(o)); };
