@@ -1,7 +1,12 @@
 """Plan an Expedition (/plan.html) + trip link landing (/trip.html). Field names/enums mirror the app's
 data/trip/TripModels.kt + Lodging.kt + Models.kt(HarvestMethod). Link spec: your-world-ai-hunt/docs/web-trip-link.md"""
 import json
-import kitdata
+import kitdata, pathlib
+import items as itemimg
+ITEMS = pathlib.Path(__file__).resolve().parent.parent / 'assets/items'
+def _img(label, q):
+    k = itemimg.key_for(label, q)
+    return k if k and (ITEMS / f'{k}.webp').exists() else None
 
 TAG = {"LOCAL": "Home ground stands, leases and hardwood ridges.", "WESTERN": "High country, bugles at dawn, big western game.", "CANADA": "Boreal bush, moose country and big-bodied bucks.",
  "EUROPE": "Stag, boar and high seats in ancient forests.", "SAFARI": "Plains game at sunset.", "WATERFOWL": "Cupped wings over the decoys at first light.",
@@ -25,19 +30,27 @@ BUDGET = {"TAGS": "🎫 Tags & licenses", "TRAVEL": "✈️ Travel", "LODGING": 
 
 def data_js():
     kits = {k[0]: k for k in kitdata.KITS}
-    gear = {t: [[i[0], i[1], i[3]] for i in kitdata.ESSENTIALS + list(kits[s][7])] for t, s in KIT_FOR.items()}
+    gear = {t: [[i[0], i[1], i[3], _img(i[0], i[3])] for i in kitdata.ESSENTIALS + list(kits[s][7])] for t, s in KIT_FOR.items()}
     d = {"YW_TYPES": {k: {"title": a, "emoji": b, "sp": c, "tag": TAG[k]} for k, (a, b, c) in TYPES.items()}, "YW_KITS": gear,
          "YW_METHODS": METHODS, "YW_LODGING": LODGING, "YW_BUDGET": {k: v.split(" ", 1)[1] for k, v in BUDGET.items()}}
     return "<script>" + "".join(f"window.{k}={json.dumps(v, ensure_ascii=False)};" for k, v in d.items()) + "</script>"
 
 
 def build(page, PAGES, DISCLOSURE, play_btn):
-    js = data_js() + '<script src="assets/tripcodec.js"></script><script src="assets/vendor/qrcode.js"></script><script src="assets/plan.js"></script>'
+    js = data_js() + '<script src="assets/hawkparse.js"></script><script src="assets/tripcodec.js"></script><script src="assets/vendor/qrcode.js"></script><script src="assets/plan.js"></script>'
     steps = [("where", "📍", "Where"), ("when", "📅", "When"), ("hunt", "🎯", "Hunt"), ("crew", "🏕️", "Crew & stay"), ("gear", "🎒", "Gear"), ("send", "📲", "Best days & send")]
     nav = "".join(f'<li><button type="button" class="wz-dot" data-go="{i}" aria-label="Step {i+1}: {l}"><span class="n">{i+1}</span><span class="l">{l}</span></button></li>' for i, (_, e, l) in enumerate(steps))
     def step(i, title, sub, inner):
         return f'<section class="wz-step" data-step="{i}" aria-labelledby="h{i}" hidden><p class="wz-k">Step {i+1} of 6</p><h2 id="h{i}" tabindex="-1">{title}</h2><p class="wz-sub">{sub}</p>{inner}</section>'
-    body = (
+    hawk = ('<section class="hawk" id="hawk" aria-labelledby="hawkh"><div class="hawk-head"><span class="hawk-ico" aria-hidden="true">🦅</span><div><p class="wz-k">Ask Hawk</p>'
+     '<h2 id="hawkh">Hawk Quick Plan</h2><p class="dim">Tell Hawk your trip in one sentence and it fills in the planner. Simple rule-based reading in your browser, not a full AI, so check what it understood.</p></div></div>'
+     '<form id="hawkform" class="hawk-in" onsubmit="return false"><label class="sr" for="hawkq">Describe your trip</label><textarea id="hawkq" rows="2" maxlength="300" placeholder="Whitetail bow hunt near Andrews, SC, Nov 8-10, 3 of us, camping"></textarea>'
+     '<div class="hawk-btns"><button type="button" class="round mic" id="hawkmic" hidden aria-label="Speak your trip">🎙️</button><button type="button" class="btn primary" id="hawkgo">Plan it →</button></div></form>'
+     '<div class="chips hawk-ex" aria-label="Examples">' + "".join(f'<button type="button" class="chipbtn" data-ex="{x}">{x}</button>' for x in [
+       "Whitetail bow hunt near Andrews, SC, Nov 8-10, 3 of us, camping", "Duck hunt this weekend near Stuttgart, AR with my son",
+       "Elk rifle hunt in Bozeman, Montana Oct 20-25, me and 2 buddies, cabin, $1500", "Turkey hunt next Friday near Macon, GA, solo, shotgun"]) + '</div>'
+     '<div id="hawkreview" class="hawk-review" hidden aria-live="polite"></div></section>')
+    body = (hawk +
      '<div class="wz" id="wz"><div class="wz-top"><div class="wz-bar"><span id="wzfill"></span></div><ol class="wz-nav">' + nav + '</ol></div>'
      '<div class="wz-layout"><div class="wz-main" id="plan">'
      + step(0, "Where are you hunting?", "Search a town, park or area. We use it for the forecast. Nothing leaves your browser except the search.",
@@ -55,7 +68,7 @@ def build(page, PAGES, DISCLOSURE, play_btn):
         '<div id="crewnames" class="crewnames"></div><h3>Lodging</h3><div class="chips" id="lodging"></div>'
         '<details class="budget"><summary>💵 Budget (optional, your own estimates)</summary><div id="budget" class="g3"></div><p class="pill" id="budtotal"></p></details>')
      + step(4, "Pack your kit", "Starts from our checklist for this hunt type. Tick what you have; Amazon links open a search sorted by customer rating.",
-        DISCLOSURE.format(p="") + '<p class="pill" id="packed"></p><div id="gearlist" class="kit"></div><div class="addrow"><input id="newgear" maxlength="80" placeholder="Add your own item" aria-label="Add your own gear item"><button type="button" class="btn" id="addgear">Add</button></div>')
+        DISCLOSURE.format(p="") + '<p class="pill" id="packed"></p><p class="dim item-note">Item images are illustrations, not the exact products sold.</p><div id="gearlist" class="kit"></div><div class="addrow"><input id="newgear" maxlength="80" placeholder="Add your own item" aria-label="Add your own gear item"><button type="button" class="btn" id="addgear">Add</button></div>')
      + step(5, "Best days &amp; send to phone", "Day-by-day estimate from the free Open-Meteo forecast and moon phase. The app adds solunar feeding windows, so its stars can differ.",
         '<label class="lbl">Trip name<input id="n" maxlength="80" placeholder="e.g. November rut week"></label><div id="days" class="days" aria-live="polite"></div>'
         '<label class="lbl">Notes<textarea id="no" rows="3" maxlength="1500" placeholder="Access, regs to check, meeting point…"></textarea></label>'

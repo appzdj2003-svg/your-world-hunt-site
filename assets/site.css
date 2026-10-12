@@ -239,6 +239,32 @@ body.planpage .hero{min-height:200px}
  .sumtoggle #sumshort{flex:1;text-align:right;font-weight:500;font-size:.82rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chev{transition:transform .25s}
  .sumbody,.wz-sum .saved{display:none}body.sheet-open .sumbody,body.sheet-open .wz-sum .saved{display:block}body.sheet-open .wz-sum{padding-bottom:14px}body.sheet-open .chev{transform:rotate(180deg)}
  body.planpage footer{padding-bottom:80px}.wz-foot{position:sticky;bottom:64px;z-index:20;background:rgba(21,19,13,.94);backdrop-filter:blur(8px);padding:10px;border-radius:16px;border:1px solid var(--edge)}}
+/* Hawk Quick Plan */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.hawk{margin:22px 0 6px;padding:clamp(16px,4vw,26px);border-radius:22px;border:1px solid var(--amber);background:radial-gradient(120% 140% at 0% 0%,rgba(224,112,42,.22),transparent 55%),linear-gradient(160deg,#2b2416,var(--panel));box-shadow:0 14px 34px rgba(0,0,0,.3)}
+.hawk-head{display:flex;gap:14px;align-items:flex-start}.hawk-head h2{margin:.05em 0 .2em;color:var(--text)}.hawk-head p.dim{margin:0}
+.hawk-ico{font-size:2.2rem;display:grid;place-items:center;width:60px;height:60px;border-radius:18px;background:var(--void);border:1px solid var(--amber);flex:none}
+.hawk-in{display:flex;gap:10px;align-items:stretch;margin:16px 0 12px;background:var(--void);border:2px solid var(--edge);border-radius:18px;padding:8px;transition:border-color .2s}.hawk-in:focus-within{border-color:var(--amber)}
+.hawk-in textarea{flex:1;border:0;background:none;color:var(--text);font:inherit;font-size:1.08rem;resize:none;padding:8px;outline:none;min-height:56px}
+.hawk-btns{display:flex;gap:8px;align-items:center}.mic{border-color:var(--moss)}.mic.live{background:var(--sunset);border-color:var(--sunset);animation:pulse 1s infinite}@keyframes pulse{50%{box-shadow:0 0 0 8px rgba(224,112,42,.25)}}
+@media(max-width:560px){.hawk-in{flex-direction:column}.hawk-btns{justify-content:flex-end}}
+.hawk-ex .chipbtn{font-size:.82rem;font-weight:500;text-align:left;color:var(--dim)}.hawk-ex .chipbtn:hover{color:var(--text)}
+.hawk-review{margin-top:16px;animation:wzin .35s ease both}.hk-said{font-weight:700}
+.hchips{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.hchip{display:flex;gap:10px;align-items:center;text-align:left;padding:10px 12px;min-height:56px;border-radius:14px;border:1px solid var(--moss);background:rgba(138,154,75,.12);color:var(--text);font:inherit;cursor:pointer}
+.hchip small{display:block;color:var(--dim);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em}.hchip .ed{margin-left:auto;color:var(--dim)}.hchip:hover{border-color:var(--khaki)}
+.hchip.need{border:2px dashed var(--sunset);background:rgba(224,112,42,.12)}
+.asks{margin-top:14px;padding:14px;border-radius:16px;border:2px solid var(--sunset);background:rgba(224,112,42,.08)}.ask+.ask{margin-top:12px;padding-top:12px;border-top:1px solid var(--edge)}.ask p{margin:.2em 0 .5em}
+.hawk input{font:inherit;color:var(--text);background:var(--void);border:1px solid var(--edge);border-radius:12px;padding:12px;min-height:48px;width:100%;color-scheme:dark}
+/* gear image cards */
+.kitsec h3{margin:18px 0 8px}.itemgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.icard{position:relative;display:flex;flex-direction:column;background:var(--panelhi);border:2px solid var(--edge);border-radius:16px;overflow:hidden;transition:border-color .15s,transform .15s}.icard:hover{transform:translateY(-2px)}
+.icard.on{border-color:var(--moss)}.icard label{display:flex;flex-direction:column;cursor:pointer;flex:1}.icard input{position:absolute;opacity:0;width:1px;height:1px}
+.icard:focus-within{outline:3px solid var(--amber);outline-offset:2px}
+.ipic{position:relative;display:block;aspect-ratio:1;background:#2a2518}.ipic img{display:block;width:100%;height:100%;object-fit:cover}.noimg{display:grid;place-items:center;height:100%;font-size:2.6rem;opacity:.6}
+.tick{position:absolute;top:8px;right:8px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(21,19,13,.75);border:2px solid var(--khaki);color:transparent;font-weight:900}
+.icard.on .tick{background:var(--moss);border-color:var(--moss);color:#141008}.icard.on img{opacity:.75}
+.iname{padding:8px 10px 2px;font-weight:700;font-size:.88rem;line-height:1.3}.icard .amz{padding:4px 10px 10px}.icard .x{position:absolute;top:6px;left:6px;background:rgba(21,19,13,.75);border-radius:50%}
 /* trip landing */
 .tripcard{margin:22px 0 10px;background:var(--panel);border:1px solid var(--edge);border-radius:22px;padding:clamp(16px,4vw,28px);box-shadow:0 12px 30px rgba(0,0,0,.25);animation:wzin .35s ease both}
 .tc-head{display:flex;gap:16px;align-items:center;padding-bottom:14px;border-bottom:1px solid var(--edge)}.tc-head h2{margin:.1em 0;color:var(--text)}.tc-emoji{font-size:2.8rem;display:grid;place-items:center;width:72px;height:72px;border-radius:20px;background:var(--panelhi);flex:none}

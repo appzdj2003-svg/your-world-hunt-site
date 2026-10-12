@@ -21,6 +21,7 @@
     try { const o = JSON.parse(localStorage.getItem(LS) || "null"); if (!o || o.v !== 1) return;
       if (Array.isArray(o.bu)) { const m = {}; o.bu.forEach(l => m[l[0]] = l[2]); o.bu = m; }   // older saves
       if (o.g && o.g.length && o.g[0].length < 5) { const q = new Map((KITS[o.t] || []).map(k => [k[0], k[2]])); o.g = o.g.map(g => [g[0], g[1], g[2], q.has(g[0]) ? 0 : 1, q.get(g[0]) || null]); }
+      if (o.g) { const im = new Map((KITS[o.t] || []).map(k => [k[0], k[3]])); o.g.forEach(g => { if (g.length < 6) g[5] = im.get(g[0]) || null; }); }
       step = Math.min(STEPS - 1, +o.step || 0); delete o.step; st = Object.assign(st, o);
     } catch (e) {}
   }
@@ -91,7 +92,7 @@
   }
   function setType(k) {
     st.t = k; const was = new Map(st.g.map(g => [g[0], g[2]])), custom = st.g.filter(g => g[3]);
-    st.g = (KITS[k] || []).map(([l, c, q]) => [l, c, was.get(l) ? 1 : 0, 0, q]).concat(custom);
+    st.g = (KITS[k] || []).map(([l, c, q, im]) => [l, c, was.get(l) ? 1 : 0, 0, q, im]).concat(custom);
     renderHunt(); renderGear(); save();
   }
 
@@ -109,10 +110,10 @@
   /* ---------- step 5: gear ---------- */
   function renderGear() {
     const cats = [...new Set(st.g.map(g => g[1]))];
-    $("gearlist").innerHTML = cats.map(c => `<div class="kitcard"><h3>${esc(c)}</h3><ul>` + st.g.map((g, i) => g[1] !== c ? "" :
-      `<li class="${g[2] ? "on" : ""}"><label><input type="checkbox" data-i="${i}"${g[2] ? " checked" : ""}><span>${esc(g[0])}</span></label>` +
+    $("gearlist").innerHTML = cats.map(c => `<div class="kitsec"><h3>${esc(c)}</h3><div class="itemgrid">` + st.g.map((g, i) => g[1] !== c ? "" :
+      `<div class="icard${g[2] ? " on" : ""}"><label><input type="checkbox" data-i="${i}"${g[2] ? " checked" : ""}><span class="ipic">${g[5] ? `<img src="assets/items/${esc(g[5])}.webp" width="400" height="400" loading="lazy" decoding="async" alt="Illustration of ${esc(g[0].toLowerCase())}">` : '<span class="noimg" aria-hidden="true">🎒</span>'}<span class="tick" aria-hidden="true">✓</span></span><span class="iname">${esc(g[0])}</span></label>` +
       (g[4] ? `<a class="amz" href="${esc(amz(g[4]))}" target="_blank" rel="sponsored nofollow noopener" aria-label="Shop ${esc(g[0])} on Amazon">Amazon ↗</a>` : "") +
-      (g[3] ? `<button type="button" class="x" data-del="${i}" aria-label="Remove ${esc(g[0])}">✕</button>` : "") + `</li>`).join("") + `</ul></div>`).join("") || '<p class="empty">No gear yet.</p>';
+      (g[3] ? `<button type="button" class="x" data-del="${i}" aria-label="Remove ${esc(g[0])}">✕</button>` : "") + `</div>`).join("") + `</div></div>`).join("") || '<p class="empty">No gear yet.</p>';
     const n = st.g.filter(g => g[2]).length; $("packed").innerHTML = `🎒 ${n} of ${st.g.length} packed <span class="meter"><span style="width:${st.g.length ? n / st.g.length * 100 : 0}%"></span></span>`;
   }
 
@@ -183,9 +184,67 @@
     $("sumshort").textContent = `${st.loc ? st.loc.split(",")[0] + " · " : ""}${st.d}d · ${n}/${st.g.length} gear`;
   }
 
+
+  /* ---------- Hawk Quick Plan (rule-based, see hawkparse.js) ---------- */
+  let hk = null;
+  async function geocode(name, state) {
+    const r = await fetch("https://geocoding-api.open-meteo.com/v1/search?count=10&language=en&format=json&name=" + encodeURIComponent(name)).then(r => { if (!r.ok) throw 0; return r.json(); });
+    const res = r.results || []; return (state && res.find(x => x.admin1 === state)) || (state ? null : res[0]) || null;
+  }
+  function refreshAll() { $("loc").value = st.loc; scored = null; renderGeo(); renderDates(); renderHunt(); renderCrew(); renderGear(); save(); }
+  async function hawkRun(text) {
+    text = (text || $("hawkq").value).trim(); if (!text) { $("hawkq").focus(); return; }
+    const box = $("hawkreview"); box.hidden = false; box.innerHTML = '<p class="dim">🦅 Hawk is reading your trip…</p><div class="skel"></div>';
+    const r = window.HawkParse.parse(text); hk = { r, locOk: false };
+    if (r.t) setType(r.t);
+    if (r.sp.length) st.sp = r.sp.slice();
+    st.m = r.m || ""; st.lt = r.lt || "";   // a new sentence replaces the old answers
+    st.cr = Array.from({ length: (r.party || 1) - 1 }, (_, i) => "Hunter " + (i + 2));
+    st.bu = r.budget ? { OTHER: r.budget } : {};
+    if (r.sd) { st.sd = r.sd; st.d = r.d; }
+    if (r.loc) {
+      st.loc = r.loc; st.la = st.lo = null;
+      try { const g = await geocode(r.name, r.state) || (r.state ? null : await geocode(r.loc)); if (g) { st.loc = [g.name, g.admin1, g.country].filter(Boolean).join(", "); st.la = g.latitude; st.lo = g.longitude; hk.locOk = true; } } catch (e) { hk.geoErr = true; }
+    }
+    refreshAll(); hawkReview();
+  }
+  function hawkReview() {
+    const r = hk.r, x = TY[st.t] || {}, ed = iso(dms(st.sd) + (st.d - 1) * DAY);
+    const chip = (ic, k, v, s, ok) => `<button type="button" class="hchip${ok ? "" : " need"}" data-go="${s}" aria-label="Edit ${k}"><span>${ic}</span><span><small>${k}</small>${v}</span><span class="ed" aria-hidden="true">✎</span></button>`;
+    const needLoc = !hk.locOk, needDate = !r.sd, needType = !r.t;
+    let ask = "";
+    if (needLoc) ask += `<div class="ask"><p><b>Where's the hunt?</b> ${r.loc ? `Hawk couldn't find “${esc(r.loc)}” on the map.` : "Hawk didn't catch a place."}</p><div class="addrow"><input id="hkloc" placeholder="Town, park or area (e.g. Andrews, SC)" value="${esc(r.loc || "")}" aria-label="Where's the hunt"><button type="button" class="btn" id="hklocgo">Find</button></div><p class="dim" id="hklocmsg"></p></div>`;
+    if (needDate) ask += `<div class="ask"><p><b>When are you going?</b></p><div class="daterange"><label>First day<input type="date" id="hksd" value="${st.sd}"></label><span class="arrow">→</span><label>Last day<input type="date" id="hked" value="${ed}"></label></div></div>`;
+    if (needType) ask += `<div class="ask"><p><b>What are you hunting?</b></p><div class="chips">${T.TYPES.map(k => `<button type="button" class="chipbtn" data-hkt="${k}">${(TY[k] || {}).emoji || ""} ${esc((TY[k] || {}).title || k)}</button>`).join("")}</div></div>`;
+    $("hawkreview").innerHTML = `<p class="hk-said">🦅 Here's what Hawk understood. Tap any chip to change it.</p><div class="hchips">` +
+      chip("📍", "Where", esc(st.loc || "Not set"), 0, !needLoc) + chip("📅", "When", `${nice(st.sd)} → ${nice(ed)} · ${st.d}d`, 1, !needDate) +
+      chip(x.emoji || "🎯", "Hunt", esc(x.title || "Not set") + (st.sp.length ? " · " + esc(st.sp.join(", ")) : ""), 2, !needType) +
+      (st.m ? chip("🏹", "Method", esc(MET[st.m]), 2, true) : "") + chip("👥", "Hunters", String(1 + st.cr.length), 3, true) +
+      (st.lt ? chip("🏕️", "Stay", esc(LOD[st.lt]), 3, true) : "") + (r.budget ? chip("💵", "Budget", "$" + r.budget.toLocaleString(), 3, true) : "") + `</div>` +
+      (ask ? `<div class="asks"><p class="wz-k">Hawk needs a little more</p>${ask}</div>` : "") +
+      `<div class="btns"><button type="button" class="btn primary big" id="hkdone">${ask ? "Continue anyway → Best days" : "Looks good → Best days & send"}</button><button type="button" class="btn link" data-go="0">Walk through every step</button></div>`;
+    const lg = $("hklocgo"); if (lg) { const f = async () => { const v = $("hkloc").value.trim(); if (!v) return; $("hklocmsg").textContent = "Searching…";
+      const p = window.HawkParse.parse("in " + v.replace(/^./, c => c.toUpperCase())); let g = null;
+      try { g = await geocode(p.name || v, p.state) || await geocode(v.split(",")[0]); } catch (e) {}
+      if (g) { st.loc = [g.name, g.admin1, g.country].filter(Boolean).join(", "); st.la = g.latitude; st.lo = g.longitude; hk.locOk = true; refreshAll(); hawkReview(); }
+      else $("hklocmsg").textContent = "Still couldn't find it. Try the nearest town."; };
+      lg.onclick = f; $("hkloc").onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); f(); } }; }
+    const hs = $("hksd"); if (hs) { const f = () => { const a = $("hksd").value, b = $("hked").value; if (a && b && b >= a) { hk.r.sd = a; setRange(a, b); } }; hs.onchange = f; $("hked").onchange = f; }
+    $("hawkreview").querySelectorAll("[data-hkt]").forEach(b => b.onclick = () => { hk.r.t = b.dataset.hkt; setType(b.dataset.hkt); hawkReview(); });
+    $("hkdone").onclick = () => go(5, true);
+  }
+  function hawkMic() {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition; if (!SR) return;
+    const btn = $("hawkmic"); btn.hidden = false;
+    btn.onclick = () => { const rec = new SR(); rec.lang = navigator.language || "en-US"; rec.interimResults = true; btn.classList.add("live"); btn.setAttribute("aria-label", "Listening…");
+      rec.onresult = e => { $("hawkq").value = [...e.results].map(x => x[0].transcript).join(" "); };
+      rec.onend = () => { btn.classList.remove("live"); btn.setAttribute("aria-label", "Speak your trip"); if ($("hawkq").value.trim()) hawkRun(); };
+      rec.onerror = () => btn.classList.remove("live"); rec.start(); };
+  }
+
   /* ---------- wire up ---------- */
   document.addEventListener("DOMContentLoaded", () => {
-    load(); if (!st.g.length) st.g = (KITS[st.t] || []).map(([l, c, q]) => [l, c, 0, 0, q]);
+    load(); if (!st.g.length) st.g = (KITS[st.t] || []).map(([l, c, q, im]) => [l, c, 0, 0, q, im]);
     $("loc").value = st.loc; $("n").value = st.n; $("no").value = st.no; $("sd").min = today();
     renderGeo(); renderDates(); renderHunt(); renderCrew(); renderGear(); go(step);
     document.addEventListener("click", e => { const g = e.target.closest("[data-go]"); if (g) { go(+g.dataset.go, true); document.body.classList.remove("sheet-open"); $("sumtoggle").setAttribute("aria-expanded", "false"); } });
@@ -212,9 +271,11 @@
     $("budget").oninput = e => { const c = e.target.dataset.b; if (c) { st.bu[c] = e.target.value; budTotal(); save(); } };
     $("gearlist").onchange = e => { const i = e.target.dataset.i; if (i != null) { st.g[i][2] = e.target.checked ? 1 : 0; renderGear(); save(); } };
     $("gearlist").onclick = e => { const d = e.target.closest("[data-del]"); if (d) { st.g.splice(+d.dataset.del, 1); renderGear(); save(); } };
-    const addG = () => { const v = $("newgear").value.trim(); if (v) { st.g.push([v, "Custom", 1, 1, null]); renderGear(); save(); } $("newgear").value = ""; };
+    const addG = () => { const v = $("newgear").value.trim(); if (v) { st.g.push([v, "Custom", 1, 1, null, null]); renderGear(); save(); } $("newgear").value = ""; };
     $("addgear").onclick = addG; $("newgear").onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); addG(); } };
     $("n").oninput = () => { st.n = $("n").value; save(); }; $("no").oninput = () => { st.no = $("no").value; save(); };
+    hawkMic(); $("hawkgo").onclick = () => hawkRun(); $("hawkq").onkeydown = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); hawkRun(); } };
+    document.querySelector(".hawk-ex").onclick = e => { const b = e.target.closest("[data-ex]"); if (b) { $("hawkq").value = b.dataset.ex; hawkRun(); } };
     $("send").onclick = send; $("print").onclick = () => window.print();
     $("copy").onclick = async () => { try { await navigator.clipboard.writeText($("tlink").value); $("copy").textContent = "Copied ✓"; setTimeout(() => $("copy").textContent = "Copy link", 1800); } catch (e) { $("tlink").select(); } };
   });
