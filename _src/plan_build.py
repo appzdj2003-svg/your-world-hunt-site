@@ -37,19 +37,27 @@ def data_js():
 
 
 def build(page, PAGES, DISCLOSURE, play_btn):
-    js = data_js() + '<script src="assets/hawkparse.js"></script><script src="assets/tripcodec.js"></script><script src="assets/vendor/qrcode.js"></script><script src="assets/plan.js"></script>'
+    js = data_js() + '<script src="assets/hawkparse.js"></script><script src="assets/tripcodec.js"></script><script src="assets/vendor/qrcode.js"></script><script src="assets/askdata.js"></script><script src="assets/ask.js"></script><script src="assets/plan.js"></script><script src="assets/voice.js"></script>'
     steps = [("where", "📍", "Where"), ("when", "📅", "When"), ("hunt", "🎯", "Hunt"), ("crew", "🏕️", "Crew & stay"), ("gear", "🎒", "Gear"), ("send", "📲", "Best days & send")]
     nav = "".join(f'<li><button type="button" class="wz-dot" data-go="{i}" aria-label="Step {i+1}: {l}"><span class="n">{i+1}</span><span class="l">{l}</span></button></li>' for i, (_, e, l) in enumerate(steps))
     def step(i, title, sub, inner):
         return f'<section class="wz-step" data-step="{i}" aria-labelledby="h{i}" hidden><p class="wz-k">Step {i+1} of 6</p><h2 id="h{i}" tabindex="-1">{title}</h2><p class="wz-sub">{sub}</p>{inner}</section>'
+<<<<<<< Updated upstream
     hawk = ('<section class="hawk" id="hawk" aria-labelledby="hawkh"><div class="hawk-head"><span class="hawk-ico" aria-hidden="true">🦅</span><div><p class="wz-k">Ask Hawk</p>'
      '<h2 id="hawkh">Hawk Quick Plan</h2><p class="dim">Tell Hawk your trip in one sentence and it fills in the planner. Simple rule-based reading in your browser, not a full AI, so check what it understood.</p></div></div>'
      '<form id="hawkform" class="hawk-in" onsubmit="return false"><label class="sr" for="hawkq">Describe your trip</label><textarea id="hawkq" rows="2" maxlength="300" placeholder="Mule deer bow hunt near Gunnison, CO, Sep 8-12, 3 of us, camping"></textarea>'
      '<div class="hawk-btns"><button type="button" class="round mic" id="hawkmic" hidden aria-label="Speak your trip">🎙️</button><button type="button" class="btn primary" id="hawkgo">Plan it →</button></div></form>'
      '<p class="hawk-tesla dim" id="hawktesla" hidden>In a Tesla, tap the box, then press the steering-wheel mic and speak.</p>'
+=======
+    hawk = ('<section class="hawk" id="hawk" aria-labelledby="hawkh"><div class="hawk-head"><span class="hawk-ico" aria-hidden="true">🦅</span><div><p class="wz-k">Trip Planner</p>'
+     '<h2 id="hawkh">Ask Hawk</h2><p class="dim">Tell Hawk your trip in one sentence and it fills in the planner, or ask a hunting question for a sourced answer. Simple rule-based reading in your browser, not a full AI, so check what it understood.</p></div></div>'
+     '<form id="hawkform" class="hawk-in" onsubmit="return false"><label class="sr" for="hawkq">Describe your trip or ask a question</label><textarea id="hawkq" rows="2" maxlength="300" placeholder="Mule deer bow hunt near Gunnison, CO, Sep 8-12, 3 of us, camping"></textarea>'
+     '<div class="hawk-btns"><button type="button" class="round mic" id="hawkmic" data-voice-for="hawkq" data-voice-submit="hawkgo" aria-label="Speak your trip" aria-pressed="false">🎙️</button><button type="button" class="btn primary" id="hawkgo">Plan it →</button></div></form>'
+>>>>>>> Stashed changes
      '<div class="chips hawk-ex" aria-label="Examples">' + "".join(f'<button type="button" class="chipbtn" data-ex="{x}">{x}</button>' for x in [
        "Mule deer bow hunt near Gunnison, CO, Sep 8-12, 3 of us, camping", "Duck hunt this weekend near Stuttgart, AR with my son",
-       "Elk rifle hunt in Bozeman, Montana Oct 20-25, me and 2 buddies, cabin, $1500", "Turkey hunt next Friday near Macon, GA, solo, shotgun"]) + '</div>'
+       "Elk rifle hunt in Bozeman, Montana Oct 20-25, me and 2 buddies, cabin, $1500", "Turkey hunt next Friday near Macon, GA, solo, shotgun", "Do I need a duck stamp?"]) + '</div>'
+     '<p class="dim fine vnote">🎙️ Voice: this site sends nothing; your browser\'s own speech service handles voice.</p>'
      '<div id="hawkreview" class="hawk-review" hidden aria-live="polite"></div></section>')
     body = (hawk +
      '<div class="wz" id="wz"><div class="wz-top"><div class="wz-bar"><span id="wzfill"></span></div><ol class="wz-nav">' + nav + '</ol></div>'
@@ -85,6 +93,14 @@ def build(page, PAGES, DISCLOSURE, play_btn):
      f'<div class="upsell noprint"><p><b>Hunt it with the app:</b> GPS return, wind, pressure, moon and directions at your stands.</p>{play_btn()}</div>' + js)
     page("plan.html", "Trip Planner", "Free hunt trip planner: pick a destination, dates, species, crew, lodging and gear, see estimated best days, then send the plan to the Your World Hunt app.",
          body, "camp", "Trip Planner", "Free · no account", "Plan the hunt in six quick steps, then send it to your phone with one scan.", prio="0.8")
+    abody = ('<section class="hawk askpage"><div id="asklog" class="asklog" aria-live="polite"><div class="msg bot"><b>🦅 Hawk</b><p>Ask a hunting question, like “Do I need a duck stamp?” or “Can I hunt on a refuge?”. '
+             'Answers come from a short, curated list with a source on every answer. Describe a hunt instead and Hawk opens the Trip Planner.</p></div></div>'
+             '<form id="askf" class="hawk-in"><label class="sr" for="askq">Ask Hawk</label><textarea id="askq" rows="2" maxlength="300" placeholder="Do I need a duck stamp?"></textarea>'
+             '<div class="hawk-btns"><button type="button" class="round mic" id="askmic" data-voice-for="askq" data-voice-submit="askf" aria-label="Speak your question" aria-pressed="false">🎙️</button><button type="submit" class="btn primary" id="askgo">Ask →</button></div></form>'
+             '<p class="dim fine vnote">🎙️ Voice: this site sends nothing; your browser\'s own speech service handles voice. Seasons, limits and licenses: always check your state wildlife agency.</p></section>'
+             '<script src="assets/hawkparse.js"></script><script src="assets/askdata.js"></script><script src="assets/ask.js"></script><script src="assets/voice.js"></script>')
+    page("ask.html", "Ask Hawk", "Ask Hawk hunting questions: sourced answers on duck stamps, refuges, public land, wind, tree stand safety and more, or describe a hunt to plan it.",
+         abody, "camp", "Ask Hawk", "Sourced answers", "Quick hunting answers with a source on every one.", prio="0.6")
     import pathlib
     for f in ("plan.html",):
         fp = pathlib.Path(__file__).resolve().parent.parent / f; fp.write_text(fp.read_text().replace("<body>", '<body class="planpage">', 1))

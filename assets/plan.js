@@ -36,6 +36,21 @@
     return t;
   }
 
+  /* ---------- open a trip sent from the app: plan.html#v1.<token> ---------- */
+  async function importHash() {
+    const h = location.hash.slice(1); if (!/^v1\./.test(h)) return false;
+    let t; try { t = await window.YWTrip.decode(h); } catch (e) { const b = $("hawkreview"); b.hidden = false; b.innerHTML = '<p class="empty">⚠️ That trip link looks incomplete or damaged. Send it from the app again.</p>'; return false; }
+    const im = new Map((KITS[t.t] || []).map(k => [k[0], k]));
+    st = Object.assign(st, { n: t.n || "", t: t.t, sp: t.sp || [], loc: t.loc || "", la: t.la ?? null, lo: t.lo ?? null, sd: t.sd, d: t.d, m: t.m || "", cr: t.cr || [], lt: t.lt || "", no: t.no || "",
+      bu: Object.fromEntries((t.bu || []).map(l => [l[0], l[2]])), ds: t.ds || null,
+      g: (t.g && t.g.length ? t.g : []).map(g => { const k = im.get(g[0]); return [g[0], g[1], g[2] ? 1 : 0, k ? 0 : 1, k ? k[2] : null, k ? k[3] : null]; }) });
+    if (!st.g.length) st.g = (KITS[st.t] || []).map(([l, c, q, i]) => [l, c, 0, 0, q, i]);
+    hk = { r: { loc: st.loc, name: null, state: null, st: null, sd: st.sd, t: st.t, sp: st.sp.slice(), party: 1 + st.cr.length, budget: Object.values(st.bu).reduce((a, c) => a + (+c || 0), 0) || null, lt: st.lt }, locOk: st.la != null || !!st.loc, fromApp: true };
+    history.replaceState(null, "", location.pathname);   // keep the token out of later reloads
+    $("n").value = st.n; $("no").value = st.no; refreshAll(); const b = $("hawkreview"); b.hidden = false; hawkReview();
+    b.insertAdjacentHTML("afterbegin", '<p class="fromapp">📲 Opened from the Your World Hunt app. Edit anything, then send it back with “Send to my phone”.</p>');
+    return true;
+  }
   /* ---------- clear (X) buttons in every text field ---------- */
   function addClear(el) {
     if (el.dataset.clr || el.readOnly || !/^(text|search|)$/.test(el.type === "textarea" ? "" : el.type || "")) return;
@@ -248,6 +263,10 @@
   async function hawkRun(text) {
     text = (text || $("hawkq").value).trim(); if (!text) { $("hawkq").focus(); return; }
     const box = $("hawkreview"); box.hidden = false; box.innerHTML = '<p class="dim">🦅 Hawk is reading your trip…</p><div class="skel"></div>';
+    if (window.YWAsk && window.YWAsk.kind(text) === "question") {   // a question, not a trip: answer from sourced Q&A
+      hk = null; box.innerHTML = `<div class="spots-card askans"><p class="wz-k">🦅 Hawk answers</p>${window.YWAsk.answerHtml(text)}<p><a class="btn link" href="ask.html?q=${encodeURIComponent(text)}">Ask more on the Ask Hawk page →</a></p></div>`;
+      box.querySelectorAll(".asksug").forEach(b => b.onclick = () => { $("hawkq").value = b.textContent; hawkRun(); }); return;
+    }
     const r = window.HawkParse.parse(text); hk = { r, locOk: false };
     if (r.t) setType(r.t);
     if (r.sp.length) st.sp = r.sp.slice();
@@ -352,6 +371,7 @@
       const chip = $("hawkreview").querySelector(".hchips"); if (chip) hawkReview();
     });
   }
+<<<<<<< Updated upstream
   function hawkMic() {
     if (/Tesla/i.test(navigator.userAgent)) { const t = $("hawktesla"); if (t) t.hidden = false; return; }
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition; if (!SR) return;
@@ -361,6 +381,8 @@
       rec.onend = () => { btn.classList.remove("live"); btn.setAttribute("aria-label", "Speak your trip"); if ($("hawkq").value.trim()) hawkRun(); };
       rec.onerror = () => btn.classList.remove("live"); rec.start(); };
   }
+=======
+>>>>>>> Stashed changes
 
   /* ---------- wire up ---------- */
   document.addEventListener("DOMContentLoaded", () => {
@@ -394,8 +416,10 @@
     const addG = () => { const v = $("newgear").value.trim(); if (v) { st.g.push([v, "Custom", 1, 1, null, null]); renderGear(); save(); } $("newgear").value = ""; };
     $("addgear").onclick = addG; $("newgear").onkeydown = e => { if (e.key === "Enter") { e.preventDefault(); addG(); } };
     $("n").oninput = () => { st.n = $("n").value; save(); }; $("no").oninput = () => { st.no = $("no").value; save(); };
-    hawkMic(); $("hawkgo").onclick = () => hawkRun(); $("hawkq").onkeydown = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); hawkRun(); } };
+    $("hawkgo").onclick = () => hawkRun(); $("hawkq").onkeydown = e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); hawkRun(); } };
     document.querySelector(".hawk-ex").onclick = e => { const b = e.target.closest("[data-ex]"); if (b) { $("hawkq").value = b.dataset.ex; hawkRun(); } };
+    importHash().then(ok => { const q = !ok && new URLSearchParams(location.search).get("q"); if (q) { $("hawkq").value = q.slice(0, 300); hawkRun(); } });
+    window.addEventListener("hashchange", importHash);
     $("send").onclick = send; $("print").onclick = () => window.print();
     $("copy").onclick = async () => { try { await navigator.clipboard.writeText($("tlink").value); $("copy").textContent = "Copied ✓"; setTimeout(() => $("copy").textContent = "Copy link", 1800); } catch (e) { $("tlink").select(); } };
   });

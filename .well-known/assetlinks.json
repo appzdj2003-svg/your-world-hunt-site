@@ -1,10 +1,15 @@
-[{
-  "relation": ["delegate_permission/common.handle_all_urls"],
-  "target": {
-    "namespace": "android_app",
-    "package_name": "com.yourworld.hunt",
-    "sha256_cert_fingerprints": [
-      "84:71:36:1E:B6:5F:E8:79:2D:63:54:E6:7C:55:82:75:98:3F:8F:BE:15:FA:17:36:AE:BE:5E:12:84:97:53:85"
-    ]
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.yourworld.hunt",
+      "sha256_cert_fingerprints": [
+        "2A:1A:E2:8A:DB:CC:F7:AC:27:E9:C1:68:4E:0A:52:BB:36:E1:43:81:1D:E4:B5:17:25:3C:92:20:9A:F2:DB:FC",
+        "84:71:36:1E:B6:5F:E8:79:2D:63:54:E6:7C:55:82:75:98:3F:8F:BE:15:FA:17:36:AE:BE:5E:12:84:97:53:85"
+      ]
+    }
   }
-}]
+]

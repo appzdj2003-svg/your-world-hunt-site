@@ -54,6 +54,15 @@ def play_btn(cls="primary"): return f'<a class="btn {cls} play-badge" href="{PLA
 
 NAV = [("index.html", "Home"), ("features.html", "Features"), ("how-to-use.html", "How-To"), ("guides/", "Guides"), ("gear/", "Gear Lists"), ("plan.html", "Trip Planner"), ("deals.html", "Deals"), ("pricing.html", "Pricing"), ("shop/", "Shop")]
 
+def bust(doc):
+    """Cache-bust local scripts and site.css: ?v=<sha1[:10]> of the file (GitHub Pages caches ~10 min)."""
+    import re, hashlib
+    def rep(m):
+        rel = m.group(2).lstrip("./").replace("../", ""); f = ROOT / rel
+        return m.group(1) + m.group(2) + ("?v=" + hashlib.sha1(f.read_bytes()).hexdigest()[:10] if f.is_file() else "") + '"'
+    return re.sub(r'((?:src|href)=")((?:\.\./)*assets/[\w./-]+\.(?:js|css))"', rep, doc)
+
+
 def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None, jsonld=None, og_type="website", prio="0.6", absolute=False, hero_extra=""):
     depth = path.count("/")
     p = SITE if absolute else "../" * depth
@@ -86,6 +95,7 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
     doc = tag_play(doc, path)
     if 'class="item-' in body and "item-note" not in body:
         doc = doc.replace("</div></main>", ITEM_NOTE + "</div></main>", 1)
+    doc = bust(doc)
     out = ROOT / path
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(doc)
