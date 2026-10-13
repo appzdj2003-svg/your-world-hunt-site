@@ -5,6 +5,8 @@ from pathlib import Path
 import scenes, shopdata, kitdata, plan_build, items as itemimg, article2026 as A26
 
 ROOT = Path(__file__).resolve().parent.parent
+import hashlib as _h, pathlib as _pl
+ICONV = _h.sha1((_pl.Path(__file__).resolve().parent.parent / "assets/icon-512.png").read_bytes()).hexdigest()[:10]
 SITE = "https://hunt.yourworldapps.si/"   # custom domain (CNAME file); the old github.io URL redirects here
 PLAY = "https://play.google.com/store/apps/details?id=com.yourworld.hunt"
 TODAY = datetime.date.today().isoformat()
@@ -79,7 +81,7 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <meta property="og:type" content="{og_type}"><meta property="og:site_name" content="Your World Hunt"><meta property="og:title" content="{E(title)}">
 <meta property="og:description" content="{E(desc)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}assets/og-hunt-2026.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Your World Hunt: hunting maps, wind, moon and trip planning">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{SITE}assets/og-hunt-2026.png"><meta name="theme-color" content="#15130D">
-<link rel="icon" href="{p}assets/favicon.png"><link rel="apple-touch-icon" href="{p}assets/icon-192.png">
+<link rel="icon" href="{p}favicon.ico?v={ICONV}" sizes="16x16 32x32 48x48"><link rel="icon" type="image/png" sizes="32x32" href="{p}assets/favicon-32.png?v={ICONV}"><link rel="icon" type="image/png" sizes="192x192" href="{p}assets/icon-192.png?v={ICONV}"><link rel="apple-touch-icon" sizes="180x180" href="{p}assets/apple-touch-icon.png?v={ICONV}">
 <link rel="stylesheet" href="{p}assets/site.css"><script src="{p}assets/affiliates.js" defer></script>{lds}
 <script type="text/javascript" src="http://classic.avantlink.com/affiliate_app_confirm.php?mode=js&authResponse=53598594d4583b51487a907666c5648e56927849"></script>
 </head><body>
