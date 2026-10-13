@@ -13,7 +13,7 @@ PLAY = "https://play.google.com/store/apps/details?id=com.yourworld.hunt"
 TODAY = datetime.date.today().isoformat()
 # Annual Premium ($33.99/yr vs $4.99 x 12 = $59.88/yr, ~43% savings). Card + JSON-LD stay hidden until the Play base plan is live.
 ANNUAL_PRICE = "33.99"
-ANNUAL_LIVE = False   # flip to True once the ywhunt_premium annual base plan is ACTIVE in Play Console
+ANNUAL_LIVE = True    # ywhunt_premium yearly base plan ACTIVE in Play (USD 33.99/yr, no trial offer)
 CFG = json.loads(re.search(r"/\*CONFIG\*/\s*window\.YW_AFF\s*=\s*(\{.*?\})\s*/\*END\*/", (ROOT/"assets/affiliates.js").read_text(), re.S).group(1))
 E = lambda s: html.escape(s, quote=True)
 enc = lambda s: urllib.parse.quote(s, safe="")
@@ -766,7 +766,7 @@ COMPETITORS = [  # (app, published price, source label, source url) -- verified 
  ("Spartan Forge", "$79.99/yr or $12.99/mo", "Spartan Forge pricing page", "https://spartanforge.ai/pages/pricing")]
 def build_pricing():
     p = ""
-    annual = (f'<div class="card"><span class="tag">Best value</span><h3>Premium Annual</h3><p class="big">${E(ANNUAL_PRICE)}/year</p><p>Everything in Premium, billed once a year by Google Play. Save about 43% vs paying monthly ($59.88/year).</p>{play_btn()}</div>' if ANNUAL_LIVE and ANNUAL_PRICE else "")
+    annual = (f'<div class="card"><span class="tag">Premium</span><h3>Premium Yearly</h3><p class="big">${E(ANNUAL_PRICE)}/year</p><p>Everything in Premium Monthly, billed once a year by Google Play. About {round((1 - float(ANNUAL_PRICE) / 59.88) * 100)}% less than paying monthly ($4.99 × 12 = $59.88). Cancel any time in Google Play.</p>{play_btn()}</div>' if ANNUAL_LIVE and ANNUAL_PRICE else "")
     rows = "".join(f"<tr><td>{a}</td><td>{f}</td><td>{pr}</td></tr>" for a, f, pr in FREE_VS)
     comp = "".join(f'<tr><td>{E(a)}</td><td>{E(pr)}</td><td><a href="{u}" target="_blank" rel="noopener nofollow">{E(sl)}</a></td></tr>' for a, pr, sl, u in COMPETITORS)
     body = (crumbs(p, ("Home", ""), ("Pricing", None)) +
@@ -780,13 +780,13 @@ def build_pricing():
         '<div class="card"><h3>🐕 Dog Pack</h3><p>Tools for hunting with dogs.</p></div></div>'
         f'<h2>Free vs Premium</h2><div class="tblwrap"><table><thead><tr><th>Feature</th><th>Free</th><th>Premium</th></tr></thead><tbody>{rows}</tbody></table></div>'
         f'<h2>How it compares</h2><p>Published prices for other popular hunting apps, checked October 9, 2026. Prices change, so confirm with each app before you buy. Features differ between apps.</p>'
-        f'<div class="tblwrap"><table><thead><tr><th>App</th><th>Published price</th><th>Source</th></tr></thead><tbody><tr><td><b>Your World Hunt</b></td><td>Free; Premium $4.99/mo with a 7-day free trial for eligible new subscribers</td><td>Google Play</td></tr>{comp}</tbody></table></div>'
+        f'<div class="tblwrap"><table><thead><tr><th>App</th><th>Published price</th><th>Source</th></tr></thead><tbody><tr><td><b>Your World Hunt</b></td><td>Free; Premium $4.99/mo with a 7-day free trial for eligible new subscribers{f"; Premium Yearly ${ANNUAL_PRICE}/yr" if ANNUAL_LIVE else ""}</td><td>Google Play</td></tr>{comp}</tbody></table></div>'
         '<p class="dim">Billing, trials and cancellation are handled by Google Play. Trial eligibility is decided by Google Play.</p>'
         f'<div class="btns">{play_btn()}<a class="btn" href="how-to-use.html">How to use the app</a></div>')
     offers = [{"@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD"},
               {"@type": "Offer", "name": "Premium Monthly", "price": "4.99", "priceCurrency": "USD", "description": "Monthly subscription with a 7-day free trial for eligible new subscribers"},
               {"@type": "Offer", "name": "Land Pack World", "price": "8.99", "priceCurrency": "USD", "description": "Monthly add-on subscription"}]
-    if ANNUAL_LIVE and ANNUAL_PRICE: offers.append({"@type": "Offer", "name": "Premium Annual", "price": ANNUAL_PRICE, "priceCurrency": "USD"})
+    if ANNUAL_LIVE and ANNUAL_PRICE: offers.append({"@type": "Offer", "name": "Premium Yearly", "price": ANNUAL_PRICE, "priceCurrency": "USD", "description": "Yearly subscription"})
     ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Your World Hunt AI", "alternateName": "Your World Hunt", "operatingSystem": "Android",
           "applicationCategory": "SportsApplication", "url": SITE + "pricing.html", "offers": offers}
     page("pricing.html", "Pricing: Free, Premium & Add-ons", "Your World Hunt pricing: free hunting map app, Premium at $4.99/month with a 7-day free trial for eligible new subscribers, add-ons, and how it compares to other hunting apps.",
