@@ -642,7 +642,7 @@ def build_howto():
               "offers": [{"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free download"},
                          {"@type": "Offer", "name": "Premium", "price": "4.99", "priceCurrency": "USD", "description": "Monthly subscription after a 7-day free trial for eligible new subscribers, billed by Google Play"}],
               "publisher": {"@type": "Organization", "name": "Your World Apps"}}
-    page("how-to-use.html", "How to Use Your World Hunt: Step-by-Step App Guide", "How to use Your World Hunt for Android: quick start, stands and marks, wind and pressure, moon and deer feeding times, LAND public land, directions, the Sharp Shooter camera rangefinder, trail cams, and Free vs Premium.",
+    page("how-to-use.html", "How to Use Your World Hunt: Step-by-Step App Guide", "How to use Your World Hunt: quick start, stands and marks, wind and pressure, moon and deer feeding times, LAND public land, directions, the Sharp Shooter camera rangefinder, trail cams, and Free vs Premium.",
          body, "whitetail", "How to Use Your World Hunt", "App guide · Free on Google Play", "Every tool, step by step: what's free, what Premium unlocks, and how to get the most out of each sit.",
          jsonld=[howto_ld, faq_ld, app_ld], prio="0.9", hero_extra=f'<div class="btns">{play_btn()}<a class="btn" href="#quick-start">Quick start</a></div>')
 
@@ -691,7 +691,7 @@ def build_home():
             f'<h2>New to the app?</h2><div class="grid">{pcard("how-to-use.html", "north", "hhow", "How to use Your World Hunt", "Quick start, every tool step by step, and Free vs Premium.", "OPEN THE GUIDE →", tag="App guide", emoji="🧭", big=True)}</div>'
             f'<h2>Plan like an expedition</h2><div class="panel"><p>Every trip in <b>Plan a Hunt</b> earns badges as it comes together:</p><div class="badges">{badges}</div><p class="dim" style="margin:0">🏆 Expedition Ready when all six are lit.</p></div>'
             f'<h2>Gear lists by hunt</h2><div class="grid tight">{hunts}</div>')
-    page("index.html", "Your World Hunt: Hunting Gear Shop, Maps, Public Land & Wind App", "Shop hunting gear by department and compare Amazon, Bass Pro, Cabela's and more in one tap. Plus Your World Hunt AI for Android: hunting maps, public land, wind, moon and feeding times. Free on Google Play.",
+    page("index.html", "Your World Hunt: Hunting Gear Shop, Maps, Public Land & Wind App", "Shop hunting gear by department and compare Amazon, Bass Pro, Cabela's and more in one tap. Plus the Your World Hunt app: hunting maps, public land, wind, moon and feeding times. Free on Google Play.",
          body, "whitetail", "The Hunter's Gear Shop", "Your World Hunt · Outfitter's Counter", "Every department a hunter needs, compared across the big stores in one tap. From the makers of the Your World Hunt app.",
          jsonld=[app_ld, site_ld], prio="1.0", hero_extra=search_form(p) + f'<div class="btns"><a class="btn primary" href="shop/">Shop all departments</a><a class="btn" href="deals.html">Deals</a><a class="btn" href="plan.html">Plan an expedition</a><a class="btn" href="#get-app">Get the app free</a></div>')
 
@@ -715,7 +715,7 @@ def build_features():
             '<li>Sharp Shooter distances are camera-based estimates, not laser readings.</li><li>Ask Hawk never quotes seasons, limits or fees. Confirm those with your state agency.</li>'
             '<li>Marks, tracks, trips and Ask Hawk chats stay on your phone unless you turn on optional sync. See <a href="privacy.html">Privacy</a>.</li></ul>'
             f'<div class="btns">{play_btn()}</div>')
-    page("features.html", "Features: Maps, LAND, Weather, Rangefinder, Ask Hawk", "Everything in Your World Hunt AI: hunting maps, LAND public land overlay, wind and pressure, moon and feeding times, Sharp Shooter camera rangefinder estimate, Plan a Hunt with Ask Hawk and Kits & Gear.",
+    page("features.html", "Features: Maps, LAND, Weather, Rangefinder, Ask Hawk", "Everything in Your World Hunt: hunting maps, LAND public land overlay, wind and pressure, moon and feeding times, Sharp Shooter camera rangefinder estimate, Plan a Hunt with Ask Hawk and Kits & Gear.",
          body, "elk", "Features", "Field kit", "Free core tools, plus Premium and add-ons when you want more.", prio="0.9")
 
 def legal_pages():
@@ -737,7 +737,7 @@ def legal_pages():
         '<li><b>Ethics first.</b> Know your range, know your target, get permission, and respect the animal.</li></ul>'
         '<h2>This website</h2><p>The Field School guides here are original articles written for hunters planning real trips. The Gear Shop and gear lists mirror the kits inside the app, with store links that may earn a commission (see the <a href="affiliate-disclosure.html">affiliate disclosure</a>). That helps keep the core of the app free.</p>'
         f'<p>More apps from the same developer: <a href="https://yourworldapps.si/">Your World Apps</a>.</p><div class="btns">{play_btn()}</div></article>')
-    page("about.html", "About Your World Hunt", "About Your World Hunt AI and Your World Apps: honest hunting tools, privacy by default, and regulations from the source.", about, "north", "About", "Base camp")
+    page("about.html", "About Your World Hunt", "About Your World Hunt and Your World Apps: honest hunting tools, privacy by default, and regulations from the source.", about, "north", "About", "Base camp")
     contact = (crumbs(p, ("Home", ""), ("Contact", None)) + '<article class="article">' + '<p><strong>Email:</strong> <a href="mailto:support@yourworldapps.si">support@yourworldapps.si</a> (app support, partnerships and affiliate questions)</p>'
         f'<p>The best way to reach the developer is through the <b>developer contact on the Google Play listing</b>. Open <a href="{PLAY}" target="_blank" rel="noopener">Your World Hunt on Google Play</a>, scroll to <b>App support</b>, and use the email shown there.</p>'
         '<ul><li><b>Bug or feature request:</b> include your phone model, Android version, the app version (Settings → About) and what you were doing.</li>'
@@ -764,7 +764,7 @@ def legal_pages():
            '<li>The Deals page asks Slickdeals\' public feed for deal posts from your browser, so Slickdeals sees that request.</li>'
            '<li>Searches you type into the Gear Shop or lodging finder are sent only to the store or site you pick, when you pick it.</li></ul>')
     priv = crumbs(p, ("Home", ""), ("Privacy", None)) + f'<article class="article">{web}<h2>Your World Hunt AI app</h2><p class="dim">The app\'s privacy policy follows. It\'s the same policy linked from Google Play.</p>{pol}</article>'
-    page("privacy.html", "Privacy Policy", "Privacy policy for the Your World Hunt AI Android app and this website: data stays on your device by default, no ads, no tracking.", priv, "north", "Privacy Policy", "Your data stays yours", prio="0.4")
+    page("privacy.html", "Privacy Policy", "Privacy policy for the Your World Hunt app and this website: data stays on your device by default, no ads, no tracking.", priv, "north", "Privacy Policy", "Your data stays yours", prio="0.4")
     nf = (f'<div style="padding:30px 0"><p>This trail goes nowhere. The page may have moved.</p><div class="btns"><a class="btn primary" href="{SITE}">Back to base camp</a><a class="btn" href="{SITE}guides/">Guides</a><a class="btn" href="{SITE}shop/">Gear Shop</a></div></div>')
     page("404.html", "Page Not Found", "That page is off the map.", nf, "camp", "Off the map", "404", absolute=True)
 
