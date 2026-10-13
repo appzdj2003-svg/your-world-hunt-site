@@ -77,8 +77,8 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <title>{E(title)}{"" if "Your World Hunt" in title else " | Your World Hunt"}</title>
 <meta name="description" content="{E(desc)}"><link rel="canonical" href="{url}">
 <meta property="og:type" content="{og_type}"><meta property="og:site_name" content="Your World Hunt"><meta property="og:title" content="{E(title)}">
-<meta property="og:description" content="{E(desc)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}assets/og-image.jpg">
-<meta name="twitter:card" content="summary_large_image"><meta name="theme-color" content="#15130D">
+<meta property="og:description" content="{E(desc)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}assets/og-hunt-2026.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Your World Hunt: hunting maps, wind, moon and trip planning">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{SITE}assets/og-hunt-2026.png"><meta name="theme-color" content="#15130D">
 <link rel="icon" href="{p}assets/favicon.png"><link rel="apple-touch-icon" href="{p}assets/icon-192.png">
 <link rel="stylesheet" href="{p}assets/site.css"><script src="{p}assets/affiliates.js" defer></script>{lds}
 <script type="text/javascript" src="http://classic.avantlink.com/affiliate_app_confirm.php?mode=js&authResponse=53598594d4583b51487a907666c5648e56927849"></script>
@@ -244,7 +244,7 @@ def build_guides():
         nxt = GUIDES[(i + 1) % len(GUIDES)]
         ld = {"@context": "https://schema.org", "@type": "Article", "headline": g["title"], "description": g["desc"], "datePublished": "2026-10-09", "dateModified": TODAY,
               "author": {"@type": "Organization", "name": "Your World Apps"}, "publisher": {"@type": "Organization", "name": "Your World Apps", "logo": {"@type": "ImageObject", "url": SITE + "assets/icon-512.png"}},
-              "mainEntityOfPage": SITE + f'guides/{g["slug"]}.html', "image": SITE + "assets/og-image.jpg"}
+              "mainEntityOfPage": SITE + f'guides/{g["slug"]}.html', "image": SITE + "assets/og-hunt-2026.png"}
         body = (crumbs(p, ("Home", ""), ("Guides", ""), (g["short"], None)) +
                 f'<article class="article"><p class="meta">Field School · {E(g["badge"])} · about {max(1, round(words/230))} min read · {words} words</p>{src}'
                 f'<div class="callout"><p><b>Regulations:</b> this guide is general information. Seasons, limits, licenses, legal methods, hours and access rules vary by state and country and change often. Check your state wildlife agency or the official authority before you hunt.</p></div>'
@@ -701,7 +701,7 @@ def build_article():
     words = len(re.sub(r"<[^>]+>", " ", art).split())
     ld = {"@context": "https://schema.org", "@type": "Article", "headline": A26.TITLE, "description": A26.DESC, "datePublished": "2026-10-09", "dateModified": TODAY,
           "author": {"@type": "Organization", "name": "Your World Apps"}, "publisher": {"@type": "Organization", "name": "Your World Apps", "logo": {"@type": "ImageObject", "url": SITE + "assets/icon-512.png"}},
-          "mainEntityOfPage": SITE + f"guides/{A26.SLUG}.html", "image": SITE + "assets/og-image.jpg"}
+          "mainEntityOfPage": SITE + f"guides/{A26.SLUG}.html", "image": SITE + "assets/og-hunt-2026.png"}
     fq = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in A26.FAQ]}
     bc = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": SITE}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": SITE + "guides/"}, {"@type": "ListItem", "position": 3, "name": A26.SHORT}]}
     body = (crumbs(p, ("Home", ""), ("Guides", ""), (A26.SHORT, None)) + DISCLOSURE.format(p=p) +
