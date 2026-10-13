@@ -303,3 +303,4 @@ body.planpage .hero{min-height:200px}
 .mic.listening{background:#D93636;border-color:#D93636;color:#fff;animation:micpulse 1s infinite}@keyframes micpulse{50%{box-shadow:0 0 0 10px rgba(217,54,54,.28)}}
 .vmsg{margin:8px 0 0;color:var(--khaki);font-size:.9rem}.vnote{margin-top:8px}.fromapp{margin:0 0 10px;padding:10px 12px;border-radius:12px;background:rgba(138,154,75,.15);border:1px solid var(--moss)}
 .asklog{display:grid;gap:10px;margin-bottom:14px}.msg{padding:12px 14px;border-radius:14px;border:1px solid var(--edge);background:var(--panel)}.msg.me{background:var(--panelhi);margin-left:15%}.msg p{margin:4px 0}
+.calbox{margin-top:18px;padding:16px;border:1px solid var(--edge);border-radius:var(--r);background:var(--panel)}.calbox h3{margin:0 0 4px}.calbox .chiprow .dim{align-self:center}.calbox[hidden],#calwake[hidden]{display:none}

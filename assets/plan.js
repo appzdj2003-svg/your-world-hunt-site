@@ -408,6 +408,17 @@
     document.querySelector(".hawk-ex").onclick = e => { const b = e.target.closest("[data-ex]"); if (b) { $("hawkq").value = b.dataset.ex; hawkRun(); } };
     importHash().then(ok => { const q = !ok && new URLSearchParams(location.search).get("q"); if (q) { $("hawkq").value = q.slice(0, 300); hawkRun(); } });
     window.addEventListener("hashchange", importHash);
+    /* ---------- add to calendar (tripcal.js) ---------- */
+    const cal = { rem: new Set(["week", "day", "wake"]), wake: 90 };
+    const calRem = () => [...cal.rem].map(k => ({ k, v: k === "wake" ? cal.wake : k === "custom" ? +$("calcd").value || 3 : 0 }));
+    const calSync = () => { $("calg").href = window.YWCal.google(collect()); $("calcust").hidden = !cal.rem.has("custom"); $("calwake").hidden = !cal.rem.has("wake");
+      $("calwhen").textContent = st.la != null ? "before sunrise" : "(5 AM, add a place for sunrise)"; };
+    $("calrem").onclick = e => { const b = e.target.closest("[data-cr]"); if (!b) return; const k = b.dataset.cr; cal.rem.has(k) ? cal.rem.delete(k) : cal.rem.add(k); b.classList.toggle("on", cal.rem.has(k)); b.setAttribute("aria-pressed", cal.rem.has(k)); calSync(); };
+    $("calwake").onclick = e => { const b = e.target.closest("[data-cw]"); if (!b) return; cal.wake = +b.dataset.cw; $("calwake").querySelectorAll("[data-cw]").forEach(x => x.classList.toggle("on", x === b)); };
+    $("calg").onmouseenter = $("calg").onfocus = calSync; $("calg").onclick = () => calSync();
+    $("calics").onclick = () => { calSync(); const t = collect(), blob = new Blob([window.YWCal.ics(t, calRem())], { type: "text/calendar" }), a = document.createElement("a");
+      a.href = URL.createObjectURL(blob); a.download = window.YWCal.fileName(t); document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500); };
+    document.addEventListener("click", e => { if (e.target.closest("[data-go='5'],#next,#hkdone")) setTimeout(calSync, 50); }); calSync();
     $("send").onclick = send; $("print").onclick = () => window.print();
     $("copy").onclick = async () => { try { await navigator.clipboard.writeText($("tlink").value); $("copy").textContent = "Copied ✓"; setTimeout(() => $("copy").textContent = "Copy link", 1800); } catch (e) { $("tlink").select(); } };
   });

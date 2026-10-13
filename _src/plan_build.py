@@ -37,7 +37,7 @@ def data_js():
 
 
 def build(page, PAGES, DISCLOSURE, play_btn):
-    js = data_js() + '<script src="assets/hawkparse.js"></script><script src="assets/tripcodec.js"></script><script src="assets/vendor/qrcode.js"></script><script src="assets/askdata.js"></script><script src="assets/ask.js"></script><script src="assets/plan.js"></script><script src="assets/voice.js"></script>'
+    js = data_js() + '<script src="assets/hawkparse.js"></script><script src="assets/tripcodec.js"></script><script src="assets/vendor/qrcode.js"></script><script src="assets/askdata.js"></script><script src="assets/ask.js"></script><script src="assets/tripcal.js"></script><script src="assets/plan.js"></script><script src="assets/voice.js"></script>'
     steps = [("where", "📍", "Where"), ("when", "📅", "When"), ("hunt", "🎯", "Hunt"), ("crew", "🏕️", "Crew & stay"), ("gear", "🎒", "Gear"), ("send", "📲", "Best days & send")]
     nav = "".join(f'<li><button type="button" class="wz-dot" data-go="{i}" aria-label="Step {i+1}: {l}"><span class="n">{i+1}</span><span class="l">{l}</span></button></li>' for i, (_, e, l) in enumerate(steps))
     def step(i, title, sub, inner):
@@ -74,6 +74,13 @@ def build(page, PAGES, DISCLOSURE, play_btn):
         '<label class="lbl">Trip name<input id="n" maxlength="80" placeholder="e.g. November rut week"></label><div id="days" class="days" aria-live="polite"></div>'
         '<label class="lbl">Notes<textarea id="no" rows="3" maxlength="1500" placeholder="Access, regs to check, meeting point…"></textarea></label>'
         '<div class="btns"><button type="button" class="btn primary big" id="send">📲 Send to my phone</button><button type="button" class="btn" id="print">🖨️ Print</button></div>'
+        '<section class="calbox" aria-labelledby="calh"><h3 id="calh">📅 Add to calendar</h3><p class="dim">Pick reminders, then add the trip to Google Calendar or download an .ics for Apple Calendar, Outlook and others.</p>'
+        '<div class="chiprow" id="calrem" role="group" aria-label="Reminders"><button type="button" class="chip on" data-cr="week" aria-pressed="true">1 week before</button><button type="button" class="chip on" data-cr="day" aria-pressed="true">1 day before</button>'
+        '<button type="button" class="chip on" data-cr="wake" aria-pressed="true">Wake-up</button><button type="button" class="chip" data-cr="custom" aria-pressed="false">Custom</button></div>'
+        '<div class="chiprow" id="calwake" role="group" aria-label="Wake-up before sunrise"><span class="dim">Wake-up:</span><button type="button" class="chip" data-cw="60">1 h</button><button type="button" class="chip on" data-cw="90">1.5 h</button><button type="button" class="chip" data-cw="120">2 h</button><span class="dim" id="calwhen">before sunrise</span></div>'
+        '<label class="lbl" id="calcust" hidden>Days before (9 AM)<input type="number" id="calcd" min="1" max="60" value="3" inputmode="numeric"></label>'
+        '<div class="btns"><a class="btn primary" id="calg" href="#" target="_blank" rel="noopener">Google Calendar</a><button type="button" class="btn" id="calics">⬇️ Download .ics (Apple, Outlook)</button></div>'
+        '<p class="dim fine">Reminders are inside the .ics file. Google Calendar links can\'t carry reminders, so Google uses your default notification. “Before” reminders fire at 9 AM; wake-up is before sunrise at your spot (5 AM if no place is set). Made in your browser; nothing is sent.</p></section>'
         '<section id="sendbox" class="sendbox" hidden aria-live="polite"><div id="qr" class="qr" aria-label="QR code for the trip link"></div><div>'
         '<p><b>Scan with your Android camera.</b> It opens Your World Hunt with this trip, or Google Play if the app isn\'t installed.</p>'
         '<label class="lbl">Trip link<input id="tlink" readonly></label><p id="tlen" class="dim"></p><div class="btns"><button type="button" class="btn primary" id="copy">Copy link</button><a class="btn" id="open" href="#">Open on this phone</a></div>'
