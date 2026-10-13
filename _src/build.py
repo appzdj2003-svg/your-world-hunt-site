@@ -2,7 +2,8 @@
 """Static site builder for Your World Hunt. Run: python3 _src/build.py  (writes HTML into the repo root)."""
 import json, re, os, html, datetime, urllib.parse, urllib.request, email.utils
 from pathlib import Path
-import scenes, shopdata, kitdata, plan_build, items as itemimg, article2026 as A26
+import scenes, shopdata, kitdata, plan_build, items as itemimg, article2026 as A26, article2026_es as A26ES
+ES_G = json.loads((Path(__file__).parent/"guides_es/guides_es.json").read_text())
 
 ROOT = Path(__file__).resolve().parent.parent
 import hashlib as _h, pathlib as _pl
@@ -67,7 +68,8 @@ def bust(doc):
 
 def _listen_root(path):
     """Guides and how-to pages get the Listen (text-to-speech) player."""
-    if path.startswith("guides/") and path.endswith(".html") and path != "guides/index.html": return ".article"
+    for g in ("guides/", "es/guides/"):
+        if path.startswith(g) and path.endswith(".html") and path != g + "index.html": return ".article"
     if path == "how-to-use.html": return "main .wrap"
     return None
 def listen_box(path, p):
@@ -77,7 +79,38 @@ def listen_js(path, p):
     return f'<script src="{p}assets/listen.js" defer></script>' if _listen_root(path) else ""
 
 
-def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None, jsonld=None, og_type="website", prio="0.6", absolute=False, hero_extra=""):
+def _u(path): return SITE + ("" if path == "index.html" else path.replace("index.html", ""))
+def hreflang(path, lang, alt):
+    """Alternate-language links both ways (en <-> es) plus x-default = English."""
+    if not alt: return ""
+    en, es = (path, alt) if lang == "en" else (alt, path)
+    loc = "es_US" if lang == "es" else "en_US"
+    return (f'<link rel="alternate" hreflang="en" href="{_u(en)}"><link rel="alternate" hreflang="es" href="{_u(es)}"><link rel="alternate" hreflang="x-default" href="{_u(en)}">'
+            f'<meta property="og:locale" content="{loc}"><meta property="og:locale:alternate" content="{"en_US" if lang == "es" else "es_US"}">')
+def lang_toggle(lang, alt, p):
+    if not alt: return ""
+    href = p + alt
+    en = '<b aria-current="true">English</b>' if lang == "en" else f'<a href="{href}" hreflang="en" lang="en">English</a>'
+    es = '<b aria-current="true">Español</b>' if lang == "es" else f'<a href="{href}" hreflang="es" lang="es">Español</a>'
+    return f'<nav class="langtoggle" aria-label="{"Idioma" if lang == "es" else "Language"}">{en}<span aria-hidden="true">·</span>{es}</nav>'
+ES_NAV = {"Home": "Inicio", "Features": "Funciones", "How-To": "Cómo usarla", "Guides": "Guías", "Gear Lists": "Listas de equipo", "Trip Planner": "Planificador", "Deals": "Ofertas", "Pricing": "Precios", "Shop": "Tienda"}
+def es_chrome(doc):
+    """Spanish labels for the shared header/footer on es/ pages (links still go to the English site pages)."""
+    head, rest = doc.split('<nav class="nav"', 1); nav, rest = rest.split("</nav>", 1)
+    for a, b in ES_NAV.items(): nav = nav.replace(f">{a}</a>", f">{b}</a>")
+    doc = head + '<nav class="nav" aria-label="Principal"' + nav.replace(' aria-label="Main"', "", 1) + "</nav>" + rest
+    i = doc.find("<footer"); f = doc[i:]
+    f = re.sub(r'href="((?:\.\./)*)guides/([\w-]+)\.html">[^<]*<', lambda m: f'href="{m.group(1)}es/guides/{m.group(2)}.html">{E(ES_G[m.group(2)]["short"] if m.group(2) in ES_G else A26ES.SHORT)}<' if (m.group(2) in ES_G or m.group(2) == A26ES.SLUG) else m.group(0), f)
+    f = f.replace('href="../../es/guides/', 'href="../../es/guides/').replace("../../es/guides/", "")
+    for a, b in [("<h4>Field School</h4>", "<h4>Escuela de campo</h4>"), ("<h4>Shop</h4>", "<h4>Tienda</h4>"), ("<h4>Legal</h4>", "<h4>Legal</h4>"),
+                 (">Get the app on Google Play<", ">Descarga la app en Google Play<"), (">How to use the app<", ">Cómo usar la app (en inglés)<"),
+                 ("We may earn a commission from links on this site. As an Amazon Associate I earn from qualifying purchases. Guides are general information only. Always check seasons, limits, licenses and land access rules with your state wildlife agency or the official authority where you hunt.",
+                  "Podemos ganar una comisión por los enlaces de este sitio. Como Asociado de Amazon, gano con las compras que califican. Las guías son solo información general. Revisa siempre las temporadas, los límites, las licencias y las reglas de acceso a la tierra con la agencia de vida silvestre de tu estado o la autoridad oficial donde cazas.")]:
+        f = f.replace(a, b)
+    return doc[:i] + f
+
+
+def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None, jsonld=None, og_type="website", prio="0.6", absolute=False, hero_extra="", lang="en", alt=None):
     depth = path.count("/")
     p = SITE if absolute else "../" * depth
     url = SITE + ("" if path == "index.html" else path.replace("index.html", ""))
@@ -87,9 +120,9 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
     lds = "".join(f'<script type="application/ld+json">{json.dumps(j, ensure_ascii=False)}</script>' for j in (jsonld or []))
     hero = f'''<section class="hero">{scenes.svg(scene, "hs")}<div class="wrap">{f'<span class="kicker">{E(kicker)}</span>' if kicker else ""}<h1>{E(h1 or title)}</h1>{f'<p class="lead">{lead}</p>' if lead else ""}{hero_extra}</div></section>'''
     doc = f'''<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="{lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{E(title)}{"" if "Your World Hunt" in title else " | Your World Hunt"}</title>
-<meta name="description" content="{E(desc)}"><link rel="canonical" href="{url}">
+<meta name="description" content="{E(desc)}"><link rel="canonical" href="{url}">{hreflang(path, lang, alt)}
 <meta property="og:type" content="{og_type}"><meta property="og:site_name" content="Your World Hunt"><meta property="og:title" content="{E(title)}">
 <meta property="og:description" content="{E(desc)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}assets/og-hunt-2026.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Your World Hunt: hunting maps, wind, moon and trip planning">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{SITE}assets/og-hunt-2026.png"><meta name="theme-color" content="#15130D">
@@ -98,7 +131,7 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <script type="text/javascript" src="http://classic.avantlink.com/affiliate_app_confirm.php?mode=js&authResponse=53598594d4583b51487a907666c5648e56927849"></script>
 </head><body>
 <header class="top"><div class="wrap"><a class="brand" href="{p or './'}"><img src="{p}assets/icon-192.png" width="34" height="34" alt="">Your World Hunt</a><nav class="nav" aria-label="Main">{nav}</nav></div></header>
-<main>{hero}<div class="wrap">{listen_box(path, p)}{body}</div></main>{listen_js(path, p)}
+<main>{hero}<div class="wrap">{lang_toggle(lang, alt, p)}{listen_box(path, p)}{body}</div></main>{listen_js(path, p)}
 <footer><div class="wrap"><div class="cols">
 <div><h4>Your World Hunt</h4><ul><li><a href="{PLAY}" target="_blank" rel="noopener">Get the app on Google Play</a></li><li><a href="{p}features.html">Features</a></li><li><a href="{p}how-to-use.html">How to use the app</a></li><li><a href="{p}pricing.html">Pricing</a></li><li><a href="{p}about.html">About</a></li><li><a href="{p}contact.html">Contact</a></li></ul></div>
 <div><h4>Field School</h4><ul>{"".join(f'<li><a href="{p}guides/{g["slug"]}.html">{E(g["short"])}</a></li>' for g in GUIDES)}</ul></div>
@@ -106,6 +139,7 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <div><h4>Legal</h4><ul><li><a href="{p}privacy.html">Privacy</a></li><li><a href="{p}terms.html">Terms</a></li><li><a href="{p}affiliate-disclosure.html">Affiliate disclosure</a></li></ul></div>
 </div><p class="fine">We may earn a commission from links on this site. As an Amazon Associate I earn from qualifying purchases. Guides are general information only. Always check seasons, limits, licenses and land access rules with your state wildlife agency or the official authority where you hunt. &copy; {datetime.date.today().year} Your World Apps. Google Play is a trademark of Google LLC. Retailer names are trademarks of their owners and are used only to identify where a link goes.</p></div></footer>
 </body></html>'''
+    if lang == "es": doc = es_chrome(doc)
     doc = tag_play(doc, path)
     if 'class="item-' in body and "item-note" not in body:
         doc = doc.replace("</div></main>", ITEM_NOTE + "</div></main>", 1)
@@ -249,7 +283,7 @@ def build_guides():
             f'<div class="panel" style="margin-bottom:18px"><p class="stencil" style="margin-top:0;color:var(--amber)">Season checklist</p><p><a href="{A26.SLUG}.html"><b>{E(A26.TITLE)}</b></a>: every category from tree stand safety to waders, with what to look for.</p></div>'
             f'<div class="grid">{cards}</div>')
     page("guides/index.html", "Hunting Guides: Field School", "Practical hunting guides: playing the wind for whitetail, first elk hunt checklist, moon and feeding times, public land basics, waterfowl blind gear, spring turkey setup, first plains-game safari and shot distance.",
-         body, "camp", "Field School", "Guides", "Earn every badge. Written by hunters for hunters, with no fluff and no made-up regulations.", prio="0.9")
+         body, "camp", "Field School", "Guides", "Earn every badge. Written by hunters for hunters, with no fluff and no made-up regulations.", prio="0.9", alt="es/guides/index.html")
     for i, g in enumerate(GUIDES):
         src = (Path(__file__).parent / "guides" / f'{g["slug"]}.html').read_text()
         words = len(re.sub(r"<[^>]+>", " ", src).split())
@@ -266,7 +300,66 @@ def build_guides():
                 f'<div class="upsell gearcta"><p><b>Gear up for this hunt:</b> the {E(KIT[g["kit"]][1])} checklist has every item with compare-stores links, and the 2026 season checklist covers what to look for in each category.</p><div class="btns"><a class="btn primary" href="../gear/{g["kit"]}.html">Open the {E(KIT[g["kit"]][1])}</a><a class="btn" href="../shop/{g["depts"][0]}.html">Shop {E(DEPT[g["depts"][0]][1])}</a><a class="btn" href="{A26.SLUG}.html">2026 gear checklist</a></div></div>'
                 f'<h2>Gear for this guide</h2>{DISCLOSURE.format(p=p)}<div class="grid tight">{dl}<a class="card" href="../gear/{g["kit"]}.html"><span class="ic" style="font-size:1.4rem">✅</span><h3>{E(KIT[g["kit"]][1])}</h3><p>Full checklist</p></a></div>'
                 f'<div class="panel" style="margin-top:20px"><p class="stencil" style="margin-top:0;color:var(--amber)">Plan it in the app</p><p>{g["app"]}</p>{play_btn()}</div>')
-        page(f'guides/{g["slug"]}.html', g["title"], g["desc"], body, g["scene"], g["title"], "Field School · " + g["badge"], E(g["desc"]), jsonld=[ld], og_type="article", prio="0.8")
+        page(f'guides/{g["slug"]}.html', g["title"], g["desc"], body, g["scene"], g["title"], "Field School · " + g["badge"], E(g["desc"]), jsonld=[ld], og_type="article", prio="0.8", alt=f'es/guides/{g["slug"]}.html')
+
+# ---------- Spanish guides (es/guides/) ----------
+ES_KIT = {"whitetail": "kit para puesto de cola blanca", "elk": "kit para wapití en zonas remotas", "turkey": "kit de pavo de primavera", "waterfowl": "kit de escondite para aves acuáticas",
+          "safari": "kit para safari de especies de llanura", "european": "kit para cacería en finca europea", "day-hunt": "kit esencial para cacería de un día"}
+ES_DEPT = {"optics": "Óptica", "clothing-boots": "Ropa y botas", "stands-blinds": "Puestos y escondites", "calls-decoys": "Llamadores y señuelos", "scent-control": "Control de olor",
+           "archery": "Arquería", "firearm-accessories": "Accesorios para armas", "game-processing": "Procesamiento de presas", "camp-lodging": "Campamento y alojamiento",
+           "safety": "Seguridad", "electronics-trail-cams": "Electrónica y cámaras de rastreo", "dog-gear": "Equipo para perros"}
+DISCLOSURE_ES = ('<p class="disclosure"><strong>Divulgación:</strong> Podemos ganar una comisión por los enlaces de este sitio, sin costo adicional para ti. '
+                 '<strong>Como Asociado de Amazon, gano con las compras que califican.</strong> Los enlaces abren la búsqueda de cada tienda. Nunca mostramos precios, calificaciones ni reseñas, así que revisa los detalles en el sitio del vendedor. '
+                 '<a href="{p}affiliate-disclosure.html">Detalles (en inglés)</a></p>')
+def play_btn_es(cls="primary"): return f'<a class="btn {cls} play-badge" href="{PLAY}" target="_blank" rel="noopener">{PLAY_SVG if cls=="primary" else ""}Disponible en Google Play</a>'
+def rb_es(q, apparel=False): return rb(q, apparel).replace('aria-label="Compare stores for ', 'aria-label="Comparar tiendas: ')
+def es_ld(headline, desc, url):
+    return {"@context": "https://schema.org", "@type": "Article", "inLanguage": "es", "headline": headline, "description": desc, "datePublished": TODAY, "dateModified": TODAY,
+            "author": {"@type": "Organization", "name": "Your World Apps"}, "publisher": {"@type": "Organization", "name": "Your World Apps", "logo": {"@type": "ImageObject", "url": SITE + "assets/icon-512.png"}},
+            "mainEntityOfPage": SITE + url, "image": SITE + "assets/og-hunt-2026.png"}
+def build_guides_es():
+    p = "../../"; d = Path(__file__).parent / "guides_es"
+    G = [dict(g, **ES_G[g["slug"]]) for g in GUIDES]
+    cards = "".join(pcard(f'{g["slug"]}.html', g["scene"], "egi"+str(i), g["title"], g["desc"], "LEER GUÍA →", tag="Insignia: " + g["badge"], emoji=g["medal"], big=True) for i, g in enumerate(G))
+    body = (crumbs(p, ("Inicio", ""), ("Guías", None)) +
+            '<p>Artículos originales y prácticos para cazadores de todos los niveles. Cada uno otorga una insignia de la Escuela de campo. Son consejos generales, no asesoría legal. <b>Las temporadas, los límites de captura, las licencias, el horario legal de caza, las reglas de equipo y el acceso a la tierra los fija la agencia de vida silvestre de tu estado o la autoridad del lugar donde cazas. Consúltalos siempre directamente con ellos.</b></p>'
+            f'<div class="panel" style="margin-bottom:18px"><p class="stencil" style="margin-top:0;color:var(--amber)">Lista de temporada</p><p><a href="{A26ES.SLUG}.html"><b>{E(A26ES.TITLE)}</b></a>: cada categoría, desde la seguridad en puestos en árboles hasta los vadeadores, con lo que hay que buscar.</p></div>'
+            f'<div class="grid">{cards}</div>')
+    page("es/guides/index.html", "Guías de caza: Escuela de campo", "Guías prácticas de caza: cómo jugar con el viento para el cola blanca, tu primera cacería de wapití, la luna y los horarios de alimentación, lo básico de la tierra pública, el equipo para aves acuáticas, el pavo de primavera, tu primer safari y la distancia de tiro.",
+         body, "camp", "Escuela de campo", "Guías", "Gana todas las insignias. Escritas por cazadores para cazadores, sin relleno y sin reglamentos inventados.", prio="0.8", lang="es", alt="guides/index.html")
+    for i, g in enumerate(G):
+        src = (d / f'{g["slug"]}.html').read_text()
+        words = len(re.sub(r"<[^>]+>", " ", src).split())
+        dl = "".join(f'<a class="card" href="{p}shop/{x}.html"><span class="ic" style="font-size:1.4rem">{DEPT[x][2]}</span><h3>{E(ES_DEPT[x])}</h3><p>Compra y compara tiendas</p></a>' for x in g["depts"])
+        nxt = G[(i + 1) % len(G)]; kit = ES_KIT[g["kit"]]
+        body = (crumbs(p, ("Inicio", ""), ("Guías", "es/guides/"), (g["short"], None)) +
+                f'<article class="article"><p class="meta">Escuela de campo · {E(g["badge"])} · unos {max(1, round(words/230))} min de lectura · {words} palabras</p>{src}'
+                f'<div class="callout"><p><b>Reglamento:</b> esta guía es información general. Las temporadas, los límites, las licencias, los métodos legales, los horarios y las reglas de acceso varían según el estado y el país, y cambian con frecuencia. Consulta a la agencia de vida silvestre de tu estado o a la autoridad oficial antes de cazar.</p></div>'
+                f'<div class="milestone"><div class="medal">{g["medal"]}</div><div><strong>Insignia obtenida: {E(g["badge"])}</strong><span class="dim">Lo siguiente: <a href="{nxt["slug"]}.html">{E(nxt["title"])}</a></span></div></div></article>'
+                f'<div class="upsell gearcta"><p><b>Equípate para esta cacería:</b> la lista del {E(kit)} tiene cada artículo con enlaces para comparar tiendas, y la lista de la temporada 2026 explica qué buscar en cada categoría (páginas de equipo en inglés).</p><div class="btns"><a class="btn primary" href="{p}gear/{g["kit"]}.html">Abrir el {E(kit)}</a><a class="btn" href="{p}shop/{g["depts"][0]}.html">Comprar {E(ES_DEPT[g["depts"][0]])}</a></div></div>'
+                f'<h2>Equipo para esta guía</h2>{DISCLOSURE_ES.format(p=p)}<div class="grid tight">{dl}<a class="card" href="{p}gear/{g["kit"]}.html"><span class="ic" style="font-size:1.4rem">✅</span><h3>{E(kit[0].upper() + kit[1:])}</h3><p>Lista completa</p></a></div>'
+                f'<div class="panel" style="margin-top:20px"><p class="stencil" style="margin-top:0;color:var(--amber)">Planéalo en la app</p><p>{g["app"]}</p>{play_btn_es()}</div>')
+        url = f'es/guides/{g["slug"]}.html'
+        page(url, g["title"], g["desc"], body, g["scene"], g["title"], "Escuela de campo · " + g["badge"], E(g["desc"]), jsonld=[es_ld(g["title"], g["desc"], url)], og_type="article", prio="0.7", lang="es", alt=f'guides/{g["slug"]}.html')
+    # 2026 season checklist
+    toc = "".join(f'<li><a href="#{x[0]}">{E(x[1])}</a></li>' for x in A26ES.SECTIONS)
+    secs = ""
+    for sid, h, dept, kit, q, why, look, app in A26ES.SECTIONS:
+        secs += (f'<h2 id="{sid}">{E(h)}</h2><p><b>Por qué importa:</b> {why}</p><p><b>Qué buscar:</b></p><ul>' + "".join(f"<li>{x}</li>" for x in look) + "</ul>"
+                 f'{rb_es(q, app)}<p class="dim"><a href="{p}shop/{dept}.html">Comprar {E(ES_DEPT[dept])} →</a> · <a href="{p}gear/{kit}.html">Lista del {E(ES_KIT[kit])} →</a></p>')
+    tl = "".join(f"<li><b>{m}:</b> {t}</li>" for m, t in A26ES.TIMELINE)
+    faq = "".join(f"<h3>{E(q)}</h3><p>{E(a)}</p>" for q, a in A26ES.FAQ)
+    art = (" ".join(f"<p>{x}</p>" for x in A26ES.INTRO) + f"<h2>La temporada de un vistazo</h2><ul>{tl}</ul><h2>Lista</h2><ol>{toc}</ol>" + secs +
+           f'<div class="upsell"><p><b>Elige el puesto correcto para el viento.</b> Your World Hunt muestra el viento, la presión, la luna y los horarios del sol en tus marcas de puesto. Gratis en Google Play; Premium añade los horarios de alimentación de los venados con una prueba gratuita de 7 días para nuevos suscriptores que califiquen.</p>{play_btn_es()}</div>'
+           f"<h2>Preguntas frecuentes</h2>{faq}")
+    words = len(re.sub(r"<[^>]+>", " ", art).split())
+    url = f"es/guides/{A26ES.SLUG}.html"
+    fq = {"@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in A26ES.FAQ]}
+    body = (crumbs(p, ("Inicio", ""), ("Guías", "es/guides/"), (A26ES.SHORT, None)) + DISCLOSURE_ES.format(p=p) +
+            f'<article class="article"><p class="meta">Lista de temporada · unos {max(1, round(words/230))} min de lectura · actualizado {TODAY}</p>{art}'
+            '<div class="callout"><p><b>Reglamento:</b> las reglas sobre temporadas, naranja de seguridad, tipo de perdigón, horario legal, llamadores electrónicos, señuelos, cámaras y cebado varían según el estado y cambian con frecuencia. Consulta a la agencia de vida silvestre de tu estado antes de cazar.</p></div></article>'
+            f'<h2>Sigue comprando</h2><div class="grid tight"><a class="card" href="{p}gear/whitetail.html"><h3>🦌 Kit para puesto de cola blanca</h3><p>Lista completa</p></a><a class="card" href="{p}gear/waterfowl.html"><h3>🦆 Kit de escondite para aves acuáticas</h3><p>Lista completa</p></a><a class="card" href="{p}shop/"><h3>🛒 Tienda de equipo</h3><p>Todos los departamentos</p></a></div>')
+    page(url, A26ES.TITLE, A26ES.DESC, body, "marsh", A26ES.TITLE, "Lista de temporada · sept.–dic.", E(A26ES.DESC), jsonld=[es_ld(A26ES.TITLE, A26ES.DESC, url), fq], og_type="article", prio="0.7", lang="es", alt=f"guides/{A26.SLUG}.html")
 
 # ---------- deals ----------
 DEAL_PAGES = [("Amazon", "Today's Deals", "https://www.amazon.com/deals" + (f"?tag={enc(CFG['amazonTag'])}" if CFG["amazonTag"] else "")),
@@ -722,7 +815,7 @@ def build_article():
             f'<article class="article"><p class="meta">Season checklist · about {max(1, round(words/230))} min read · updated {TODAY}</p>{art}'
             '<div class="callout"><p><b>Regulations:</b> seasons, blaze orange, shot type, legal hours, electronic calls, decoys, cameras and baiting rules vary by state and change often. Check your state wildlife agency before you hunt.</p></div></article>'
             f'<h2>Keep shopping</h2><div class="grid tight"><a class="card" href="../gear/whitetail.html"><h3>🦌 Whitetail Stand Kit</h3><p>Full checklist</p></a><a class="card" href="../gear/waterfowl.html"><h3>🦆 Waterfowl Blind Kit</h3><p>Full checklist</p></a><a class="card" href="../shop/"><h3>🛒 Gear Shop</h3><p>All departments</p></a><a class="card" href="../deals.html"><h3>🔥 Deals</h3><p>Store sale pages</p></a></div>')
-    page(f"guides/{A26.SLUG}.html", A26.TITLE, A26.DESC, body, "marsh", A26.TITLE, "Season checklist · Sept–Dec", E(A26.DESC), jsonld=[ld, fq, bc], og_type="article", prio="0.9")
+    page(f"guides/{A26.SLUG}.html", A26.TITLE, A26.DESC, body, "marsh", A26.TITLE, "Season checklist · Sept–Dec", E(A26.DESC), jsonld=[ld, fq, bc], og_type="article", prio="0.9", alt=f"es/guides/{A26.SLUG}.html")
     return words
 
 def seo_files():
@@ -733,7 +826,7 @@ def seo_files():
 if __name__ == "__main__":
     import sys
     if "--no-deals" not in sys.argv: fetch_deals()
-    build_guides(); build_shop(); build_gear(); build_deals(); build_home(); build_features(); build_howto(); legal_pages(); build_pricing(); plan_build.build(page, PAGES, DISCLOSURE, play_btn); print("article words:", build_article()); seo_files()
+    build_guides(); build_shop(); build_gear(); build_deals(); build_home(); build_features(); build_howto(); legal_pages(); build_pricing(); plan_build.build(page, PAGES, DISCLOSURE, play_btn); print("article words:", build_article()); build_guides_es(); seo_files()
     print("pages:", len(PAGES))
     have = sorted(k for k in USED_KEYS if (ROOT / "assets/items" / f"{k}.webp").exists())
     print(f"item images: {len(have)}/{len(USED_KEYS)} categories present")

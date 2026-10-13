@@ -316,3 +316,7 @@ body.planpage .hero{min-height:200px}
 .listen-note{margin:6px 0 0;color:var(--dim);font-size:.82rem}
 .listen-on{background:rgba(200,137,58,.16);box-shadow:-4px 0 0 var(--amber);border-radius:4px;transition:background .2s}
 @media (max-width:560px){.lstat{width:100%;margin:0}.listen .lvwrap select{max-width:100%}}
+.langtoggle{display:flex;gap:10px;align-items:center;justify-content:flex-end;margin:12px 0 0;font-size:.95rem}
+.langtoggle a,.langtoggle b{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:10px;border:1px solid var(--edge)}
+.langtoggle b{background:var(--panelhi);color:var(--amber)}
+.langtoggle a{color:var(--text);text-decoration:none}
