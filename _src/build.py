@@ -138,6 +138,7 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <link rel="icon" href="{p}favicon.ico?v={ICONV}" sizes="16x16 32x32 48x48"><link rel="icon" type="image/png" sizes="32x32" href="{p}assets/favicon-32.png?v={ICONV}"><link rel="icon" type="image/png" sizes="192x192" href="{p}assets/icon-192.png?v={ICONV}"><link rel="apple-touch-icon" sizes="180x180" href="{p}assets/apple-touch-icon.png?v={ICONV}">
 <link rel="stylesheet" href="{p}assets/site.css"><script src="{p}assets/affiliates.js" defer></script>{lds}
 <script type="text/javascript" src="http://classic.avantlink.com/affiliate_app_confirm.php?mode=js&authResponse=53598594d4583b51487a907666c5648e56927849"></script>
+<script defer data-domain="hunt.yourworldapps.si" src="https://plausible.io/js/script.outbound-links.js"></script>
 </head><body>
 <header class="top"><div class="wrap"><a class="brand" href="{p or './'}"><img src="{p}assets/icon-192.png" width="34" height="34" alt="">Your World Hunt</a><nav class="nav" aria-label="Main">{nav}</nav></div></header>
 <main>{hero}<div class="wrap">{lang_toggle(lang, alt, p)}{listen_box(path, p)}{body}{wx_card(lang) if (path == "index.html" or _listen_root(path) == ".article") else ""}</div></main>{listen_js(path, p)}
