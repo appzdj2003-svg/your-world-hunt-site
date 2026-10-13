@@ -103,11 +103,20 @@ def es_chrome(doc):
     f = re.sub(r'href="((?:\.\./)*)guides/([\w-]+)\.html">[^<]*<', lambda m: f'href="{m.group(1)}es/guides/{m.group(2)}.html">{E(ES_G[m.group(2)]["short"] if m.group(2) in ES_G else A26ES.SHORT)}<' if (m.group(2) in ES_G or m.group(2) == A26ES.SLUG) else m.group(0), f)
     f = f.replace('href="../../es/guides/', 'href="../../es/guides/').replace("../../es/guides/", "")
     for a, b in [("<h4>Field School</h4>", "<h4>Escuela de campo</h4>"), ("<h4>Shop</h4>", "<h4>Tienda</h4>"), ("<h4>Legal</h4>", "<h4>Legal</h4>"),
-                 (">Get the app on Google Play<", ">Descarga la app en Google Play<"), (">How to use the app<", ">Cómo usar la app (en inglés)<"),
+                 (">Get the app on Google Play<", ">Descarga la app en Google Play<"), (">How to use the app<", ">Cómo usar la app (en inglés)<"), (">Sister app: Your World Weather Radar<", ">App hermana: Your World Weather Radar<"),
                  ("We may earn a commission from links on this site. As an Amazon Associate I earn from qualifying purchases. Guides are general information only. Always check seasons, limits, licenses and land access rules with your state wildlife agency or the official authority where you hunt.",
                   "Podemos ganar una comisión por los enlaces de este sitio. Como Asociado de Amazon, gano con las compras que califican. Las guías son solo información general. Revisa siempre las temporadas, los límites, las licencias y las reglas de acceso a la tierra con la agencia de vida silvestre de tu estado o la autoridad oficial donde cazas.")]:
         f = f.replace(a, b)
     return doc[:i] + f
+
+
+WX_URL = "https://weather.yourworldapps.si/?ref=hunt"
+WX_COPY = {"en": ("Check the sky before you climb the stand", "Your World Weather Radar has live radar, National Weather Service alerts, hurricane tracks and nearby weather cams.", "Open Your World Weather Radar", "Sister app"),
+           "es": ("Mira el cielo antes de subir al puesto", "Your World Weather Radar tiene radar en vivo, alertas del Servicio Meteorológico Nacional (NWS), trayectorias de huracanes y cámaras meteorológicas cercanas.", "Abrir Your World Weather Radar", "App hermana")}
+def wx_card(lang="en"):
+    h, line, btn, tag = WX_COPY[lang]
+    return (f'<aside class="wxpromo" data-nolisten aria-label="{E(tag)}"><span class="wxtag">⛈️ {E(tag)}</span><h2>{E(h)}</h2><p>{E(line)}</p>'
+            f'<a class="btn wxbtn" href="{WX_URL}" target="_blank" rel="noopener">{E(btn)}</a></aside>')
 
 
 def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None, jsonld=None, og_type="website", prio="0.6", absolute=False, hero_extra="", lang="en", alt=None):
@@ -131,9 +140,9 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <script type="text/javascript" src="http://classic.avantlink.com/affiliate_app_confirm.php?mode=js&authResponse=53598594d4583b51487a907666c5648e56927849"></script>
 </head><body>
 <header class="top"><div class="wrap"><a class="brand" href="{p or './'}"><img src="{p}assets/icon-192.png" width="34" height="34" alt="">Your World Hunt</a><nav class="nav" aria-label="Main">{nav}</nav></div></header>
-<main>{hero}<div class="wrap">{lang_toggle(lang, alt, p)}{listen_box(path, p)}{body}</div></main>{listen_js(path, p)}
+<main>{hero}<div class="wrap">{lang_toggle(lang, alt, p)}{listen_box(path, p)}{body}{wx_card(lang) if (path == "index.html" or _listen_root(path) == ".article") else ""}</div></main>{listen_js(path, p)}
 <footer><div class="wrap"><div class="cols">
-<div><h4>Your World Hunt</h4><ul><li><a href="{PLAY}" target="_blank" rel="noopener">Get the app on Google Play</a></li><li><a href="{p}features.html">Features</a></li><li><a href="{p}how-to-use.html">How to use the app</a></li><li><a href="{p}pricing.html">Pricing</a></li><li><a href="{p}about.html">About</a></li><li><a href="{p}contact.html">Contact</a></li></ul></div>
+<div><h4>Your World Hunt</h4><ul><li><a href="{PLAY}" target="_blank" rel="noopener">Get the app on Google Play</a></li><li><a href="{p}features.html">Features</a></li><li><a href="{p}how-to-use.html">How to use the app</a></li><li><a class="wxlink" href="{WX_URL}" target="_blank" rel="noopener">Sister app: Your World Weather Radar</a></li><li><a href="{p}pricing.html">Pricing</a></li><li><a href="{p}about.html">About</a></li><li><a href="{p}contact.html">Contact</a></li></ul></div>
 <div><h4>Field School</h4><ul>{"".join(f'<li><a href="{p}guides/{g["slug"]}.html">{E(g["short"])}</a></li>' for g in GUIDES)}</ul></div>
 <div><h4>Shop</h4><ul><li><a href="{p}shop/">Gear Shop</a></li><li><a href="{p}guides/{A26.SLUG}.html">2026 season gear checklist</a></li><li><a href="{p}gear/">Gear lists by hunt</a></li><li><a href="{p}deals.html">Deals &amp; compare</a></li><li><a href="{p}shop/camp-lodging.html">Lodging finder</a></li></ul></div>
 <div><h4>Legal</h4><ul><li><a href="{p}privacy.html">Privacy</a></li><li><a href="{p}terms.html">Terms</a></li><li><a href="{p}affiliate-disclosure.html">Affiliate disclosure</a></li></ul></div>

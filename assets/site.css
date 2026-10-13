@@ -320,3 +320,11 @@ body.planpage .hero{min-height:200px}
 .langtoggle a,.langtoggle b{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;border-radius:10px;border:1px solid var(--edge)}
 .langtoggle b{background:var(--panelhi);color:var(--amber)}
 .langtoggle a{color:var(--text);text-decoration:none}
+/* Sister app: Your World Weather Radar promo (weather-blue accent) */
+.wxpromo{margin:28px 0;padding:18px 18px 20px;border-radius:14px;border:1px solid #2E6F9E;background:linear-gradient(135deg,rgba(46,111,158,.28),rgba(34,30,20,.92) 70%);box-shadow:inset 4px 0 0 #4FA3E0}
+.wxpromo h2{margin:.35em 0 .3em;color:var(--text)}
+.wxpromo p{margin:0 0 14px;color:var(--khaki)}
+.wxtag{display:inline-block;font-size:.75rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:#8CC8F0}
+.btn.wxbtn{border-color:#4FA3E0;background:#1F4E73;color:#F1F7FC;min-height:48px}
+.btn.wxbtn:hover{background:#2E6F9E;color:#fff}
+footer a.wxlink{color:#8CC8F0}
