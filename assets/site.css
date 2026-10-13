@@ -304,3 +304,15 @@ body.planpage .hero{min-height:200px}
 .vmsg{margin:8px 0 0;color:var(--khaki);font-size:.9rem}.vnote{margin-top:8px}.fromapp{margin:0 0 10px;padding:10px 12px;border-radius:12px;background:rgba(138,154,75,.15);border:1px solid var(--moss)}
 .asklog{display:grid;gap:10px;margin-bottom:14px}.msg{padding:12px 14px;border-radius:14px;border:1px solid var(--edge);background:var(--panel)}.msg.me{background:var(--panelhi);margin-left:15%}.msg p{margin:4px 0}
 .calbox{margin-top:18px;padding:16px;border:1px solid var(--edge);border-radius:var(--r);background:var(--panel)}.calbox h3{margin:0 0 4px}.calbox .chiprow .dim{align-self:center}.calbox[hidden],#calwake[hidden]{display:none}
+/* Listen (text-to-speech) */
+.listen{position:sticky;top:0;z-index:20;margin:14px 0 18px;padding:10px 12px;background:rgba(34,30,20,.96);border:1px solid var(--edge);border-radius:12px;backdrop-filter:blur(4px)}
+.listen-bar{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.lbtn{min-height:48px;min-width:48px;padding:0 16px;border-radius:10px;border:2px solid var(--amber);background:var(--panelhi);color:var(--text);font-weight:900;font-size:1rem;letter-spacing:.05em;cursor:pointer}
+.lbtn.lplay{background:var(--sunset);border-color:var(--sunset);color:#160d05}
+.lbtn:disabled{opacity:.45;cursor:default}
+.lbtn:focus-visible,.listen select:focus-visible{outline:3px solid var(--khaki);outline-offset:2px}
+.listen select{min-height:48px;max-width:46vw;border-radius:10px;border:1px solid var(--edge);background:var(--panel);color:var(--text);padding:0 10px;font-size:1rem}
+.lstat{color:var(--dim);font-size:.85rem;margin-left:auto}
+.listen-note{margin:6px 0 0;color:var(--dim);font-size:.82rem}
+.listen-on{background:rgba(200,137,58,.16);box-shadow:-4px 0 0 var(--amber);border-radius:4px;transition:background .2s}
+@media (max-width:560px){.lstat{width:100%;margin:0}.listen .lvwrap select{max-width:100%}}

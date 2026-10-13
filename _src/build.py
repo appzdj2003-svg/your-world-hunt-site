@@ -65,6 +65,18 @@ def bust(doc):
     return re.sub(r'((?:src|href)=")((?:\.\./)*assets/[\w./-]+\.(?:js|css))"', rep, doc)
 
 
+def _listen_root(path):
+    """Guides and how-to pages get the Listen (text-to-speech) player."""
+    if path.startswith("guides/") and path.endswith(".html") and path != "guides/index.html": return ".article"
+    if path == "how-to-use.html": return "main .wrap"
+    return None
+def listen_box(path, p):
+    r = _listen_root(path)
+    return f'<div class="listen" data-listen="{r}" hidden></div>' if r else ""
+def listen_js(path, p):
+    return f'<script src="{p}assets/listen.js" defer></script>' if _listen_root(path) else ""
+
+
 def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None, jsonld=None, og_type="website", prio="0.6", absolute=False, hero_extra=""):
     depth = path.count("/")
     p = SITE if absolute else "../" * depth
@@ -86,7 +98,7 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <script type="text/javascript" src="http://classic.avantlink.com/affiliate_app_confirm.php?mode=js&authResponse=53598594d4583b51487a907666c5648e56927849"></script>
 </head><body>
 <header class="top"><div class="wrap"><a class="brand" href="{p or './'}"><img src="{p}assets/icon-192.png" width="34" height="34" alt="">Your World Hunt</a><nav class="nav" aria-label="Main">{nav}</nav></div></header>
-<main>{hero}<div class="wrap">{body}</div></main>
+<main>{hero}<div class="wrap">{listen_box(path, p)}{body}</div></main>{listen_js(path, p)}
 <footer><div class="wrap"><div class="cols">
 <div><h4>Your World Hunt</h4><ul><li><a href="{PLAY}" target="_blank" rel="noopener">Get the app on Google Play</a></li><li><a href="{p}features.html">Features</a></li><li><a href="{p}how-to-use.html">How to use the app</a></li><li><a href="{p}pricing.html">Pricing</a></li><li><a href="{p}about.html">About</a></li><li><a href="{p}contact.html">Contact</a></li></ul></div>
 <div><h4>Field School</h4><ul>{"".join(f'<li><a href="{p}guides/{g["slug"]}.html">{E(g["short"])}</a></li>' for g in GUIDES)}</ul></div>
