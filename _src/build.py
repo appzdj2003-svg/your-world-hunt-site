@@ -759,12 +759,12 @@ def legal_pages():
     pol = re.search(r"<body>(.*)</body>", src, re.S).group(1)
     pol = re.sub(r"<h1>.*?</h1>", "", pol, flags=re.S)
     pol = pol.replace("<p>Contact: via Google Play listing</p>", f'<p>Contact: via the developer contact on the <a href="{PLAY}" target="_blank" rel="noopener">Google Play listing</a>.</p>')
-    web = ('<h2>This website</h2><ul><li>This site has no accounts, no ads, no analytics and no tracking cookies. It\'s static pages hosted on GitHub Pages. GitHub may log visitors\' IP addresses for security (<a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub privacy statement</a>).</li>'
+    web = ('<h2>This website</h2><ul><li>This site has no accounts, no ads and no tracking cookies. It uses <a href="https://plausible.io/data-policy">Plausible Analytics</a>, a cookieless, privacy-friendly service, to count page visits and clicks on links to other sites anonymously. Plausible doesn\'t set cookies, doesn\'t store IP addresses and doesn\'t track you across sites. The site is static pages hosted on GitHub Pages. GitHub may log visitors\' IP addresses for security (<a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub privacy statement</a>).</li>'
            '<li>Store, booking and deal links open third-party sites. When you click them, those sites (for example Amazon) may set their own cookies to credit a referral. Their privacy policies apply.</li>'
            '<li>The Deals page asks Slickdeals\' public feed for deal posts from your browser, so Slickdeals sees that request.</li>'
            '<li>Searches you type into the Gear Shop or lodging finder are sent only to the store or site you pick, when you pick it.</li></ul>')
     priv = crumbs(p, ("Home", ""), ("Privacy", None)) + f'<article class="article">{web}<h2>Your World Hunt AI app</h2><p class="dim">The app\'s privacy policy follows. It\'s the same policy linked from Google Play.</p>{pol}</article>'
-    page("privacy.html", "Privacy Policy", "Privacy policy for the Your World Hunt app and this website: data stays on your device by default, no ads, no tracking.", priv, "north", "Privacy Policy", "Your data stays yours", prio="0.4")
+    page("privacy.html", "Privacy Policy", "Privacy policy for the Your World Hunt app and this website: data stays on your device by default, no ads, nothing sold, anonymous analytics you can turn off.", priv, "north", "Privacy Policy", "Your data stays yours", prio="0.4")
     nf = (f'<div style="padding:30px 0"><p>This trail goes nowhere. The page may have moved.</p><div class="btns"><a class="btn primary" href="{SITE}">Back to base camp</a><a class="btn" href="{SITE}guides/">Guides</a><a class="btn" href="{SITE}shop/">Gear Shop</a></div></div>')
     page("404.html", "Page Not Found", "That page is off the map.", nf, "camp", "Off the map", "404", absolute=True)
 
