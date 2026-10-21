@@ -103,7 +103,7 @@ def es_chrome(doc):
     f = re.sub(r'href="((?:\.\./)*)guides/([\w-]+)\.html">[^<]*<', lambda m: f'href="{m.group(1)}es/guides/{m.group(2)}.html">{E(ES_G[m.group(2)]["short"] if m.group(2) in ES_G else A26ES.SHORT)}<' if (m.group(2) in ES_G or m.group(2) == A26ES.SLUG) else m.group(0), f)
     f = f.replace('href="../../es/guides/', 'href="../../es/guides/').replace("../../es/guides/", "")
     for a, b in [("<h4>Field School</h4>", "<h4>Escuela de campo</h4>"), ("<h4>Shop</h4>", "<h4>Tienda</h4>"), ("<h4>Legal</h4>", "<h4>Legal</h4>"),
-                 (">Get the app on Google Play<", ">Descarga la app en Google Play<"), (">How to use the app<", ">Cómo usar la app (en inglés)<"), (">Sister app: Your World Weather Radar<", ">App hermana: Your World Weather Radar<"),
+                 (">Get the app on Google Play<", ">Descarga la app en Google Play<"), (">How to use the app<", ">Cómo usar la app (en inglés)<"), (">Sister app: Your World Weather Radar<", ">App hermana: Your World Weather Radar<"), (">Watch on YouTube<", ">Ver en YouTube<"),
                  ("We may earn a commission from links on this site. As an Amazon Associate I earn from qualifying purchases. Guides are general information only. Always check seasons, limits, licenses and land access rules with your state wildlife agency or the official authority where you hunt.",
                   "Podemos ganar una comisión por los enlaces de este sitio. Como Asociado de Amazon, gano con las compras que califican. Las guías son solo información general. Revisa siempre las temporadas, los límites, las licencias y las reglas de acceso a la tierra con la agencia de vida silvestre de tu estado o la autoridad oficial donde cazas.")]:
         f = f.replace(a, b)
@@ -111,6 +111,10 @@ def es_chrome(doc):
 
 
 WX_URL = "https://weather.yourworldapps.si/?ref=hunt"
+YOUTUBE = "https://www.youtube.com/channel/UCv_HP3UU30nKawvJ0AgHL3A"
+ORG_LD = {"@context": "https://schema.org", "@type": "Organization", "name": "Your World Apps", "url": "https://yourworldapps.si/", "logo": SITE + "assets/icon-512.png",
+          "sameAs": [YOUTUBE, PLAY, "https://yourworldapps.si/"]}
+def og_url(og): return SITE + ("assets/og/" + og if og else "assets/og-hunt-2026.png")
 WX_COPY = {"en": ("Check the sky before you climb the stand", "Your World Weather Radar has live radar, National Weather Service alerts, hurricane tracks and nearby weather cams.", "Open Your World Weather Radar", "Sister app"),
            "es": ("Mira el cielo antes de subir al puesto", "Your World Weather Radar tiene radar en vivo, alertas del Servicio Meteorológico Nacional (NWS), trayectorias de huracanes y cámaras meteorológicas cercanas.", "Abrir Your World Weather Radar", "App hermana")}
 def wx_card(lang="en"):
@@ -119,7 +123,7 @@ def wx_card(lang="en"):
             f'<a class="btn wxbtn" href="{WX_URL}" target="_blank" rel="noopener">{E(btn)}</a></aside>')
 
 
-def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None, jsonld=None, og_type="website", prio="0.6", absolute=False, hero_extra="", lang="en", alt=None):
+def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None, jsonld=None, og_type="website", prio="0.6", absolute=False, hero_extra="", lang="en", alt=None, og=None):
     depth = path.count("/")
     p = SITE if absolute else "../" * depth
     url = SITE + ("" if path == "index.html" else path.replace("index.html", ""))
@@ -133,8 +137,8 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <title>{E(title)}{"" if "Your World Hunt" in title else " | Your World Hunt"}</title>
 <meta name="description" content="{E(desc)}"><link rel="canonical" href="{url}">{hreflang(path, lang, alt)}
 <meta property="og:type" content="{og_type}"><meta property="og:site_name" content="Your World Hunt"><meta property="og:title" content="{E(title)}">
-<meta property="og:description" content="{E(desc)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{SITE}assets/og-hunt-2026.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Your World Hunt: hunting maps, wind, moon and trip planning">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{SITE}assets/og-hunt-2026.png"><meta name="theme-color" content="#15130D">
+<meta property="og:description" content="{E(desc)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{og_url(og)}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="{E(title) if og else "Your World Hunt: hunting maps, wind, moon and trip planning"}">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{og_url(og)}"><meta name="theme-color" content="#15130D">
 <link rel="icon" href="{p}favicon.ico?v={ICONV}" sizes="16x16 32x32 48x48"><link rel="icon" type="image/png" sizes="32x32" href="{p}assets/favicon-32.png?v={ICONV}"><link rel="icon" type="image/png" sizes="192x192" href="{p}assets/icon-192.png?v={ICONV}"><link rel="apple-touch-icon" sizes="180x180" href="{p}assets/apple-touch-icon.png?v={ICONV}">
 <link rel="stylesheet" href="{p}assets/site.css"><script src="{p}assets/affiliates.js" defer></script>{lds}
 <script type="text/javascript" src="http://classic.avantlink.com/affiliate_app_confirm.php?mode=js&authResponse=53598594d4583b51487a907666c5648e56927849"></script>
@@ -143,7 +147,7 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <header class="top"><div class="wrap"><a class="brand" href="{p or './'}"><img src="{p}assets/icon-192.png" width="34" height="34" alt="">Your World Hunt</a><nav class="nav" aria-label="Main">{nav}</nav></div></header>
 <main>{hero}<div class="wrap">{lang_toggle(lang, alt, p)}{listen_box(path, p)}{body}{wx_card(lang) if (path == "index.html" or _listen_root(path) == ".article") else ""}</div></main>{listen_js(path, p)}
 <footer><div class="wrap"><div class="cols">
-<div><h4>Your World Hunt</h4><ul><li><a href="{PLAY}" target="_blank" rel="noopener">Get the app on Google Play</a></li><li><a href="{p}features.html">Features</a></li><li><a href="{p}how-to-use.html">How to use the app</a></li><li><a class="wxlink" href="{WX_URL}" target="_blank" rel="noopener">Sister app: Your World Weather Radar</a></li><li><a href="{p}pricing.html">Pricing</a></li><li><a href="{p}about.html">About</a></li><li><a href="{p}contact.html">Contact</a></li></ul></div>
+<div><h4>Your World Hunt</h4><ul><li><a href="{PLAY}" target="_blank" rel="noopener">Get the app on Google Play</a></li><li><a href="{p}features.html">Features</a></li><li><a href="{p}how-to-use.html">How to use the app</a></li><li><a class="wxlink" href="{WX_URL}" target="_blank" rel="noopener">Sister app: Your World Weather Radar</a></li><li><a href="{p}pricing.html">Pricing</a></li><li><a href="{p}about.html">About</a></li><li><a href="{p}contact.html">Contact</a></li><li><a class="ytlink" href="{YOUTUBE}" target="_blank" rel="noopener">Watch on YouTube</a></li></ul></div>
 <div><h4>Field School</h4><ul>{"".join(f'<li><a href="{p}guides/{g["slug"]}.html">{E(g["short"])}</a></li>' for g in GUIDES)}</ul></div>
 <div><h4>Shop</h4><ul><li><a href="{p}shop/">Gear Shop</a></li><li><a href="{p}guides/{A26.SLUG}.html">2026 season gear checklist</a></li><li><a href="{p}gear/">Gear lists by hunt</a></li><li><a href="{p}deals.html">Deals &amp; compare</a></li><li><a href="{p}shop/camp-lodging.html">Lodging finder</a></li></ul></div>
 <div><h4>Legal</h4><ul><li><a href="{p}privacy.html">Privacy</a></li><li><a href="{p}terms.html">Terms</a></li><li><a href="{p}affiliate-disclosure.html">Affiliate disclosure</a></li></ul></div>
@@ -282,7 +286,7 @@ def build_gear():
                 + (lodging_finder() if slug in ("elk", "safari", "northern", "european") else "") +
                 f'<div class="btns">{play_btn()}<a class="btn" href="index.html">All gear lists</a></div>')
         page(f"gear/{slug}.html", f"{name}: Hunting Gear Checklist", f"{blurb} A practical {name.lower()} checklist with compare-stores links. Regulations and paperwork: always confirm with official sources.",
-             body, scene, name, "Gear list", E(blurb), prio="0.7")
+             body, scene, name, "Gear list", E(blurb), prio="0.7", og=f"gear-{slug}.png")
 
 # ---------- guides ----------
 def build_guides():
@@ -302,7 +306,7 @@ def build_guides():
         nxt = GUIDES[(i + 1) % len(GUIDES)]
         ld = {"@context": "https://schema.org", "@type": "Article", "headline": g["title"], "description": g["desc"], "datePublished": "2026-10-09", "dateModified": TODAY,
               "author": {"@type": "Organization", "name": "Your World Apps"}, "publisher": {"@type": "Organization", "name": "Your World Apps", "logo": {"@type": "ImageObject", "url": SITE + "assets/icon-512.png"}},
-              "mainEntityOfPage": SITE + f'guides/{g["slug"]}.html', "image": SITE + "assets/og-hunt-2026.png"}
+              "mainEntityOfPage": SITE + f'guides/{g["slug"]}.html', "image": og_url(f'guide-{g["slug"]}.png')}
         body = (crumbs(p, ("Home", ""), ("Guides", ""), (g["short"], None)) +
                 f'<article class="article"><p class="meta">Field School · {E(g["badge"])} · about {max(1, round(words/230))} min read · {words} words</p>{src}'
                 f'<div class="callout"><p><b>Regulations:</b> this guide is general information. Seasons, limits, licenses, legal methods, hours and access rules vary by state and country and change often. Check your state wildlife agency or the official authority before you hunt.</p></div>'
@@ -310,7 +314,7 @@ def build_guides():
                 f'<div class="upsell gearcta"><p><b>Gear up for this hunt:</b> the {E(KIT[g["kit"]][1])} checklist has every item with compare-stores links, and the 2026 season checklist covers what to look for in each category.</p><div class="btns"><a class="btn primary" href="../gear/{g["kit"]}.html">Open the {E(KIT[g["kit"]][1])}</a><a class="btn" href="../shop/{g["depts"][0]}.html">Shop {E(DEPT[g["depts"][0]][1])}</a><a class="btn" href="{A26.SLUG}.html">2026 gear checklist</a></div></div>'
                 f'<h2>Gear for this guide</h2>{DISCLOSURE.format(p=p)}<div class="grid tight">{dl}<a class="card" href="../gear/{g["kit"]}.html"><span class="ic" style="font-size:1.4rem">✅</span><h3>{E(KIT[g["kit"]][1])}</h3><p>Full checklist</p></a></div>'
                 f'<div class="panel" style="margin-top:20px"><p class="stencil" style="margin-top:0;color:var(--amber)">Plan it in the app</p><p>{g["app"]}</p>{play_btn()}</div>')
-        page(f'guides/{g["slug"]}.html', g["title"], g["desc"], body, g["scene"], g["title"], "Field School · " + g["badge"], E(g["desc"]), jsonld=[ld], og_type="article", prio="0.8", alt=f'es/guides/{g["slug"]}.html')
+        page(f'guides/{g["slug"]}.html', g["title"], g["desc"], body, g["scene"], g["title"], "Field School · " + g["badge"], E(g["desc"]), jsonld=[ld], og_type="article", prio="0.8", alt=f'es/guides/{g["slug"]}.html', og=f'guide-{g["slug"]}.png')
 
 # ---------- Spanish guides (es/guides/) ----------
 ES_KIT = {"whitetail": "kit para puesto de cola blanca", "elk": "kit para wapití en zonas remotas", "turkey": "kit de pavo de primavera", "waterfowl": "kit de escondite para aves acuáticas",
@@ -323,10 +327,10 @@ DISCLOSURE_ES = ('<p class="disclosure"><strong>Divulgación:</strong> Podemos g
                  '<a href="{p}affiliate-disclosure.html">Detalles (en inglés)</a></p>')
 def play_btn_es(cls="primary"): return f'<a class="btn {cls} play-badge" href="{PLAY}" target="_blank" rel="noopener">{PLAY_SVG if cls=="primary" else ""}Disponible en Google Play</a>'
 def rb_es(q, apparel=False): return rb(q, apparel).replace('aria-label="Compare stores for ', 'aria-label="Comparar tiendas: ')
-def es_ld(headline, desc, url):
+def es_ld(headline, desc, url, og=None):
     return {"@context": "https://schema.org", "@type": "Article", "inLanguage": "es", "headline": headline, "description": desc, "datePublished": TODAY, "dateModified": TODAY,
             "author": {"@type": "Organization", "name": "Your World Apps"}, "publisher": {"@type": "Organization", "name": "Your World Apps", "logo": {"@type": "ImageObject", "url": SITE + "assets/icon-512.png"}},
-            "mainEntityOfPage": SITE + url, "image": SITE + "assets/og-hunt-2026.png"}
+            "mainEntityOfPage": SITE + url, "image": og_url(og)}
 def build_guides_es():
     p = "../../"; d = Path(__file__).parent / "guides_es"
     G = [dict(g, **ES_G[g["slug"]]) for g in GUIDES]
@@ -350,7 +354,7 @@ def build_guides_es():
                 f'<h2>Equipo para esta guía</h2>{DISCLOSURE_ES.format(p=p)}<div class="grid tight">{dl}<a class="card" href="{p}gear/{g["kit"]}.html"><span class="ic" style="font-size:1.4rem">✅</span><h3>{E(kit[0].upper() + kit[1:])}</h3><p>Lista completa</p></a></div>'
                 f'<div class="panel" style="margin-top:20px"><p class="stencil" style="margin-top:0;color:var(--amber)">Planéalo en la app</p><p>{g["app"]}</p>{play_btn_es()}</div>')
         url = f'es/guides/{g["slug"]}.html'
-        page(url, g["title"], g["desc"], body, g["scene"], g["title"], "Escuela de campo · " + g["badge"], E(g["desc"]), jsonld=[es_ld(g["title"], g["desc"], url)], og_type="article", prio="0.7", lang="es", alt=f'guides/{g["slug"]}.html')
+        page(url, g["title"], g["desc"], body, g["scene"], g["title"], "Escuela de campo · " + g["badge"], E(g["desc"]), jsonld=[es_ld(g["title"], g["desc"], url, f'es-guide-{g["slug"]}.png')], og_type="article", prio="0.7", lang="es", alt=f'guides/{g["slug"]}.html', og=f'es-guide-{g["slug"]}.png')
     # 2026 season checklist
     toc = "".join(f'<li><a href="#{x[0]}">{E(x[1])}</a></li>' for x in A26ES.SECTIONS)
     secs = ""
@@ -369,7 +373,7 @@ def build_guides_es():
             f'<article class="article"><p class="meta">Lista de temporada · unos {max(1, round(words/230))} min de lectura · actualizado {TODAY}</p>{art}'
             '<div class="callout"><p><b>Reglamento:</b> las reglas sobre temporadas, naranja de seguridad, tipo de perdigón, horario legal, llamadores electrónicos, señuelos, cámaras y cebado varían según el estado y cambian con frecuencia. Consulta a la agencia de vida silvestre de tu estado antes de cazar.</p></div></article>'
             f'<h2>Sigue comprando</h2><div class="grid tight"><a class="card" href="{p}gear/whitetail.html"><h3>🦌 Kit para puesto de cola blanca</h3><p>Lista completa</p></a><a class="card" href="{p}gear/waterfowl.html"><h3>🦆 Kit de escondite para aves acuáticas</h3><p>Lista completa</p></a><a class="card" href="{p}shop/"><h3>🛒 Tienda de equipo</h3><p>Todos los departamentos</p></a></div>')
-    page(url, A26ES.TITLE, A26ES.DESC, body, "marsh", A26ES.TITLE, "Lista de temporada · sept.–dic.", E(A26ES.DESC), jsonld=[es_ld(A26ES.TITLE, A26ES.DESC, url), fq], og_type="article", prio="0.7", lang="es", alt=f"guides/{A26.SLUG}.html")
+    page(url, A26ES.TITLE, A26ES.DESC, body, "marsh", A26ES.TITLE, "Lista de temporada · sept.–dic.", E(A26ES.DESC), jsonld=[es_ld(A26ES.TITLE, A26ES.DESC, url, f"es-guide-{A26ES.SLUG}.png"), fq], og_type="article", prio="0.7", lang="es", alt=f"guides/{A26.SLUG}.html", og=f"es-guide-{A26ES.SLUG}.png")
 
 # ---------- deals ----------
 DEAL_PAGES = [("Amazon", "Today's Deals", "https://www.amazon.com/deals" + (f"?tag={enc(CFG['amazonTag'])}" if CFG["amazonTag"] else "")),
@@ -636,7 +640,7 @@ def build_howto():
                 "tool": [{"@type": "HowToTool", "name": "Android phone"}],
                 "step": [{"@type": "HowToStep", "position": i + 1, "name": t, "text": re.sub(r"<[^>]+>", "", d), "url": SITE + "how-to-use.html#quick-start"} for i, (t, d) in enumerate(HOWTO_QS)]}
     faq_ld = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in HOWTO_FAQ]}
-    app_ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Your World Hunt AI", "alternateName": "Your World Hunt",
+    app_ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Your World Hunt", "alternateName": "Your World Hunt AI",
               "operatingSystem": "Android", "applicationCategory": "SportsApplication", "url": SITE, "downloadUrl": PLAY, "installUrl": PLAY,
               "image": SITE + "assets/icon-512.png",
               "offers": [{"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free download"},
@@ -666,12 +670,12 @@ def build_home():
     gcards = "".join(pcard(f'guides/{g["slug"]}.html', g["scene"], "hg"+str(i), g["title"], g["desc"], "READ GUIDE →", tag="Badge: " + g["badge"], emoji=g["medal"]) for i, g in enumerate(GUIDES))
     hunts = "".join(pcard(f"gear/{h[0]}.html", h[3], "hh"+h[0], h[1], "Kit checklist with store links", "VIEW LIST →", emoji=h[2]) for h in shopdata.HUNTS)
     badges = "".join(f'<span class="badge on">{b}</span>' for b in BADGES)
-    app_ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Your World Hunt AI", "alternateName": "Your World Hunt",
+    app_ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Your World Hunt", "alternateName": "Your World Hunt AI",
               "operatingSystem": "Android", "applicationCategory": "SportsApplication", "url": SITE, "downloadUrl": PLAY, "installUrl": PLAY,
               "image": SITE + "assets/icon-512.png", "screenshot": [SITE + f"assets/shots/{n}-hunt.jpg" for n, _ in SHOTS],
               "description": "Hunting maps with public land, wind, pressure, moon and feeding times, a camera rangefinder estimate, Plan a Hunt with Ask Hawk, and Kits & Gear checklists.",
               "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free download with optional in-app subscriptions"},
-              "publisher": {"@type": "Organization", "name": "Your World Apps"}}
+              "publisher": {"@type": "Organization", "name": "Your World Apps", "url": "https://yourworldapps.si/", "sameAs": ORG_LD["sameAs"]}}
     site_ld = {"@context": "https://schema.org", "@type": "WebSite", "name": "Your World Hunt", "url": SITE}
     dtiles = "".join(f'<a class="dtile" href="shop/{d[0]}.html">{item_img(d[5][0][0], d[5][0][1], "card", "")}<span>{d[2]} {E(d[1])}</span></a>' for d in shopdata.DEPTS)
     kits = "".join(f'<a class="dtile" href="gear/{k[0]}.html">{next((item_img(it[0], it[3], "card", "") for it in k[7] + kitdata.ESSENTIALS if len(it) > 3 and it[3] and item_img(it[0], it[3], "card", "")), "")}<span>{k[2]} {E(k[1])}</span></a>' for k in kitdata.KITS)
@@ -686,14 +690,14 @@ def build_home():
             f'<p class="dim"><b>Premium: 7-day free trial</b> for eligible new subscribers, then billed by Google Play. Cancel any time.</p>'
             f'<div class="btns">{play_btn()}<a class="btn" href="how-to-use.html">How to use the app</a></div></div></section>'
             f'<h2>Field School guides</h2><div class="grid">{gcards}</div>'
-            f'<h2>Your hunting command center</h2><p>Your World Hunt AI puts the map, the wind, the weather and the plan in one Android app. Mark stands, read public land, watch the pressure trend, plan a trip with Ask Hawk, and pack with built-in gear lists.</p>'
+            f'<h2>Your hunting command center</h2><p>Your World Hunt puts the map, the wind, the weather and the plan in one Android app. Mark stands, read public land, watch the pressure trend, plan a trip with Ask Hawk, and pack with built-in gear lists.</p>'
             f'<div class="grid">{feats}</div>{shots(p)}<div class="btns">{play_btn()}<a class="btn" href="features.html">All features</a></div>'
             f'<h2>New to the app?</h2><div class="grid">{pcard("how-to-use.html", "north", "hhow", "How to use Your World Hunt", "Quick start, every tool step by step, and Free vs Premium.", "OPEN THE GUIDE →", tag="App guide", emoji="🧭", big=True)}</div>'
             f'<h2>Plan like an expedition</h2><div class="panel"><p>Every trip in <b>Plan a Hunt</b> earns badges as it comes together:</p><div class="badges">{badges}</div><p class="dim" style="margin:0">🏆 Expedition Ready when all six are lit.</p></div>'
             f'<h2>Gear lists by hunt</h2><div class="grid tight">{hunts}</div>')
     page("index.html", "Your World Hunt: Hunting Gear Shop, Maps, Public Land & Wind App", "Shop hunting gear by department and compare Amazon, Bass Pro, Cabela's and more in one tap. Plus the Your World Hunt app: hunting maps, public land, wind, moon and feeding times. Free on Google Play.",
          body, "whitetail", "The Hunter's Gear Shop", "Your World Hunt · Outfitter's Counter", "Every department a hunter needs, compared across the big stores in one tap. From the makers of the Your World Hunt app.",
-         jsonld=[app_ld, site_ld], prio="1.0", hero_extra=search_form(p) + f'<div class="btns"><a class="btn primary" href="shop/">Shop all departments</a><a class="btn" href="deals.html">Deals</a><a class="btn" href="plan.html">Plan an expedition</a><a class="btn" href="#get-app">Get the app free</a></div>')
+         jsonld=[app_ld, site_ld, ORG_LD], prio="1.0", hero_extra=search_form(p) + f'<div class="btns"><a class="btn primary" href="shop/">Shop all departments</a><a class="btn" href="deals.html">Deals</a><a class="btn" href="plan.html">Plan an expedition</a><a class="btn" href="#get-app">Get the app free</a></div>')
 
 def build_features():
     p = ""
@@ -763,7 +767,7 @@ def legal_pages():
            '<li>Store, booking and deal links open third-party sites. When you click them, those sites (for example Amazon) may set their own cookies to credit a referral. Their privacy policies apply.</li>'
            '<li>The Deals page asks Slickdeals\' public feed for deal posts from your browser, so Slickdeals sees that request.</li>'
            '<li>Searches you type into the Gear Shop or lodging finder are sent only to the store or site you pick, when you pick it.</li></ul>')
-    priv = crumbs(p, ("Home", ""), ("Privacy", None)) + f'<article class="article">{web}<h2>Your World Hunt AI app</h2><p class="dim">The app\'s privacy policy follows. It\'s the same policy linked from Google Play.</p>{pol}</article>'
+    priv = crumbs(p, ("Home", ""), ("Privacy", None)) + f'<article class="article">{web}<h2>Your World Hunt app</h2><p class="dim">The app\'s privacy policy follows. It\'s the same policy linked from Google Play.</p>{pol}</article>'
     page("privacy.html", "Privacy Policy", "Privacy policy for the Your World Hunt app and this website: data stays on your device by default, no ads, nothing sold, anonymous analytics you can turn off.", priv, "north", "Privacy Policy", "Your data stays yours", prio="0.4")
     nf = (f'<div style="padding:30px 0"><p>This trail goes nowhere. The page may have moved.</p><div class="btns"><a class="btn primary" href="{SITE}">Back to base camp</a><a class="btn" href="{SITE}guides/">Guides</a><a class="btn" href="{SITE}shop/">Gear Shop</a></div></div>')
     page("404.html", "Page Not Found", "That page is off the map.", nf, "camp", "Off the map", "404", absolute=True)
@@ -797,7 +801,7 @@ def build_pricing():
               {"@type": "Offer", "name": "Premium Monthly", "price": "4.99", "priceCurrency": "USD", "description": "Monthly subscription with a 7-day free trial for eligible new subscribers"},
               {"@type": "Offer", "name": "Land Pack World", "price": "8.99", "priceCurrency": "USD", "description": "Monthly add-on subscription"}]
     if ANNUAL_LIVE and ANNUAL_PRICE: offers.append({"@type": "Offer", "name": "Premium Yearly", "price": ANNUAL_PRICE, "priceCurrency": "USD", "description": "Yearly subscription with a 7-day free trial for eligible new subscribers"})
-    ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Your World Hunt AI", "alternateName": "Your World Hunt", "operatingSystem": "Android",
+    ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Your World Hunt", "alternateName": "Your World Hunt AI", "operatingSystem": "Android",
           "applicationCategory": "SportsApplication", "url": SITE + "pricing.html", "offers": offers}
     page("pricing.html", "Pricing: Free, Premium & Add-ons", "Your World Hunt pricing: free hunting map app, Premium at $4.99/month with a 7-day free trial for eligible new subscribers, add-ons, and how it compares to other hunting apps.",
          body, "whitetail", "Pricing", "Free to start", "Start free. Upgrade when you want unlimited marks, feeding times and public land.", jsonld=[ld], prio="0.8")
@@ -818,14 +822,14 @@ def build_article():
     words = len(re.sub(r"<[^>]+>", " ", art).split())
     ld = {"@context": "https://schema.org", "@type": "Article", "headline": A26.TITLE, "description": A26.DESC, "datePublished": "2026-10-09", "dateModified": TODAY,
           "author": {"@type": "Organization", "name": "Your World Apps"}, "publisher": {"@type": "Organization", "name": "Your World Apps", "logo": {"@type": "ImageObject", "url": SITE + "assets/icon-512.png"}},
-          "mainEntityOfPage": SITE + f"guides/{A26.SLUG}.html", "image": SITE + "assets/og-hunt-2026.png"}
+          "mainEntityOfPage": SITE + f"guides/{A26.SLUG}.html", "image": og_url(f"guide-{A26.SLUG}.png")}
     fq = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in A26.FAQ]}
     bc = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": SITE}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": SITE + "guides/"}, {"@type": "ListItem", "position": 3, "name": A26.SHORT}]}
     body = (crumbs(p, ("Home", ""), ("Guides", ""), (A26.SHORT, None)) + DISCLOSURE.format(p=p) +
             f'<article class="article"><p class="meta">Season checklist · about {max(1, round(words/230))} min read · updated {TODAY}</p>{art}'
             '<div class="callout"><p><b>Regulations:</b> seasons, blaze orange, shot type, legal hours, electronic calls, decoys, cameras and baiting rules vary by state and change often. Check your state wildlife agency before you hunt.</p></div></article>'
             f'<h2>Keep shopping</h2><div class="grid tight"><a class="card" href="../gear/whitetail.html"><h3>🦌 Whitetail Stand Kit</h3><p>Full checklist</p></a><a class="card" href="../gear/waterfowl.html"><h3>🦆 Waterfowl Blind Kit</h3><p>Full checklist</p></a><a class="card" href="../shop/"><h3>🛒 Gear Shop</h3><p>All departments</p></a><a class="card" href="../deals.html"><h3>🔥 Deals</h3><p>Store sale pages</p></a></div>')
-    page(f"guides/{A26.SLUG}.html", A26.TITLE, A26.DESC, body, "marsh", A26.TITLE, "Season checklist · Sept–Dec", E(A26.DESC), jsonld=[ld, fq, bc], og_type="article", prio="0.9", alt=f"es/guides/{A26.SLUG}.html")
+    page(f"guides/{A26.SLUG}.html", A26.TITLE, A26.DESC, body, "marsh", A26.TITLE, "Season checklist · Sept–Dec", E(A26.DESC), jsonld=[ld, fq, bc], og_type="article", prio="0.9", alt=f"es/guides/{A26.SLUG}.html", og=f"guide-{A26.SLUG}.png")
     return words
 
 def seo_files():
