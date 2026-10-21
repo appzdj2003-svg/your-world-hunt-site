@@ -103,7 +103,7 @@ def es_chrome(doc):
     f = re.sub(r'href="((?:\.\./)*)guides/([\w-]+)\.html">[^<]*<', lambda m: f'href="{m.group(1)}es/guides/{m.group(2)}.html">{E(ES_G[m.group(2)]["short"] if m.group(2) in ES_G else A26ES.SHORT)}<' if (m.group(2) in ES_G or m.group(2) == A26ES.SLUG) else m.group(0), f)
     f = f.replace('href="../../es/guides/', 'href="../../es/guides/').replace("../../es/guides/", "")
     for a, b in [("<h4>Field School</h4>", "<h4>Escuela de campo</h4>"), ("<h4>Shop</h4>", "<h4>Tienda</h4>"), ("<h4>Legal</h4>", "<h4>Legal</h4>"),
-                 (">Get the app on Google Play<", ">Descarga la app en Google Play<"), (">How to use the app<", ">Cómo usar la app (en inglés)<"), (">Sister app: Your World Weather Radar<", ">App hermana: Your World Weather Radar<"), (">Watch on YouTube<", ">Ver en YouTube<"),
+                 (">Get the app on Google Play<", ">Descarga la app en Google Play<"), (">How to use the app<", ">Cómo usar la app (en inglés)<"), (">Sister app: Your World Weather Radar<", ">App hermana: Your World Weather Radar<"), (">Watch on YouTube<", ">Ver en YouTube<"), (">Cookie settings<", ">Configuración de cookies<"), (">Privacy<", ">Privacidad<"),
                  ("We may earn a commission from links on this site. As an Amazon Associate I earn from qualifying purchases. Guides are general information only. Always check seasons, limits, licenses and land access rules with your state wildlife agency or the official authority where you hunt.",
                   "Podemos ganar una comisión por los enlaces de este sitio. Como Asociado de Amazon, gano con las compras que califican. Las guías son solo información general. Revisa siempre las temporadas, los límites, las licencias y las reglas de acceso a la tierra con la agencia de vida silvestre de tu estado o la autoridad oficial donde cazas.")]:
         f = f.replace(a, b)
@@ -122,6 +122,23 @@ def wx_card(lang="en"):
     return (f'<aside class="wxpromo" data-nolisten aria-label="{E(tag)}"><span class="wxtag">⛈️ {E(tag)}</span><h2>{E(h)}</h2><p>{E(line)}</p>'
             f'<a class="btn wxbtn" href="{WX_URL}" target="_blank" rel="noopener">{E(btn)}</a></aside>')
 
+
+GA_ID = "G-JQDX4D1RF3"
+# EU/EEA + UK + Switzerland (ISO 3166-1). Google applies this default by its own IP location.
+GA_REGIONS = "AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE IS LI NO GB CH".split()
+# Banner region is guessed from the browser time zone (no third-party call). Unknown/UTC -> treated as EU (banner shown).
+GA_HEAD = ("<script>(function(){window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};"
+  "var Z='';try{Z=Intl.DateTimeFormat().resolvedOptions().timeZone||''}catch(e){}"
+  "var eu=!Z||/^(Europe\\/|Etc\\/|UTC$|UCT$|GMT|Universal$|Zulu$|WET$|CET$|MET$|EET$|Arctic\\/Longyearbyen$|Atlantic\\/(Reykjavik|Canary|Madeira|Azores|Faroe|Faeroe|Jan_Mayen)$|Asia\\/(Nicosia|Famagusta)$|Africa\\/Ceuta$|America\\/(Guadeloupe|Martinique|Cayenne|Marigot|St_Barthelemy)$|Indian\\/(Reunion|Mayotte)$)/.test(Z);"
+  "var c=null;try{c=localStorage.getItem('yw_consent')}catch(e){}"
+  "var D='denied',G='granted',ok=c===G||(!eu&&c!==D);"
+  "gtag('consent','default',{ad_storage:D,ad_user_data:D,ad_personalization:D,analytics_storage:D,region:" + json.dumps(GA_REGIONS).replace('"', "'").replace(" ", "") + "});"
+  "gtag('consent','default',{ad_storage:D,ad_user_data:D,ad_personalization:D,analytics_storage:ok?G:D});"
+  "if(c===G)gtag('consent','update',{analytics_storage:G});"
+  "gtag('set','ads_data_redaction',true);gtag('js',new Date());"
+  "gtag('config','" + GA_ID + "',{allow_google_signals:false,allow_ad_personalization_signals:false});"
+  "window.ywGA={eu:eu,tz:Z,load:function(){if(this.l)return;this.l=1;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id=" + GA_ID + "';document.head.appendChild(s)}};"
+  "if(ok)ywGA.load();})();</script>\n")
 
 def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None, jsonld=None, og_type="website", prio="0.6", absolute=False, hero_extra="", lang="en", alt=None, og=None):
     depth = path.count("/")
@@ -142,7 +159,7 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <link rel="icon" href="{p}favicon.ico?v={ICONV}" sizes="16x16 32x32 48x48"><link rel="icon" type="image/png" sizes="32x32" href="{p}assets/favicon-32.png?v={ICONV}"><link rel="icon" type="image/png" sizes="192x192" href="{p}assets/icon-192.png?v={ICONV}"><link rel="apple-touch-icon" sizes="180x180" href="{p}assets/apple-touch-icon.png?v={ICONV}">
 <link rel="stylesheet" href="{p}assets/site.css"><script src="{p}assets/affiliates.js" defer></script>{lds}
 <script type="text/javascript" src="http://classic.avantlink.com/affiliate_app_confirm.php?mode=js&authResponse=53598594d4583b51487a907666c5648e56927849"></script>
-<script defer data-domain="hunt.yourworldapps.si" src="https://plausible.io/js/script.outbound-links.js"></script>
+{GA_HEAD}<script src="{p}assets/consent.js" defer></script>
 </head><body>
 <header class="top"><div class="wrap"><a class="brand" href="{p or './'}"><img src="{p}assets/icon-192.png" width="34" height="34" alt="">Your World Hunt</a><nav class="nav" aria-label="Main">{nav}</nav></div></header>
 <main>{hero}<div class="wrap">{lang_toggle(lang, alt, p)}{listen_box(path, p)}{body}{wx_card(lang) if (path == "index.html" or _listen_root(path) == ".article") else ""}</div></main>{listen_js(path, p)}
@@ -150,7 +167,7 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <div><h4>Your World Hunt</h4><ul><li><a href="{PLAY}" target="_blank" rel="noopener">Get the app on Google Play</a></li><li><a href="{p}features.html">Features</a></li><li><a href="{p}how-to-use.html">How to use the app</a></li><li><a class="wxlink" href="{WX_URL}" target="_blank" rel="noopener">Sister app: Your World Weather Radar</a></li><li><a href="{p}pricing.html">Pricing</a></li><li><a href="{p}about.html">About</a></li><li><a href="{p}contact.html">Contact</a></li><li><a class="ytlink" href="{YOUTUBE}" target="_blank" rel="noopener">Watch on YouTube</a></li></ul></div>
 <div><h4>Field School</h4><ul>{"".join(f'<li><a href="{p}guides/{g["slug"]}.html">{E(g["short"])}</a></li>' for g in GUIDES)}</ul></div>
 <div><h4>Shop</h4><ul><li><a href="{p}shop/">Gear Shop</a></li><li><a href="{p}guides/{A26.SLUG}.html">2026 season gear checklist</a></li><li><a href="{p}gear/">Gear lists by hunt</a></li><li><a href="{p}deals.html">Deals &amp; compare</a></li><li><a href="{p}shop/camp-lodging.html">Lodging finder</a></li></ul></div>
-<div><h4>Legal</h4><ul><li><a href="{p}privacy.html">Privacy</a></li><li><a href="{p}terms.html">Terms</a></li><li><a href="{p}affiliate-disclosure.html">Affiliate disclosure</a></li></ul></div>
+<div><h4>Legal</h4><ul><li><a href="{p}privacy.html">Privacy</a></li><li><a href="{p}terms.html">Terms</a></li><li><a href="{p}affiliate-disclosure.html">Affiliate disclosure</a></li><li><a href="#cookie-settings" data-yw-cookies>Cookie settings</a></li></ul></div>
 </div><p class="fine">We may earn a commission from links on this site. As an Amazon Associate I earn from qualifying purchases. Guides are general information only. Always check seasons, limits, licenses and land access rules with your state wildlife agency or the official authority where you hunt. &copy; {datetime.date.today().year} Your World Apps. Google Play is a trademark of Google LLC. Retailer names are trademarks of their owners and are used only to identify where a link goes.</p></div></footer>
 </body></html>'''
     if lang == "es": doc = es_chrome(doc)
@@ -763,7 +780,8 @@ def legal_pages():
     pol = re.search(r"<body>(.*)</body>", src, re.S).group(1)
     pol = re.sub(r"<h1>.*?</h1>", "", pol, flags=re.S)
     pol = pol.replace("<p>Contact: via Google Play listing</p>", f'<p>Contact: via the developer contact on the <a href="{PLAY}" target="_blank" rel="noopener">Google Play listing</a>.</p>')
-    web = ('<h2>This website</h2><ul><li>This site has no accounts, no ads and no tracking cookies. It uses <a href="https://plausible.io/data-policy">Plausible Analytics</a>, a cookieless, privacy-friendly service, to count page visits and clicks on links to other sites anonymously. Plausible doesn\'t set cookies, doesn\'t store IP addresses and doesn\'t track you across sites. The site is static pages hosted on GitHub Pages. GitHub may log visitors\' IP addresses for security (<a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub privacy statement</a>).</li>'
+    web = ('<h2>This website</h2><ul><li>This site has no accounts and no ads. It uses <b>Google Analytics 4</b> to count visits and see which pages and links get used. Google Analytics sets first-party cookies (<code>_ga</code> and <code>_ga_*</code>) and Google processes the data. Google signals and ad personalization are off, and data sharing with Google is turned off in our settings. Visitors in the EU, UK and Switzerland are asked first: if your browser\'s time zone is in Europe (or we can\'t tell), a banner asks, and Google Analytics isn\'t loaded and sets no cookies unless you accept. As a backstop, Google is also told not to set analytics cookies for visitors it places in those countries. You can change your choice any time with <a href="#cookie-settings" data-yw-cookies>Cookie settings</a> in the footer, or block cookies in your browser. We don\'t sell this data or use it for ads. See <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google\'s privacy policy</a> and the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google Analytics opt-out add-on</a>.</li>'
+           '<li>The site is static pages hosted on GitHub Pages. GitHub may log visitors\' IP addresses for security (<a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub privacy statement</a>).</li>'
            '<li>Store, booking and deal links open third-party sites. When you click them, those sites (for example Amazon) may set their own cookies to credit a referral. Their privacy policies apply.</li>'
            '<li>The Deals page asks Slickdeals\' public feed for deal posts from your browser, so Slickdeals sees that request.</li>'
            '<li>Searches you type into the Gear Shop or lodging finder are sent only to the store or site you pick, when you pick it.</li></ul>')

@@ -328,3 +328,6 @@ body.planpage .hero{min-height:200px}
 .btn.wxbtn{border-color:#4FA3E0;background:#1F4E73;color:#F1F7FC;min-height:48px}
 .btn.wxbtn:hover{background:#2E6F9E;color:#fff}
 footer a.wxlink{color:#8CC8F0}
+.ywconsent{position:fixed;left:12px;right:12px;bottom:12px;z-index:1000;max-width:520px;margin:0 auto;background:var(--panel);border:1px solid var(--edge);border-top:3px solid var(--amber);border-radius:var(--r);padding:14px 16px;color:var(--text);font-size:.9rem;box-shadow:0 8px 28px rgba(0,0,0,.45)}
+.ywconsent p{margin:0 0 10px}.ywconsent a{color:var(--khaki)}
+.ywc-btns{display:flex;gap:10px}.ywc-btns .btn{flex:1;min-height:42px;padding:8px 12px;cursor:pointer;font-family:inherit}
