@@ -3,7 +3,9 @@
 import json, re, os, html, datetime, urllib.parse, urllib.request, email.utils
 from pathlib import Path
 import scenes, shopdata, kitdata, plan_build, items as itemimg, article2026 as A26, article2026_es as A26ES
-ES_G = json.loads((Path(__file__).parent/"guides_es/guides_es.json").read_text())
+import guide_index
+from guide_index import UNRELEASED   # guides for unshipped app features: never built/listed unless YW_PREVIEW_DRAFTS is set (local preview)
+GUIDES, ES_G = guide_index.load()
 
 ROOT = Path(__file__).resolve().parent.parent
 import hashlib as _h, pathlib as _pl
@@ -17,7 +19,6 @@ ANNUAL_LIVE = True    # ywhunt_premium yearly base plan ACTIVE in Play (USD 33.9
 CFG = json.loads(re.search(r"/\*CONFIG\*/\s*window\.YW_AFF\s*=\s*(\{.*?\})\s*/\*END\*/", (ROOT/"assets/affiliates.js").read_text(), re.S).group(1))
 E = lambda s: html.escape(s, quote=True)
 enc = lambda s: urllib.parse.quote(s, safe="")
-GUIDES = json.loads((Path(__file__).parent/"guides/guides.json").read_text())
 PAGES = []  # (path, priority)
 
 # ---------- affiliate links (static mirror of assets/affiliates.js) ----------
@@ -305,6 +306,19 @@ def build_gear():
         page(f"gear/{slug}.html", f"{name}: Hunting Gear Checklist", f"{blurb} A practical {name.lower()} checklist with compare-stores links. Regulations and paperwork: always confirm with official sources.",
              body, scene, name, "Gear list", E(blurb), prio="0.7", og=f"gear-{slug}.png")
 
+# ---------- "Watch the video" spots ----------
+# One YouTube video ID per guide slug (EN and ES pages share it). Empty = no block at all, so nothing loads.
+# Example: VIDEO_IDS = {"playing-the-wind-whitetail": "dQw4w9WgXcQ"}
+VIDEO_IDS = {}
+VIDEO_COPY = {"en": ("Watch the video", "Video: "), "es": ("Mira el video", "Video: ")}
+def video_block(slug, title, lang="en"):
+    vid = (VIDEO_IDS.get(slug) or "").strip()
+    if not re.fullmatch(r"[A-Za-z0-9_-]{11}", vid): return ""
+    h, pre = VIDEO_COPY[lang]
+    return (f'<section class="guidevideo" data-nolisten aria-label="{E(h)}"><h2>▶ {E(h)}</h2><div class="vwrap">'
+            f'<iframe src="https://www.youtube-nocookie.com/embed/{vid}?rel=0" title="{E(pre + title)}" loading="lazy" '
+            'allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></section>')
+
 # ---------- guides ----------
 def build_guides():
     p = "../"
@@ -313,10 +327,10 @@ def build_guides():
             '<p>Original, practical articles for hunters at every level. Each one earns a Field School badge. They\'re general advice, not legal advice. <b>Seasons, bag limits, licenses, legal hunting hours, equipment rules and land access are set by your state wildlife agency or the authority where you hunt. Always check with them directly.</b></p>'
             f'<div class="panel" style="margin-bottom:18px"><p class="stencil" style="margin-top:0;color:var(--amber)">Season checklist</p><p><a href="{A26.SLUG}.html"><b>{E(A26.TITLE)}</b></a>: every category from tree stand safety to waders, with what to look for.</p></div>'
             f'<div class="grid">{cards}</div>')
-    page("guides/index.html", "Hunting Guides: Field School", "Practical hunting guides: playing the wind for whitetail, first elk hunt checklist, moon and feeding times, public land basics, waterfowl blind gear, spring turkey setup, first plains-game safari and shot distance.",
+    page("guides/index.html", "Hunting Guides: Field School", "Practical hunting guides: playing the wind for whitetail, first elk hunt checklist, moon and feeding times, public land basics, waterfowl blind gear, spring turkey setup, first plains-game safari, shot distance and blood trailing a wounded deer.",
          body, "camp", "Field School", "Guides", "Earn every badge. Written by hunters for hunters, with no fluff and no made-up regulations.", prio="0.9", alt="es/guides/index.html")
     for i, g in enumerate(GUIDES):
-        src = (Path(__file__).parent / "guides" / f'{g["slug"]}.html').read_text()
+        src = guide_index.src(g["slug"], "en").read_text()
         words = len(re.sub(r"<[^>]+>", " ", src).split())
         g["words"] = words
         dl = "".join(f'<a class="card" href="../shop/{d}.html"><span class="ic" style="font-size:1.4rem">{DEPT[d][2]}</span><h3>{E(DEPT[d][1])}</h3><p>Shop &amp; compare stores</p></a>' for d in g["depts"])
@@ -325,7 +339,7 @@ def build_guides():
               "author": {"@type": "Organization", "name": "Your World Apps"}, "publisher": {"@type": "Organization", "name": "Your World Apps", "logo": {"@type": "ImageObject", "url": SITE + "assets/icon-512.png"}},
               "mainEntityOfPage": SITE + f'guides/{g["slug"]}.html', "image": og_url(f'guide-{g["slug"]}.png')}
         body = (crumbs(p, ("Home", ""), ("Guides", ""), (g["short"], None)) +
-                f'<article class="article"><p class="meta">Field School · {E(g["badge"])} · about {max(1, round(words/230))} min read · {words} words</p>{src}'
+                f'<article class="article"><p class="meta">Field School · {E(g["badge"])} · about {max(1, round(words/230))} min read · {words} words</p>{video_block(g["slug"], g["title"])}{src}'
                 f'<div class="callout"><p><b>Regulations:</b> this guide is general information. Seasons, limits, licenses, legal methods, hours and access rules vary by state and country and change often. Check your state wildlife agency or the official authority before you hunt.</p></div>'
                 f'<div class="milestone"><div class="medal">{g["medal"]}</div><div><strong>Badge earned: {E(g["badge"])}</strong><span class="dim">Next up: <a href="{nxt["slug"]}.html">{E(nxt["title"])}</a></span></div></div></article>'
                 f'<div class="upsell gearcta"><p><b>Gear up for this hunt:</b> the {E(KIT[g["kit"]][1])} checklist has every item with compare-stores links, and the 2026 season checklist covers what to look for in each category.</p><div class="btns"><a class="btn primary" href="../gear/{g["kit"]}.html">Open the {E(KIT[g["kit"]][1])}</a><a class="btn" href="../shop/{g["depts"][0]}.html">Shop {E(DEPT[g["depts"][0]][1])}</a><a class="btn" href="{A26.SLUG}.html">2026 gear checklist</a></div></div>'
@@ -353,18 +367,18 @@ def build_guides_es():
     G = [dict(g, **ES_G[g["slug"]]) for g in GUIDES]
     cards = "".join(pcard(f'{g["slug"]}.html', g["scene"], "egi"+str(i), g["title"], g["desc"], "LEER GUÍA →", tag="Insignia: " + g["badge"], emoji=g["medal"], big=True) for i, g in enumerate(G))
     body = (crumbs(p, ("Inicio", ""), ("Guías", None)) +
-            '<p>Artículos originales y prácticos para cazadores de todos los niveles. Cada uno otorga una insignia de la Escuela de campo. Son consejos generales, no asesoría legal. <b>Las temporadas, los límites de captura, las licencias, el horario legal de caza, las reglas de equipo y el acceso a la tierra los fija la agencia de vida silvestre de tu estado o la autoridad del lugar donde cazas. Consúltalos siempre directamente con ellos.</b></p>'
-            f'<div class="panel" style="margin-bottom:18px"><p class="stencil" style="margin-top:0;color:var(--amber)">Lista de temporada</p><p><a href="{A26ES.SLUG}.html"><b>{E(A26ES.TITLE)}</b></a>: cada categoría, desde la seguridad en puestos en árboles hasta los vadeadores, con lo que hay que buscar.</p></div>'
+            '<p>Artículos originales y prácticos para cazadores de todos los niveles. Cada uno otorga una insignia de la Escuela de campo. Son consejos generales, no asesoría legal. <b>Las temporadas, los límites de captura, las licencias, el horario legal de caza, las reglas de equipo y el acceso a la tierra los fija la agencia de vida silvestre de tu estado o la autoridad del lugar donde cazas. Consúltalos siempre directamente con esa autoridad.</b></p>'
+            f'<div class="panel" style="margin-bottom:18px"><p class="stencil" style="margin-top:0;color:var(--amber)">Lista de temporada</p><p><a href="{A26ES.SLUG}.html"><b>{E(A26ES.TITLE)}</b></a>: cada categoría, desde la seguridad en puestos en árboles hasta los vadeadores, con lo que conviene buscar.</p></div>'
             f'<div class="grid">{cards}</div>')
-    page("es/guides/index.html", "Guías de caza: Escuela de campo", "Guías prácticas de caza: cómo jugar con el viento para el cola blanca, tu primera cacería de wapití, la luna y los horarios de alimentación, lo básico de la tierra pública, el equipo para aves acuáticas, el pavo de primavera, tu primer safari y la distancia de tiro.",
+    page("es/guides/index.html", "Guías de caza: Escuela de campo", "Guías prácticas de caza: cómo aprovechar el viento para el cola blanca, tu primera cacería de wapití, la luna y los horarios de alimentación, lo básico de la tierra pública, el equipo para aves acuáticas, el pavo de primavera, tu primer safari, la distancia de tiro y el rastreo de sangre de un venado herido.",
          body, "camp", "Escuela de campo", "Guías", "Gana todas las insignias. Escritas por cazadores para cazadores, sin relleno y sin reglamentos inventados.", prio="0.8", lang="es", alt="guides/index.html")
     for i, g in enumerate(G):
-        src = (d / f'{g["slug"]}.html').read_text()
+        src = guide_index.src(g["slug"], "es").read_text()
         words = len(re.sub(r"<[^>]+>", " ", src).split())
         dl = "".join(f'<a class="card" href="{p}shop/{x}.html"><span class="ic" style="font-size:1.4rem">{DEPT[x][2]}</span><h3>{E(ES_DEPT[x])}</h3><p>Compra y compara tiendas</p></a>' for x in g["depts"])
         nxt = G[(i + 1) % len(G)]; kit = ES_KIT[g["kit"]]
         body = (crumbs(p, ("Inicio", ""), ("Guías", "es/guides/"), (g["short"], None)) +
-                f'<article class="article"><p class="meta">Escuela de campo · {E(g["badge"])} · unos {max(1, round(words/230))} min de lectura · {words} palabras</p>{src}'
+                f'<article class="article"><p class="meta">Escuela de campo · {E(g["badge"])} · unos {max(1, round(words/230))} min de lectura · {words} palabras</p>{video_block(g["slug"], g["title"], "es")}{src}'
                 f'<div class="callout"><p><b>Reglamento:</b> esta guía es información general. Las temporadas, los límites, las licencias, los métodos legales, los horarios y las reglas de acceso varían según el estado y el país, y cambian con frecuencia. Consulta a la agencia de vida silvestre de tu estado o a la autoridad oficial antes de cazar.</p></div>'
                 f'<div class="milestone"><div class="medal">{g["medal"]}</div><div><strong>Insignia obtenida: {E(g["badge"])}</strong><span class="dim">Lo siguiente: <a href="{nxt["slug"]}.html">{E(nxt["title"])}</a></span></div></div></article>'
                 f'<div class="upsell gearcta"><p><b>Equípate para esta cacería:</b> la lista del {E(kit)} tiene cada artículo con enlaces para comparar tiendas, y la lista de la temporada 2026 explica qué buscar en cada categoría (páginas de equipo en inglés).</p><div class="btns"><a class="btn primary" href="{p}gear/{g["kit"]}.html">Abrir el {E(kit)}</a><a class="btn" href="{p}shop/{g["depts"][0]}.html">Comprar {E(ES_DEPT[g["depts"][0]])}</a></div></div>'
@@ -387,7 +401,7 @@ def build_guides_es():
     url = f"es/guides/{A26ES.SLUG}.html"
     fq = {"@context": "https://schema.org", "@type": "FAQPage", "inLanguage": "es", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in A26ES.FAQ]}
     body = (crumbs(p, ("Inicio", ""), ("Guías", "es/guides/"), (A26ES.SHORT, None)) + DISCLOSURE_ES.format(p=p) +
-            f'<article class="article"><p class="meta">Lista de temporada · unos {max(1, round(words/230))} min de lectura · actualizado {TODAY}</p>{art}'
+            f'<article class="article"><p class="meta">Lista de temporada · unos {max(1, round(words/230))} min de lectura · actualizado {TODAY}</p>{video_block(A26ES.SLUG, A26ES.TITLE, "es")}{art}'
             '<div class="callout"><p><b>Reglamento:</b> las reglas sobre temporadas, naranja de seguridad, tipo de perdigón, horario legal, llamadores electrónicos, señuelos, cámaras y cebado varían según el estado y cambian con frecuencia. Consulta a la agencia de vida silvestre de tu estado antes de cazar.</p></div></article>'
             f'<h2>Sigue comprando</h2><div class="grid tight"><a class="card" href="{p}gear/whitetail.html"><h3>🦌 Kit para puesto de cola blanca</h3><p>Lista completa</p></a><a class="card" href="{p}gear/waterfowl.html"><h3>🦆 Kit de escondite para aves acuáticas</h3><p>Lista completa</p></a><a class="card" href="{p}shop/"><h3>🛒 Tienda de equipo</h3><p>Todos los departamentos</p></a></div>')
     page(url, A26ES.TITLE, A26ES.DESC, body, "marsh", A26ES.TITLE, "Lista de temporada · sept.–dic.", E(A26ES.DESC), jsonld=[es_ld(A26ES.TITLE, A26ES.DESC, url, f"es-guide-{A26ES.SLUG}.png"), fq], og_type="article", prio="0.7", lang="es", alt=f"guides/{A26.SLUG}.html", og=f"es-guide-{A26ES.SLUG}.png")
@@ -844,7 +858,7 @@ def build_article():
     fq = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in A26.FAQ]}
     bc = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": SITE}, {"@type": "ListItem", "position": 2, "name": "Guides", "item": SITE + "guides/"}, {"@type": "ListItem", "position": 3, "name": A26.SHORT}]}
     body = (crumbs(p, ("Home", ""), ("Guides", ""), (A26.SHORT, None)) + DISCLOSURE.format(p=p) +
-            f'<article class="article"><p class="meta">Season checklist · about {max(1, round(words/230))} min read · updated {TODAY}</p>{art}'
+            f'<article class="article"><p class="meta">Season checklist · about {max(1, round(words/230))} min read · updated {TODAY}</p>{video_block(A26.SLUG, A26.TITLE)}{art}'
             '<div class="callout"><p><b>Regulations:</b> seasons, blaze orange, shot type, legal hours, electronic calls, decoys, cameras and baiting rules vary by state and change often. Check your state wildlife agency before you hunt.</p></div></article>'
             f'<h2>Keep shopping</h2><div class="grid tight"><a class="card" href="../gear/whitetail.html"><h3>🦌 Whitetail Stand Kit</h3><p>Full checklist</p></a><a class="card" href="../gear/waterfowl.html"><h3>🦆 Waterfowl Blind Kit</h3><p>Full checklist</p></a><a class="card" href="../shop/"><h3>🛒 Gear Shop</h3><p>All departments</p></a><a class="card" href="../deals.html"><h3>🔥 Deals</h3><p>Store sale pages</p></a></div>')
     page(f"guides/{A26.SLUG}.html", A26.TITLE, A26.DESC, body, "marsh", A26.TITLE, "Season checklist · Sept–Dec", E(A26.DESC), jsonld=[ld, fq, bc], og_type="article", prio="0.9", alt=f"es/guides/{A26.SLUG}.html", og=f"guide-{A26.SLUG}.png")

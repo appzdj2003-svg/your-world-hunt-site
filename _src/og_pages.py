@@ -3,7 +3,7 @@ Same art as og_image.py: dusk gradient, amber glow, the app icon, site palette. 
 Run: python3 _src/og_pages.py   (then python3 _src/build.py wires og:image/twitter:image to them)"""
 import json, pathlib
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
-import kitdata, article2026 as A26, article2026_es as A26ES
+import kitdata, guide_index, article2026 as A26, article2026_es as A26ES
 S = pathlib.Path(__file__).resolve().parent; R = S.parent; OUT = R / "assets/og"; W, H = 1200, 630
 G = "/usr/share/fonts/truetype/sand-box/google/"
 def F(path, size, w):
@@ -52,7 +52,7 @@ def card(title, kicker, sub, out):
 
 def all_cards():
     made = []
-    guides = json.loads((S / "guides/guides.json").read_text()); es = json.loads((S / "guides_es/guides_es.json").read_text())
+    guides, es = guide_index.load()   # skips UNRELEASED guides unless YW_PREVIEW_DRAFTS is set
     for g in guides: made.append(card(g["title"], "Field School guide", "Badge: " + g["badge"], f'guide-{g["slug"]}.png'))
     made.append(card(A26.TITLE, "Season checklist", "Sept to Dec: what to look for in each category", f"guide-{A26.SLUG}.png"))
     for g in guides:

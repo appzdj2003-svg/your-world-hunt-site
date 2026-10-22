@@ -160,5 +160,21 @@
 ],
 "kit": "whitetail",
 "app": "Drop a mark on each stand in Your World Hunt so you can share exact coordinates with a hunting partner, and use GPS return to walk back to the truck in the dark. Check the forecast wind before you climb."
+},
+{
+"slug": "blood-trailing-wounded-deer",
+"short": "Blood trailing a wounded deer",
+"title": "Blood Trailing a Wounded Deer: Reading Sign, Waiting and Searching",
+"desc": "How to read blood after the shot, when to wait and when to follow, how to mark the last blood, grid-search a lost trail, track at night, and check the rules on tracking dogs and lights.",
+"scene": "whitetail",
+"badge": "Trail Finisher",
+"medal": "🩸",
+"depts": [
+"electronics-trail-cams",
+"safety",
+"game-processing"
+],
+"kit": "whitetail",
+"app": "Drop a mark in Your World Hunt at the shot spot, the last place you saw the deer and each blood spot, so the trail is on your map with exact coordinates. Share the marks with your tracking partner, and use GPS return to get back to the truck in the dark."
 }
 ]
