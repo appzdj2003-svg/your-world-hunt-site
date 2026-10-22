@@ -8,7 +8,7 @@ guides.json / guides_es.json, and remove the slug from UNRELEASED."""
 import json, os
 from pathlib import Path
 S = Path(__file__).resolve().parent
-UNRELEASED = {"ranging-a-spot-on-the-map"}   # ships with Hunt 0.1.93; tone under review
+UNRELEASED = set()   # e.g. {"some-guide-slug"}
 DRAFTS = os.environ.get("YW_PREVIEW_DRAFTS")   # e.g. /workspace/hunt-guides/drafts (local preview only)
 
 def load():

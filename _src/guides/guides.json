@@ -176,5 +176,21 @@
 ],
 "kit": "whitetail",
 "app": "Drop a mark in Your World Hunt at the shot spot, the last place you saw the deer and each blood spot, so the trail is on your map with exact coordinates. Share the marks with your tracking partner, and use GPS return to get back to the truck in the dark."
+},
+{
+"slug": "ranging-a-spot-on-the-map",
+"short": "Ranging a spot on the map",
+"title": "Ranging a Spot on the Map: GPS Distance and Known-Size Ranging",
+"desc": "How to get the distance to a bait barrel, tree or opening with your phone: GPS distance to a marked spot, known-size camera ranging, GPS error at bow range, and low-light technique.",
+"scene": "north",
+"badge": "Spot On",
+"medal": "📍",
+"depts": [
+"optics",
+"archery",
+"firearm-accessories"
+],
+"kit": "day-hunt",
+"app": "Mark your bait, openings and stand trees in Your World Hunt, select a mark, and the Return card shows its distance and bearing from you. The camera rangefinder with Wind Hold is in the Sharp Shooter Pack. Both give estimates, not laser readings."
 }
 ]
