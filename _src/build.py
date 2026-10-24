@@ -545,13 +545,22 @@ FEATURE_SECTIONS = [
       "Hunting by water? Mark your boat ramps, then choose <b>BOAT</b> and pick a put-in and take-out. The open-water leg uses a bearing and your boat speed for the ETA."],
    None, None),
   ("sharp", "📏 Sharp Shooter camera rangefinder", ("addon",), [
-      "Tap <b>SHARP</b> on the map to open Sharp Shooter, then open the <b>camera rangefinder</b>.",
+      "In the latest version, tap <b>◎ RANGE</b> on the right side of the map to open the <b>camera rangefinder</b> in one tap. <b>SHARP</b> on the weather and wind strip still opens Sharp Shooter and the wind hold guide.",
       "Point at the animal. On-device AI fit finds it and sets the brackets, or tap any object to lock on.",
-      "Pick a preset (deer, elk, turkey, hog, coyote, person, truck, fence post, door, sign) or enter a custom size.",
+      "Pick a preset (deer, elk, turkey, hog, coyote, black bear, person, truck, fence post, door, sign, bait barrel) or enter a custom size.",
       "Tap <b>CALIBRATE</b> once on a known distance for tighter estimates.",
+      "Tap <b>YD</b> or <b>M</b> at the top of the rangefinder to switch between yards and meters. Map distances follow the same choice (also under <b>UNITS</b> in Settings). Yards is the default.",
       "Tap <b>USE IN WIND HOLD</b> to send the range to the wind hold guide (rifle, bow, crossbow, muzzleloader) for a suggested hold in inches and MOA."],
    "<b>It's an estimate, not a laser,</b> and not a ballistic calculator. Verify with your own dope. Camera images stay on your phone, and it works with no signal.",
    "Add Sharp Shooter in the app"),
+  ("bloodtrail", "🩸 Blood Trail and Trail Lens", ("free", "prem"), [
+      "After the shot, tap <b>🩸 TRAIL</b> on the map to open <b>Trail Lens</b>, or tap <b>MARK BLOOD</b> on the Blood Trail card to drop a GPS pin where you stand. Your first pin starts the trail.",
+      "Optionally tag a pin under <b>PIN TYPE</b>: Shot, First, Heavy, Last, Bedded, Arrow, Vehicle or Recovery.",
+      "With <b>Premium</b>, turn on <b>HIGHLIGHT</b> to tint blood-like colors in the live camera view. A short buzz tells you when the highlight holds on a spot. Use <b>CALIBRATE</b> on a drop you know is blood, pick a <b>HIGHLIGHT COLOR</b> that's easy for your eyes (colorblind-friendly options included), and on supported phones turn on <b>AI ASSIST</b>, an on-device aid that helps cut false highlights.",
+      "<b>MARK + PHOTO</b> saves a pin with a photo, and <b>SIDE-BY-SIDE</b> puts the plain and highlighted views next to each other. The map strip in the camera view shows your trail, the last pin and the bearing back to the hit and your truck.",
+      "<b>EXPORT GPX</b> or <b>EXPORT KML</b> (Premium) saves the trail. <b>CLOSE</b> hides the controls; open <b>CONTROLS</b> and tap <b>EXIT BLOOD TRAIL</b> to leave."],
+   "<b>Blood Trail is an aid, not a blood detector.</b> A highlight means look closer, and it can't promise a recovery. MARK BLOOD pins, tags and the trail on the map are free; the live highlight and GPX/KML export are Premium. Camera images stay on your phone.",
+   None),
   ("trailcams", "📷 Trail cams", ("prem",), [
       "Place a trail cam pin with <b>MARK</b>, right where the camera hangs.",
       "Connect your camera brand in the trail cam settings. SpyPoint can sync the latest stills from the cloud, and Reveal is supported too. You can also share photos into the app.",
@@ -572,7 +581,7 @@ FEATURE_SECTIONS = [
 
 SOON = [
   ("plan", "🦅 Plan a Hunt expedition planner", "Tap <b>PLAN A HUNT</b> on the map, set base camp from a mark or a search, and get Hunt Days scored by moon, sun and a 10-day forecast (days 1–3 forecast, 4–7 trend, 8+ outlook only). Then build a day-by-day plan, kit checklist, budget, hunting party and field journal. Add tag and draw deadline reminders using dates you enter from your agency.", "Free includes 1 expedition. Premium adds unlimited expeditions, budget split, party sharing and a papers checklist."),
-  ("hawk", "🦅 Ask Hawk, your field guide", "Talk or type to Ask Hawk about best days, which stand fits the wind, entry and exit routes, backups and lodging. Hawk answers from your own trip, forecast, marks and land layer, and suggests plan changes you approve with a tap. Hawk never quotes seasons, limits or fees.", "Optional on-device AI with Premium or the Expedition Pack (about a 557 MB download). Your chat stays on your phone."),
+  ("hawk", "🦅 Ask Hawk, your field guide", "Talk or type to Ask Hawk about best days, which stand fits the wind, entry and exit routes, backups and lodging. Hawk answers from your own trip, forecast, marks and land layer, and suggests plan changes you approve with a tap. Hawk never quotes seasons, limits or fees.", "Optional on-device AI with Premium or the Expedition Pack: turn on <b>On-device Ask Hawk</b> under Settings → PLAN A HUNT, then download it over Wi-Fi (about 557 MB). Some older or lower-memory phones keep using Hawk's built-in field rules instead. Your chat stays on your phone."),
   ("lodging", "⛺ Find Lodging", "Pick a lodging type (campsites, hotels, cabins, RV parks or rentals) and get big buttons that open each provider's own search for your trip's area and dates. Save your pick as base camp to add it to your budget.", 'Free. Want it today? Try the <a href="shop/camp-lodging.html">lodging finder on this site</a>.'),
   ("kits", "🎒 Kits & Gear hub", "Kit lists by hunt type (whitetail stand, elk backcountry, turkey, waterfowl, plains-game safari and more). Check off what you own in My Gear, add your own items, add a kit to an expedition, and get weather-based gear tips on your hunt days. Open it from Settings, PACKS or Plan a Hunt.", 'Free for everyone. The same lists are on this site now: <a href="gear/">Gear lists</a> and the <a href="shop/">Gear Shop</a>.'),
   ("multistop", "🧭 Mark-to-mark & multi-stop directions", "Get directions from any mark to any other mark, not just from your GPS, and chain several stops into one route (Directions from here, Add to route, Start multi-route).", "Free, using the same travel modes as today's directions."),
@@ -597,6 +606,8 @@ FREE_VS = [("Hunting map: satellite, streets, topo, GPS, deep zoom", "✔", "✔
            ("LAND overlay: live US public land (online)", "—", "✔"),
            ("Close-Buddy live partner GPS", "—", "✔"),
            ("GPX export", "—", "✔"),
+           ("Blood Trail: MARK BLOOD pins, pin tags, trail on the map", "✔", "✔"),
+           ("Trail Lens live highlight + Blood Trail GPX/KML export", "—", "✔"),
            ("Lite mode", "✔", "✔"),
            ("Land Packs (offline public land)", "Add-on", "Add-on"),
            ("Sharp Shooter camera rangefinder + wind hold", "Add-on", "Add-on"),
@@ -608,6 +619,7 @@ HOWTO_FAQ = [
   ("How do I cancel?", "Subscriptions are billed and managed by Google Play. Cancel any time in Google Play → Payments & subscriptions. If you cancel during the free trial, you won't be charged."),
   ("Does Premium include Land Packs or Sharp Shooter?", "No. Land Packs, Sharp Shooter and Dog Pack are separate add-on subscriptions. Premium includes the live US LAND overlay while you're online."),
   ("Is the camera rangefinder as accurate as a laser rangefinder?", "No. Sharp Shooter's camera rangefinder is an estimate based on the target's size in the frame. Calibrate it on a known distance and verify with your own dope. It's not a laser and not a ballistic calculator."),
+  ("Does Blood Trail find blood for me?", "No. Trail Lens highlights colors that look like blood to help your eyes, and an on-device AI assist helps cut false highlights on supported phones, but it isn't a blood detector and can't guarantee a recovery. Red leaves, mud or rust can light up, and real blood can be missed. Confirm every spot yourself."),
   ("Does the LAND layer prove I can hunt there?", "No. Public-land layers are informational guides, not a legal survey and not proof of access. Confirm boundaries, regulations and permission with official sources."),
   ("Does it work without cell signal?", "Maps and weather need a network connection. Land Packs download to your phone for offline public-land maps, and the camera rangefinder works with no signal."),
   ("Does the app tell me seasons, bag limits or legal hours?", "No. Regulations come from your state wildlife agency or the official authority where you hunt. Always check with them directly."),
@@ -636,10 +648,11 @@ def build_howto():
         if sid == "weather": extra = '<p class="dim">Read more: <a href="guides/playing-the-wind-whitetail.html">Playing the wind for whitetail</a> · <a href="shop/scent-control.html">scent control gear</a>.</p>'
         if sid == "land": extra = '<p class="dim">Read more: <a href="guides/public-land-hunting-basics.html">Public land hunting basics</a>.</p>'
         if sid == "sharp": extra = '<p class="dim">Read more: <a href="guides/rangefinding-shot-distance-basics.html">Rangefinding &amp; shot distance basics</a> · <a href="shop/optics.html">optics &amp; laser rangefinders</a>.</p>'
+        if sid == "bloodtrail": extra = '<p class="dim">Read more: <a href="guides/blood-trailing-wounded-deer.html">Blood trailing a wounded deer</a> · <a href="gear/whitetail.html">whitetail stand checklist</a>.</p>'
         if sid == "trailcams": extra = '<p class="dim">Need a camera? <a href="shop/electronics-trail-cams.html">Trail cams &amp; electronics</a>.</p>'
         secs += (f'<section class="feat" id="{sid}">{tiers(*tk)}<h2>{title}</h2><ol class="steps">{st}</ol>'
                  + (f'<p>{note}</p>' if note else "") + extra + (upsell(UPMSG[sid], cta) if cta and sid not in ("sharp", "land") else "")
-                 + (upsell("Sharp Shooter is a separate add-on. Open <b>SHARP</b> in the app to see the current price in Google Play.", "Get the app") if sid == "sharp" else "")
+                 + (upsell("Sharp Shooter is a separate add-on. Tap <b>RANGE</b> or <b>SHARP</b> in the app to see the current price in Google Play.", "Get the app") if sid == "sharp" else "")
                  + (upsell("Live US public land is in Premium. Offline Land Packs are a separate add-on.", "Unlock LAND: start your 7-day free trial") if sid == "land" else "")
                  + "</section>")
     tbl = ('<div class="tblwrap"><table><tr><th>Feature</th><th>Free</th><th>Premium</th></tr>' +
@@ -677,7 +690,7 @@ def build_howto():
               "offers": [{"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free download"},
                          {"@type": "Offer", "name": "Premium", "price": "4.99", "priceCurrency": "USD", "description": "Monthly subscription after a 7-day free trial for eligible new subscribers, billed by Google Play"}],
               "publisher": {"@type": "Organization", "name": "Your World Apps"}}
-    page("how-to-use.html", "How to Use Your World Hunt: Step-by-Step App Guide", "How to use Your World Hunt: quick start, stands and marks, wind and pressure, moon and deer feeding times, LAND public land, directions, the Sharp Shooter camera rangefinder, trail cams, and Free vs Premium.",
+    page("how-to-use.html", "How to Use Your World Hunt: Step-by-Step App Guide", "How to use Your World Hunt: quick start, stands and marks, wind and pressure, moon and deer feeding times, LAND public land, directions, the Sharp Shooter camera rangefinder, Blood Trail, trail cams, and Free vs Premium.",
          body, "whitetail", "How to Use Your World Hunt", "App guide · Free on Google Play", "Every tool, step by step: what's free, what Premium unlocks, and how to get the most out of each sit.",
          jsonld=[howto_ld, faq_ld, app_ld], prio="0.9", hero_extra=f'<div class="btns">{play_btn()}<a class="btn" href="#quick-start">Quick start</a></div>')
 
