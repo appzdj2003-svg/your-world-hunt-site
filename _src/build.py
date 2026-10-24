@@ -159,7 +159,6 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{og_url(og)}"><meta name="theme-color" content="#15130D">
 <link rel="icon" href="{p}favicon.ico?v={ICONV}" sizes="16x16 32x32 48x48"><link rel="icon" type="image/png" sizes="32x32" href="{p}assets/favicon-32.png?v={ICONV}"><link rel="icon" type="image/png" sizes="192x192" href="{p}assets/icon-192.png?v={ICONV}"><link rel="apple-touch-icon" sizes="180x180" href="{p}assets/apple-touch-icon.png?v={ICONV}">
 <link rel="stylesheet" href="{p}assets/site.css"><script src="{p}assets/affiliates.js" defer></script>{lds}
-<script type="text/javascript" src="https://classic.avantlink.com/affiliate_app_confirm.php?mode=js&authResponse=53598594d4583b51487a907666c5648e56927849"></script>
 {GA_HEAD}<script src="{p}assets/consent.js" defer></script>
 </head><body>
 <header class="top"><div class="wrap"><a class="brand" href="{p or './'}"><img src="{p}assets/icon-192.png" width="34" height="34" alt="">Your World Hunt</a><nav class="nav" aria-label="Main">{nav}</nav></div></header>
@@ -810,7 +809,8 @@ def legal_pages():
         '<li><b>Retailers, outfitters and partnerships:</b> use the same Play listing contact. Put "Partnership" in the subject.</li></ul>'
         '<p class="dim">We can\'t answer questions about seasons, limits or legal methods. Please contact your state wildlife agency.</p></article>')
     page("contact.html", "Contact", "How to contact the Your World Hunt developer: email support@yourworldapps.si or reach app support through the Google Play listing.", contact, "marsh", "Contact", "Radio check")
-    terms = (crumbs(p, ("Home", ""), ("Terms", None)) + '<article class="article"><p class="meta">Last updated: ' + TODAY + '</p>'
+    TERMS_UPDATED = "2026-10-22"  # bump only when the terms text actually changes
+    terms = (crumbs(p, ("Home", ""), ("Terms", None)) + '<article class="article"><p class="meta">Last updated: ' + TERMS_UPDATED + '</p>'
         '<h2>Information only</h2><p>Guides, gear lists and pages on this site are general information. They are not legal, safety, medical or professional advice. Hunting is regulated, and the rules (seasons, limits, licenses, legal methods and equipment, hours, blaze orange, baiting, land access, firearm transport and import) vary by place and change often. <b>You are responsible for confirming and following the current rules with your state wildlife agency or the official authority, and for getting permission to hunt private land.</b></p>'
         '<h2>Safety</h2><p>Hunting and outdoor travel carry real risks. Use a full-body harness in tree stands, follow firearm and archery safety rules, tell someone your plan, and carry the means to call for help. Sharp Shooter distances in the app are estimates, not laser measurements. Weather, land and moon information is informational.</p>'
         '<h2>Third-party links</h2><p>This site links to retailers, booking sites, Slickdeals and government sites. We don\'t control them, their prices or their availability. Their own terms and privacy policies apply. Some links are affiliate links (see the <a href="affiliate-disclosure.html">disclosure</a>).</p>'
@@ -835,16 +835,10 @@ def legal_pages():
     page("404.html", "Page Not Found", "That page is off the map.", nf, "camp", "Off the map", "404", absolute=True)
 
 # ---------- pricing ----------
-COMPETITORS = [  # (app, published price, source label, source url) -- verified Oct 9, 2026
- ("onX Hunt", "Premium $34.99/yr (1 state), $49.99/yr (2 states); Elite $99.99/yr or $14.99/mo", "onX pricing page", "https://www.onxmaps.com/hunt/app/pricing"),
- ("HuntStand", "Pro $34.99/yr; Ultimate $99.99/yr", "Trail Pro Intel, Aug 2026", "https://www.trailprointel.com/blog/best-hunting-apps-2026"),
- ("HuntWise", "Pro $59.99/yr or $19.99/mo; Elite $119.99/yr or $39.99/mo", "Trail Pro Intel, Aug 2026", "https://www.trailprointel.com/blog/huntwise-cost-2026"),
- ("Spartan Forge", "$79.99/yr or $12.99/mo", "Spartan Forge pricing page", "https://spartanforge.ai/pages/pricing")]
 def build_pricing():
     p = ""
     annual = (f'<div class="card"><span class="tag">Premium</span><h3>Premium Yearly</h3><p class="big">${E(ANNUAL_PRICE)}/year</p><p>Everything in Premium Monthly, billed once a year by Google Play. About {round((1 - float(ANNUAL_PRICE) / 59.88) * 100)}% less than paying monthly ($4.99 × 12 = $59.88). <b>7-day free trial for eligible new subscribers.</b> Cancel any time in Google Play.</p>{play_btn()}</div>' if ANNUAL_LIVE and ANNUAL_PRICE else "")
     rows = "".join(f"<tr><td>{a}</td><td>{f}</td><td>{pr}</td></tr>" for a, f, pr in FREE_VS)
-    comp = "".join(f'<tr><td>{E(a)}</td><td>{E(pr)}</td><td><a href="{u}" target="_blank" rel="noopener nofollow">{E(sl)}</a></td></tr>' for a, pr, sl, u in COMPETITORS)
     body = (crumbs(p, ("Home", ""), ("Pricing", None)) +
         '<div class="grid">'
         f'<div class="card"><span class="tag">Free</span><h3>Free</h3><p class="big">$0</p><p>Hunting map, GPS return, directions, wind, pressure, moon and sun. 1 stand, 2 boat ramps and 2 of each game mark.</p>{play_btn("")}</div>'
@@ -855,8 +849,6 @@ def build_pricing():
         '<div class="card"><h3>📏 Sharp Shooter</h3><p>Camera rangefinder <b>estimate</b> and wind hold. Not a laser rangefinder.</p></div>'
         '<div class="card"><h3>🐕 Dog Pack</h3><p>Tools for hunting with dogs.</p></div></div>'
         f'<h2>Free vs Premium</h2><div class="tblwrap"><table><thead><tr><th>Feature</th><th>Free</th><th>Premium</th></tr></thead><tbody>{rows}</tbody></table></div>'
-        f'<h2>How it compares</h2><p>Published prices for other popular hunting apps, checked October 9, 2026. Prices change, so confirm with each app before you buy. Features differ between apps.</p>'
-        f'<div class="tblwrap"><table><thead><tr><th>App</th><th>Published price</th><th>Source</th></tr></thead><tbody><tr><td><b>Your World Hunt</b></td><td>Free; Premium $4.99/mo with a 7-day free trial for eligible new subscribers{f"; Premium Yearly ${ANNUAL_PRICE}/yr with a 7-day free trial for eligible new subscribers" if ANNUAL_LIVE else ""}</td><td>Google Play</td></tr>{comp}</tbody></table></div>'
         '<p class="dim">Billing, trials and cancellation are handled by Google Play. Trial eligibility is decided by Google Play.</p>'
         f'<div class="btns">{play_btn()}<a class="btn" href="how-to-use.html">How to use the app</a></div>')
     offers = [{"@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD"},
@@ -865,7 +857,7 @@ def build_pricing():
     if ANNUAL_LIVE and ANNUAL_PRICE: offers.append({"@type": "Offer", "name": "Premium Yearly", "price": ANNUAL_PRICE, "priceCurrency": "USD", "description": "Yearly subscription with a 7-day free trial for eligible new subscribers"})
     ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Your World Hunt", "alternateName": "Your World Hunt AI", "operatingSystem": "Android",
           "applicationCategory": "SportsApplication", "url": SITE + "pricing.html", "offers": offers}
-    page("pricing.html", "Pricing: Free, Premium & Add-ons", "Your World Hunt pricing: free hunting map app, Premium at $4.99/month with a 7-day free trial for eligible new subscribers, add-ons, and how it compares to other hunting apps.",
+    page("pricing.html", "Pricing: Free, Premium & Add-ons", "Your World Hunt pricing: free hunting map app, Premium at $4.99/month with a 7-day free trial for eligible new subscribers, and add-ons.",
          body, "whitetail", "Pricing", "Free to start", "Start free. Upgrade when you want unlimited marks, feeding times and public land.", jsonld=[ld], prio="0.8")
 
 # ---------- 2026 season article ----------
