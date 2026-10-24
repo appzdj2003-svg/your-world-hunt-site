@@ -159,7 +159,7 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{og_url(og)}"><meta name="theme-color" content="#15130D">
 <link rel="icon" href="{p}favicon.ico?v={ICONV}" sizes="16x16 32x32 48x48"><link rel="icon" type="image/png" sizes="32x32" href="{p}assets/favicon-32.png?v={ICONV}"><link rel="icon" type="image/png" sizes="192x192" href="{p}assets/icon-192.png?v={ICONV}"><link rel="apple-touch-icon" sizes="180x180" href="{p}assets/apple-touch-icon.png?v={ICONV}">
 <link rel="stylesheet" href="{p}assets/site.css"><script src="{p}assets/affiliates.js" defer></script>{lds}
-<script type="text/javascript" src="http://classic.avantlink.com/affiliate_app_confirm.php?mode=js&authResponse=53598594d4583b51487a907666c5648e56927849"></script>
+<script type="text/javascript" src="https://classic.avantlink.com/affiliate_app_confirm.php?mode=js&authResponse=53598594d4583b51487a907666c5648e56927849"></script>
 {GA_HEAD}<script src="{p}assets/consent.js" defer></script>
 </head><body>
 <header class="top"><div class="wrap"><a class="brand" href="{p or './'}"><img src="{p}assets/icon-192.png" width="34" height="34" alt="">Your World Hunt</a><nav class="nav" aria-label="Main">{nav}</nav></div></header>
@@ -496,7 +496,7 @@ def build_deals():
          body, "safari", "Deals & Compare", "Trading Post", "Compare stores in one tap, browse real deals from the source, and know when the big sales usually land. No invented prices.", prio="0.8")
 
 # ---------- how to use the app (sales-focused guide) ----------
-# Grounded in the app source and the 0.1.78 Production listing. Features only in Internal builds (0.1.79+) are labeled Coming soon.
+# Grounded in the app source and the current Production app. Plan a Hunt and Ask Hawk are live (no more Coming soon section).
 TIER = {"free": ("free", "Free"), "prem": ("prem", "Premium"), "addon": ("addon", "Add-on"), "soon": ("soon", "Coming soon")}
 def tiers(*ks): return "".join(f'<span class="tier {TIER[k][0]}">{TIER[k][1]}</span>' for k in ks)
 TRIAL = "Start your 7-day free trial"
@@ -561,6 +561,21 @@ FEATURE_SECTIONS = [
       "<b>EXPORT GPX</b> or <b>EXPORT KML</b> (Premium) saves the trail. <b>CLOSE</b> hides the controls; open <b>CONTROLS</b> and tap <b>EXIT BLOOD TRAIL</b> to leave."],
    "<b>Blood Trail is an aid, not a blood detector.</b> A highlight means look closer, and it can't promise a recovery. MARK BLOOD pins, tags and the trail on the map are free; the live highlight and GPX/KML export are Premium. Camera images stay on your phone.",
    None),
+  ("plan", "🦅 Plan a Hunt expedition planner", ("free", "prem"), [
+      "Tap <b>PLAN A HUNT</b> on the right side of the map to open the trip planner. Your map, marks and settings stay as they are.",
+      "Start an expedition: pick your species and dates, and set base camp from one of your marks or a place search.",
+      "See your <b>best hunt days</b> scored by moon, sun and the forecast. Days 1–3 use the normal forecast, days 4–7 the trend, and days 8+ are outlook only.",
+      "Build a day-by-day plan, then fill in <b>BASE CAMP PLAN</b> (including <b>Find Lodging</b>), your kit checklist, <b>BUDGET</b>, hunting party and <b>FIELD JOURNAL</b>.",
+      "Add tag and draw deadline reminders using the dates you get from your wildlife agency."],
+   "Free includes 1 expedition with hunt-day scoring. Premium or the Expedition Pack adds unlimited expeditions, budget split, party sharing and a papers checklist. Hunt-day scores are a planning aid, not a promise of game movement.",
+   None),
+  ("hawk", "🦅 Ask Hawk, your field guide", ("free", "prem"), [
+      "Tap <b>🦅 HAWK</b> on the right side of the map, or <b>🦅 ASK HAWK</b> inside Plan a Hunt.",
+      "Type, or tap the mic and talk. Ask about best days, which stand fits the wind, entry and exit routes, backups, lodging or what to pack.",
+      "Hawk answers from your own trip, forecast, marks and land layer, and suggests plan changes that only apply when you tap them.",
+      "Optional, with Premium or the Expedition Pack: open Settings → <b>PLAN A HUNT</b>, turn on <b>On-device Ask Hawk</b>, and let it download over Wi-Fi (about 557 MB). It asks before using cellular, and you can delete it in Settings any time."],
+   "Hawk never quotes seasons, limits or fees, so confirm those with the official agency. Your chat runs on your phone and isn't sent to us or to any AI service. Some older or lower-memory phones keep using Hawk's built-in field rules instead of the on-device AI.",
+   None),
   ("trailcams", "📷 Trail cams", ("prem",), [
       "Place a trail cam pin with <b>MARK</b>, right where the camera hangs.",
       "Connect your camera brand in the trail cam settings. SpyPoint can sync the latest stills from the cloud, and Reveal is supported too. You can also share photos into the app.",
@@ -579,13 +594,11 @@ FEATURE_SECTIONS = [
    None, None),
 ]
 
-SOON = [
-  ("plan", "🦅 Plan a Hunt expedition planner", "Tap <b>PLAN A HUNT</b> on the map, set base camp from a mark or a search, and get Hunt Days scored by moon, sun and a 10-day forecast (days 1–3 forecast, 4–7 trend, 8+ outlook only). Then build a day-by-day plan, kit checklist, budget, hunting party and field journal. Add tag and draw deadline reminders using dates you enter from your agency.", "Free includes 1 expedition. Premium adds unlimited expeditions, budget split, party sharing and a papers checklist."),
-  ("hawk", "🦅 Ask Hawk, your field guide", "Talk or type to Ask Hawk about best days, which stand fits the wind, entry and exit routes, backups and lodging. Hawk answers from your own trip, forecast, marks and land layer, and suggests plan changes you approve with a tap. Hawk never quotes seasons, limits or fees.", "Optional on-device AI with Premium or the Expedition Pack: turn on <b>On-device Ask Hawk</b> under Settings → PLAN A HUNT, then download it over Wi-Fi (about 557 MB). Some older or lower-memory phones keep using Hawk's built-in field rules instead. Your chat stays on your phone."),
-  ("lodging", "⛺ Find Lodging", "Pick a lodging type (campsites, hotels, cabins, RV parks or rentals) and get big buttons that open each provider's own search for your trip's area and dates. Save your pick as base camp to add it to your budget.", 'Free. Want it today? Try the <a href="shop/camp-lodging.html">lodging finder on this site</a>.'),
-  ("kits", "🎒 Kits & Gear hub", "Kit lists by hunt type (whitetail stand, elk backcountry, turkey, waterfowl, plains-game safari and more). Check off what you own in My Gear, add your own items, add a kit to an expedition, and get weather-based gear tips on your hunt days. Open it from Settings, PACKS or Plan a Hunt.", 'Free for everyone. The same lists are on this site now: <a href="gear/">Gear lists</a> and the <a href="shop/">Gear Shop</a>.'),
-  ("multistop", "🧭 Mark-to-mark & multi-stop directions", "Get directions from any mark to any other mark, not just from your GPS, and chain several stops into one route (Directions from here, Add to route, Start multi-route).", "Free, using the same travel modes as today's directions."),
-  ("landanywhere", "🟧 LAND where you set your location", "The LAND overlay will load wherever you set your location or pan the map, not just at your GPS spot.", "Same Premium and Land Pack access as today."),
+ALSO = [
+  ("lodging", "⛺ Find Lodging", "In an expedition, open <b>BASE CAMP PLAN</b> → <b>Find Lodging</b>, pick a lodging type (campsites, hotels, cabins, RV parks or rentals) and get big buttons that open each provider's own search for your trip's area and dates. Save your pick as base camp to add it to your budget.", 'Free. Planning from a computer? Try the <a href="shop/camp-lodging.html">lodging finder on this site</a>.'),
+  ("kits", "🎒 Kits & Gear hub", "Kit lists by hunt type (whitetail stand, elk backcountry, turkey, waterfowl, plains-game safari and more). Check off what you own in My Gear, add your own items, add a kit to an expedition, and get weather-based gear tips on your hunt days. Open it from Settings, PACKS or Plan a Hunt.", 'Free for everyone. The same lists are on this site: <a href="gear/">Gear lists</a> and the <a href="shop/">Gear Shop</a>.'),
+  ("multistop", "🧭 Mark-to-mark & multi-stop directions", "Long-press a mark for <b>DIRECTIONS FROM HERE</b> to route from any mark to any other mark, not just from your GPS, or use <b>ADD TO ROUTE</b> and <b>START MULTI-ROUTE</b> to chain several stops into one route.", "Free, using the same travel modes as regular directions."),
+  ("landanywhere", "🟧 LAND where you set your location", "The LAND overlay loads wherever you set your location or pan the map, not just at your GPS spot.", "Same Premium and Land Pack access as the LAND overlay."),
   ("expedition", "🧳 Expedition Pack & Hunting Party", "Expedition Pack: unlimited expeditions, per-person budget split, party sharing, papers checklist, a printable trip PDF and Ask Hawk expert itineraries. Hunting Party: the organizer buys once, shares the plan and splits costs.", "Separate add-ons, priced in Google Play."),
   ("military", "🎖️ Military / Veteran section", "An optional section with links to installation hunting programs, military lodging and campgrounds, and ID.me, plus a checklist of veteran and active-duty license programs to confirm with your state agency.", "A military discount for ID.me-verified members is planned. In-app verification isn't live yet, so standard prices apply for now."),
 ]
@@ -608,6 +621,9 @@ FREE_VS = [("Hunting map: satellite, streets, topo, GPS, deep zoom", "✔", "✔
            ("GPX export", "—", "✔"),
            ("Blood Trail: MARK BLOOD pins, pin tags, trail on the map", "✔", "✔"),
            ("Trail Lens live highlight + Blood Trail GPX/KML export", "—", "✔"),
+           ("Plan a Hunt: expeditions with hunt-day scoring", "1", "Unlimited"),
+           ("Ask Hawk field guide (built-in field rules)", "✔", "✔"),
+           ("On-device Ask Hawk AI (optional ~557 MB download)", "—", "✔"),
            ("Lite mode", "✔", "✔"),
            ("Land Packs (offline public land)", "Add-on", "Add-on"),
            ("Sharp Shooter camera rangefinder + wind hold", "Add-on", "Add-on"),
@@ -625,7 +641,8 @@ HOWTO_FAQ = [
   ("Does the app tell me seasons, bag limits or legal hours?", "No. Regulations come from your state wildlife agency or the official authority where you hunt. Always check with them directly."),
   ("Where is my data stored?", "Marks, tracks, your chosen location and Close-Buddy data stay on your phone unless you turn on optional live sync. See the privacy policy for details."),
   ("Is there an iPhone version?", "Your World Hunt is an Android app on Google Play."),
-  ("When will Plan a Hunt and Ask Hawk arrive?", "They're in testing now. When they ship, they'll arrive as a normal app update, so install today and keep the app updated."),
+  ("Where are Plan a Hunt and Ask Hawk?", "Both are in the app now. Tap PLAN A HUNT on the right side of the map to plan an expedition, or tap 🦅 HAWK to ask Hawk a question. The optional on-device Ask Hawk AI is under Settings → PLAN A HUNT (Premium or Expedition Pack, about a 557 MB download)."),
+  ("Does Ask Hawk send my chats anywhere?", "No. Ask Hawk runs on your phone from your own trip data. Your questions and answers aren't sent to us or to any AI service, and the chat isn't saved after you close it."),
 ]
 
 UPMSG = {"map": "Hunt more than one stand? Premium removes every limit.",
@@ -637,7 +654,7 @@ def build_howto():
     p = ""
     jump = '<nav class="jump" aria-label="Jump to">' + "".join(f'<a href="#{a}">{E(b)}</a>' for a, b in
         [("quick-start", "Quick start")] + [(s[0], re.sub(r"^\W+\s*", "", s[1]).split(":")[0]) for s in FEATURE_SECTIONS] +
-        [("free-vs-premium", "Free vs Premium"), ("add-ons", "Add-ons"), ("coming-soon", "Coming soon"), ("faq", "FAQ")]) + "</nav>"
+        [("free-vs-premium", "Free vs Premium"), ("add-ons", "Add-ons"), ("also-in-the-app", "Also in the app"), ("faq", "FAQ")]) + "</nav>"
     qs = "".join(f"<li><b>{E(t)}.</b> {d}</li>" for t, d in HOWTO_QS)
     secs = ""
     for sid, title, tk, steps, note, cta in FEATURE_SECTIONS:
@@ -664,17 +681,17 @@ def build_howto():
         f'<div class="card">{tiers("addon")}<h3>🐕 Dog Pack</h3><p>Dog profiles, map pins and tracks, find/retrieve/bay/point marks, and dog-assisted harvest logging.</p></div>'
         f'<div class="card">{tiers("addon")}<h3>🎨 Avatars Pro &amp; Arsenal Skins</h3><p>Cosmetic extras: an upgraded avatar pack and loadout badges (cosmetic only), or both in the Outfitter bundle.</p></div>'
         '</div><p class="dim">Add-ons are separate from Premium. Each is a Google Play subscription, and the current price shows in Google Play before you confirm.</p>')
-    soon = "".join(f'<section class="feat soonbox" id="{sid}">{tiers("soon")}<h2>{title}</h2><p>{what}</p><p class="dim">{acc}</p></section>' for sid, title, what, acc in SOON)
+    also = "".join(f'<section class="feat" id="{sid}"><h3>{title}</h3><p>{what}</p><p class="dim">{acc}</p></section>' for sid, title, what, acc in ALSO)
     faq = '<div class="faq">' + "".join(f"<details><summary>{E(q)}</summary><p>{E(a)}</p></details>" for q, a in HOWTO_FAQ) + "</div>"
     body = (crumbs(p, ("Home", ""), ("How to use the app", None)) + jump +
-        '<p>Your World Hunt is free on Android. This guide walks through every tool in the current version, step by step, with what\'s free and what Premium unlocks. Features still in testing are marked <span class="tier soon">Coming soon</span>.</p>'
+        '<p>Your World Hunt is free on Android. This guide walks through every tool in the current version, step by step, with what\'s free and what Premium unlocks.</p>'
         f'<section class="feat" id="quick-start">{tiers("free")}<h2>⚡ Quick start: 4 steps</h2><ol class="steps">{qs}</ol><div class="btns">{play_btn()}</div></section>'
         + secs +
         f'<h2 id="free-vs-premium">Free vs Premium</h2>{tbl}'
         f'<div class="upsell"><p>Premium: $4.99/month after a 7-day free trial for eligible new subscribers. Cancel any time in Google Play.</p><a class="btn primary" href="{PLAY}" target="_blank" rel="noopener">{TRIAL}</a></div>'
         '<p class="dim">Your exact price and trial are shown in Google Play before you confirm, and prices can differ by country. Install the app, then tap <b>UPGRADE</b> on the map to start.</p>'
         f'<h2 id="add-ons">Add-ons</h2>{addons}'
-        f'<h2 id="coming-soon">Coming soon</h2><p>These are in testing now and will arrive as a normal app update. Install today and keep the app updated so they land on your phone the day they ship.</p>{soon}'
+        f'<h2 id="also-in-the-app">Also in the app</h2><p>More tools in the current version. Keep the app updated to get new features as they ship.</p>{also}'
         f'<h2>Gear up for the hunt</h2>{DISCLOSURE.format(p=p)}<p>Pack with the same kit lists the app uses: <a href="gear/">gear lists by hunt</a>, the <a href="shop/">Gear Shop</a> by department, and <a href="deals.html">deals &amp; compare stores</a>.</p>'
         f'<h2 id="faq">FAQ</h2>{faq}'
         f'<div class="finalcta"><p class="stencil" style="color:var(--amber);margin:0">Your hunting command center</p><h2 style="margin:.4em 0;color:var(--text)">Get Your World Hunt free</h2>'
@@ -690,7 +707,7 @@ def build_howto():
               "offers": [{"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free download"},
                          {"@type": "Offer", "name": "Premium", "price": "4.99", "priceCurrency": "USD", "description": "Monthly subscription after a 7-day free trial for eligible new subscribers, billed by Google Play"}],
               "publisher": {"@type": "Organization", "name": "Your World Apps"}}
-    page("how-to-use.html", "How to Use Your World Hunt: Step-by-Step App Guide", "How to use Your World Hunt: quick start, stands and marks, wind and pressure, moon and deer feeding times, LAND public land, directions, the Sharp Shooter camera rangefinder, Blood Trail, trail cams, and Free vs Premium.",
+    page("how-to-use.html", "How to Use Your World Hunt: Step-by-Step App Guide", "How to use Your World Hunt: quick start, stands and marks, wind and pressure, moon and deer feeding times, LAND public land, directions, the Sharp Shooter camera rangefinder, Blood Trail, Plan a Hunt, Ask Hawk, trail cams, and Free vs Premium.",
          body, "whitetail", "How to Use Your World Hunt", "App guide · Free on Google Play", "Every tool, step by step: what's free, what Premium unlocks, and how to get the most out of each sit.",
          jsonld=[howto_ld, faq_ld, app_ld], prio="0.9", hero_extra=f'<div class="btns">{play_btn()}<a class="btn" href="#quick-start">Quick start</a></div>')
 
