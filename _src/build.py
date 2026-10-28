@@ -276,9 +276,10 @@ CB_RADIOS = [
  ("Wilson Little Wil magnet-mount CB antenna kit", "B005ALD1SC", "magnet mount cb antenna", "A magnet-mount antenna with coax that goes on and off the roof in seconds. Every CB antenna needs an SWR check after you mount it."),
 ]
 CB_LISTEN = [
- ("USB-C adapter with TRRS mic input", "B0BN7NLW45", "usb c trrs microphone adapter", "Gives an Android phone a 3.5 mm input it can listen to or record from."),
- ("3.5 mm patch cable", "B00NO73MUQ", "3.5mm male to male audio cable", "Runs from the radio's EXT SP jack to the adapter."),
+ ("USB-C adapter with TRRS mic input", "B0BN7NLW45", "usb c trrs microphone adapter", "Plugs into the phone's USB-C port and gives it a 3.5 mm TRRS mic jack, which takes the splitter below."),
+ ("3.5 mm patch cable", "B00NO73MUQ", "3.5mm male to male audio cable", "Runs from the radio's EXT SP jack to the ground loop isolator."),
  ("3.5 mm ground loop isolator", "B08G9J74VX", "3.5mm ground loop isolator", "Goes inline to cut the hum and alternator whine you get when the truck and phone share power."),
+ ("StarTech MUYHSMFF headset splitter", "B01GF1TPNU", "startech muyhsmff headset splitter", "Splits a 4-pole (TRRS) jack into separate mic and headphone ports. The CB audio goes into the mic port. A plain cable plugged straight into a TRRS jack shorts out the mic, so you need this."),
 ]
 def cbcard(name, asin, q, note):
     btn = f'<div class="rb"><a class="amz" href="{E(amz_dp(asin))}" target="_blank" rel="sponsored nofollow noopener">View on Amazon</a></div>'
@@ -293,7 +294,7 @@ def cb_section():
             f'<div class="grid">{"".join(cbcard(*c) for c in CB_LISTEN)}</div>'
             '<div class="panel"><ol>'
             '<li>Turn the CB volume all the way down.</li>'
-            '<li>Plug the patch cable into the radio\'s EXT SP jack, run it through the ground loop isolator, and plug it into the USB-C adapter\'s mic/input jack. Then plug the adapter into the phone.</li>'
+            '<li>Connect them in this order: the CB\'s EXT SP jack, then the patch cable, the ground loop isolator, the splitter\'s <b>mic</b> port, the USB-C adapter, and finally the phone.</li>'
             '<li>Open any voice recorder or audio app on the phone and choose the wired input if it asks.</li>'
             '<li>Turn the CB volume up slowly until voices sound clear without distortion.</li></ol>'
             '<p class="dim" style="margin:0"><b>Keep the volume low.</b> The speaker jack puts out far more than a phone\'s mic input expects, and too much can distort the audio or damage the adapter. Using the EXT SP jack usually mutes the radio\'s own speaker. Listening is all this setup does; you still transmit with the radio\'s microphone.</p></div>')
