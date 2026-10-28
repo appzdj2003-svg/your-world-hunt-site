@@ -258,13 +258,45 @@ def build_shop():
     for slug, name, emo, scene, blurb, items in shopdata.DEPTS:
         guides = [g for g in GUIDES if slug in g["depts"]]
         gl = "".join(f'<a class="card" href="../guides/{g["slug"]}.html"><span class="tag">Guide</span><h3>{E(g["title"])}</h3></a>' for g in guides)
-        extra = lodging_finder() if slug == "camp-lodging" else ""
+        extra = lodging_finder() if slug == "camp-lodging" else (cb_section() if slug == "electronics-trail-cams" else "")
         body = (crumbs(p, ("Home", ""), ("Shop", ""), (name, None)) + DISCLOSURE.format(p=p) + search_form(p, f"Search {name.lower()}…") +
                 f'<h2>{emo} {E(name)}</h2><div class="grid">{"".join(shopcard(*it) for it in items)}</div>' + extra +
                 (f'<h2>Read before you buy</h2><div class="grid">{gl}</div>' if gl else "") +
                 '<h2>Other departments</h2><p>' + " · ".join(f'<a href="{d[0]}.html">{E(d[1])}</a>' for d in shopdata.DEPTS if d[0] != slug) + "</p>")
         page(f"shop/{slug}.html", f"{name} for Hunters: Shop & Compare Stores", f"{blurb} Compare Amazon, Bass Pro Shops, Cabela's, Sportsman's Warehouse, Walmart, Academy and Duluth Trading in one tap.",
              body, scene, name, "Gear Shop · Department", E(blurb))
+
+# ---------- CB radio gear (electronics department, #cb-radio) ----------
+def amz_dp(asin): return f"https://www.amazon.com/dp/{asin}?tag={enc(CFG['amazonTag'])}"
+CB_RADIOS = [
+ ("Cobra 29 LTD Classic CB radio", "B0BVGTZCLB", "cobra 29 ltd cb radio", "The classic full-size truck CB: 40 channels, instant channel 9 and an external-speaker (EXT SP) jack on the back. A good fit for the hunt truck and convoy driving."),
+ ("Uniden Bearcat 980 SSB CB radio", "B0B9WW4L3V", "uniden bearcat 980 cb radio", "40 channels plus sideband, NOAA weather channels and alerts, and an EXT SP jack. Handy for weather and road chatter on long drives to camp."),
+ ("Midland 75-822 portable/mobile CB", "B00000K2YR", "midland 75-822 cb radio", "Runs as a handheld on AA batteries or plugs into the truck with the included mobile adapter. Has NOAA weather channels and an external-speaker jack. Good at hunt camp and between trucks."),
+ ("Uniden PRO520XL compact CB radio", "B00004VXNI", "uniden pro520xl cb radio", "A small, rugged 40-channel CB that fits ATVs, UTVs and tight truck cabs. It has an external-speaker jack."),
+ ("Wilson Little Wil magnet-mount CB antenna kit", "B005ALD1SC", "magnet mount cb antenna", "A magnet-mount antenna with coax that goes on and off the roof in seconds. Every CB antenna needs an SWR check after you mount it."),
+]
+CB_LISTEN = [
+ ("USB-C adapter with TRRS mic input", "B0BN7NLW45", "usb c trrs microphone adapter", "Gives an Android phone a 3.5 mm input it can listen to or record from."),
+ ("3.5 mm patch cable", "B00NO73MUQ", "3.5mm male to male audio cable", "Runs from the radio's EXT SP jack to the adapter."),
+ ("3.5 mm ground loop isolator", "B08G9J74VX", "3.5mm ground loop isolator", "Goes inline to cut the hum and alternator whine you get when the truck and phone share power."),
+]
+def cbcard(name, asin, q, note):
+    btn = f'<div class="rb"><a class="amz" href="{E(amz_dp(asin))}" target="_blank" rel="sponsored nofollow noopener">View on Amazon</a></div>'
+    return f'<div class="card shopcard"><span class="tag">Product</span><h3>{E(name)}</h3><p>{E(note)}</p>{btn}{rb(q)}</div>'
+def cb_section():
+    return ('<h2 id="cb-radio">📻 CB radio for hunt camp and the truck</h2>'
+            '<p>A CB radio still works where the cell signal doesn\'t: keeping a convoy together on forest roads, talking truck-to-truck or across hunt camp, and hearing weather and road chatter on the drive in. '
+            'All of these radios have an external-speaker (EXT SP) jack. Please check your local rules before you transmit.</p>'
+            '<p class="dim" style="font-size:.85rem">“View on Amazon” opens that product\'s Amazon page (an Associates link). The store buttons open each store\'s own search. We show no prices, so check them on the retailer\'s site.</p>'
+            f'<div class="grid">{"".join(cbcard(*c) for c in CB_RADIOS)}</div>'
+            '<h3 id="cb-phone-listen">Listen to or record CB chatter on an Android phone</h3>'
+            f'<div class="grid">{"".join(cbcard(*c) for c in CB_LISTEN)}</div>'
+            '<div class="panel"><ol>'
+            '<li>Turn the CB volume all the way down.</li>'
+            '<li>Plug the patch cable into the radio\'s EXT SP jack, run it through the ground loop isolator, and plug it into the USB-C adapter\'s mic/input jack. Then plug the adapter into the phone.</li>'
+            '<li>Open any voice recorder or audio app on the phone and choose the wired input if it asks.</li>'
+            '<li>Turn the CB volume up slowly until voices sound clear without distortion.</li></ol>'
+            '<p class="dim" style="margin:0"><b>Keep the volume low.</b> The speaker jack puts out far more than a phone\'s mic input expects, and too much can distort the audio or damage the adapter. Using the EXT SP jack usually mutes the radio\'s own speaker. Listening is all this setup does; you still transmit with the radio\'s microphone.</p></div>')
 
 def lodging_finder():
     homes = {"booking": "https://www.booking.com/", "expedia": "https://www.expedia.com/", "vrbo": "https://www.vrbo.com/", "hipcamp": "https://www.hipcamp.com/", "recgov": "https://www.recreation.gov/"}
