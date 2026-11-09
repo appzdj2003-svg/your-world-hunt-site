@@ -1,6 +1,6 @@
 # Your World Hunt — website
 
-Static content site for the Android app **Your World Hunt AI** (`com.yourworld.hunt`), served free by GitHub Pages:
+Static content site for **Your World Hunt AI** (iPhone and Android) (`com.yourworld.hunt`), served free by GitHub Pages. Smart download QR: `/get/` (iPhone → App Store, Android → Play, desktop → home).:
 **https://appzdj2003-svg.github.io/your-world-hunt-site/**
 
 - Home, Features, 8 Field School guides, Gear Shop (12 departments + compare-stores buttons), 9 gear lists,
