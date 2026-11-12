@@ -16,6 +16,9 @@ APPSTORE_ID = "6822549497"
 APPSTORE = f"https://apps.apple.com/app/id{APPSTORE_ID}"
 APPSTORE_US = f"https://apps.apple.com/us/app/your-world-hunt/id{APPSTORE_ID}"
 GET = SITE + "get/"
+def store_ld():
+    """Canonical App Store + Play URLs for SoftwareApplication JSON-LD."""
+    return {"downloadUrl": APPSTORE_US, "installUrl": [APPSTORE_US, PLAY], "sameAs": [PLAY, APPSTORE_US]}
 TODAY = datetime.date.today().isoformat()
 # Annual Premium ($33.99/yr vs $4.99 x 12 = $59.88/yr, ~43% savings). Card + JSON-LD stay hidden until the Play base plan is live.
 ANNUAL_PRICE = "33.99"
@@ -80,7 +83,7 @@ HOME_QR_CSS = (
     '.home-qr-cap b{font-weight:700;color:var(--text)}'
     '.home-qr-cap small{font-size:.72rem;color:var(--muted,#a89b8c)}'
     '.home-qr:hover .home-qr-card{box-shadow:0 10px 28px rgba(0,0,0,.4)}'
-    '.appband .home-cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px;margin:12px 0 0}'
+    '.appband .home-cta,.hero .home-cta{display:flex;flex-wrap:wrap;align-items:center;gap:14px 18px;margin:12px 0 0}'
     '@media(min-width:700px){.home-qr{display:inline-flex}}'
     '.shots-ios{margin-top:10px}'
     '.shots-label{font:700 11px/1.2 ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);margin:18px 0 8px}'
@@ -145,7 +148,7 @@ def es_chrome(doc):
 WX_URL = "https://weather.yourworldapps.si/?ref=hunt"
 YOUTUBE = "https://www.youtube.com/channel/UCv_HP3UU30nKawvJ0AgHL3A"
 ORG_LD = {"@context": "https://schema.org", "@type": "Organization", "name": "Your World Apps", "url": "https://yourworldapps.si/", "logo": SITE + "assets/icon-512.png",
-          "sameAs": [YOUTUBE, PLAY, APPSTORE, "https://yourworldapps.si/"]}
+          "sameAs": [YOUTUBE, PLAY, APPSTORE_US, "https://yourworldapps.si/"]}
 def og_url(og): return SITE + ("assets/og/" + og if og else "assets/og-hunt-2026.png")
 WX_COPY = {"en": ("Check the sky before you climb the stand", "Your World Weather Radar has live radar, National Weather Service alerts, hurricane tracks and nearby weather cams.", "Open Your World Weather Radar", "Sister app"),
            "es": ("Mira el cielo antes de subir al puesto", "Your World Weather Radar tiene radar en vivo, alertas del Servicio Meteorológico Nacional (NWS), trayectorias de huracanes y cámaras meteorológicas cercanas.", "Abrir Your World Weather Radar", "App hermana")}
@@ -187,7 +190,7 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <meta name="description" content="{E(desc)}"><link rel="canonical" href="{url}">{hreflang(path, lang, alt)}
 <meta property="og:type" content="{og_type}"><meta property="og:site_name" content="Your World Hunt"><meta property="og:title" content="{E(title)}">
 <meta property="og:description" content="{E(desc)}"><meta property="og:url" content="{url}"><meta property="og:image" content="{og_url(og)}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="{E(title) if og else "Your World Hunt: hunting maps, wind, moon and trip planning"}">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="{og_url(og)}"><meta name="theme-color" content="#15130D">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="{E(title)}"><meta name="twitter:description" content="{E(desc)}"><meta name="twitter:image" content="{og_url(og)}"><meta name="theme-color" content="#15130D">
 <link rel="icon" href="{p}favicon.ico?v={ICONV}" sizes="16x16 32x32 48x48"><link rel="icon" type="image/png" sizes="32x32" href="{p}assets/favicon-32.png?v={ICONV}"><link rel="icon" type="image/png" sizes="192x192" href="{p}assets/icon-192.png?v={ICONV}"><link rel="apple-touch-icon" sizes="180x180" href="{p}assets/apple-touch-icon.png?v={ICONV}">
 <meta name="apple-itunes-app" content="app-id={APPSTORE_ID}"><link rel="stylesheet" href="{p}assets/site.css"><script src="{p}assets/affiliates.js" defer></script>{HOME_QR_CSS}{lds}
 {GA_HEAD}<script src="{p}assets/consent.js" defer></script>
@@ -767,8 +770,8 @@ def build_howto():
                 "step": [{"@type": "HowToStep", "position": i + 1, "name": t, "text": re.sub(r"<[^>]+>", "", d), "url": SITE + "how-to-use.html#quick-start"} for i, (t, d) in enumerate(HOWTO_QS)]}
     faq_ld = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in HOWTO_FAQ]}
     app_ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Your World Hunt", "alternateName": "Your World Hunt AI",
-              "operatingSystem": "iOS 17.0+, Android", "applicationCategory": "SportsApplication", "url": SITE, "downloadUrl": APPSTORE, "installUrl": APPSTORE,
-              "sameAs": [PLAY, APPSTORE], "image": SITE + "assets/icon-512.png",
+              "operatingSystem": "iOS 17.0+, Android", "applicationCategory": "SportsApplication", "url": SITE, **store_ld(),
+              "image": SITE + "assets/icon-512.png",
               "offers": [{"@type": "Offer", "price": "0", "priceCurrency": "USD", "description": "Free download"},
                          {"@type": "Offer", "name": "Premium", "price": "4.99", "priceCurrency": "USD", "description": "Monthly subscription after a 7-day free trial for eligible new subscribers, billed through the App Store or Google Play"}],
               "publisher": {"@type": "Organization", "name": "Your World Apps"}}
@@ -806,8 +809,7 @@ def build_home():
     hunts = "".join(pcard(f"gear/{h[0]}.html", h[3], "hh"+h[0], h[1], "Kit checklist with store links", "VIEW LIST →", emoji=h[2]) for h in shopdata.HUNTS)
     badges = "".join(f'<span class="badge on">{b}</span>' for b in BADGES)
     app_ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Your World Hunt", "alternateName": "Your World Hunt AI",
-              "operatingSystem": "iOS 17.0+, Android", "applicationCategory": "SportsApplication", "url": SITE, "downloadUrl": APPSTORE, "installUrl": APPSTORE,
-              "sameAs": [PLAY, APPSTORE],
+              "operatingSystem": "iOS 17.0+, Android", "applicationCategory": "SportsApplication", "url": SITE, **store_ld(),
               "image": SITE + "assets/icon-512.png",
               "screenshot": [SITE + f"assets/shots/ios-{n}.jpg" for n, _ in IOS_SHOTS] + [SITE + f"assets/shots/{n}-hunt.jpg" for n, _ in SHOTS],
               "description": "Hunting maps with public land, wind, pressure, moon and feeding times, a camera rangefinder estimate, Plan a Hunt with Ask Hawk, and Kits & Gear checklists.",
@@ -816,28 +818,36 @@ def build_home():
     site_ld = {"@context": "https://schema.org", "@type": "WebSite", "name": "Your World Hunt", "url": SITE}
     dtiles = "".join(f'<a class="dtile" href="shop/{d[0]}.html">{item_img(d[5][0][0], d[5][0][1], "card", "")}<span>{d[2]} {E(d[1])}</span></a>' for d in shopdata.DEPTS)
     kits = "".join(f'<a class="dtile" href="gear/{k[0]}.html">{next((item_img(it[0], it[3], "card", "") for it in k[7] + kitdata.ESSENTIALS if len(it) > 3 and it[3] and item_img(it[0], it[3], "card", "")), "")}<span>{k[2]} {E(k[1])}</span></a>' for k in kitdata.KITS)
-    body = (DISCLOSURE.format(p=p) +
+    qr = (
+        '<a class="home-qr" href="get/" aria-label="Scan to get the app on iPhone or Android">'
+        '<span class="home-qr-card"><img src="assets/qr-get.png" width="112" height="112" alt="QR code that opens Get Your World Hunt — picks the App Store or Google Play for your phone"></span>'
+        '<span class="home-qr-cap"><b>Scan with your phone</b><small>iPhone or Android</small></span></a>'
+    )
+    hero_cta = f'<div class="home-cta">{store_btns()}{qr}<a class="btn" href="how-to-use.html">How to use the app</a><a class="btn" href="features.html">All features</a></div>'
+    shop = (DISCLOSURE.format(p=p) +
+            f"<h2>The hunter's gear shop</h2><p>Every department a hunter needs, compared across Amazon, Bass Pro, Cabela's and Sportsman's in one tap.</p>"
+            + search_form(p) +
+            f'<div class="btns"><a class="btn primary" href="shop/">Shop all departments</a><a class="btn" href="deals.html">Deals</a><a class="btn" href="plan.html">Plan an expedition</a></div>'
             f'<h2>Shop by department</h2><div class="dtiles">{dtiles}</div><p><a href="shop/">Shop all departments →</a></p>'
             f'<h2>Featured kits</h2><p class="dim">Packing lists by hunt, with a compare-stores row on every item.</p><div class="dtiles">{kits}</div>'
             f'<div class="dealband"><b>🦌🦆 2026 season checklist</b><span>Whitetail and waterfowl gear from September to December: why each item matters and what to look for.</span><a class="btn" href="guides/{A26.SLUG}.html">Read the checklist →</a></div>'
             f'<h2>Season essentials</h2>{row(shopdata.SEASON, p)}'
             f'<div class="dealband"><b>🔥 Deals &amp; compare</b><span>Store sale pages, a hunting deals feed and one-tap price comparison. We never invent prices.</span><a class="btn" href="deals.html">See deals →</a></div>'
+            f'<h2>Gear lists by hunt</h2><div class="grid tight">{hunts}</div>')
+    body = (
             f'<section class="appband" id="get-app"><img src="assets/icon-192.png" width="64" height="64" alt=""><div><p class="stencil" style="margin:0;color:var(--amber)">Get the app free</p>'
-            f'<h2 style="margin:.2em 0;color:var(--text)">Your World Hunt for iPhone and Android</h2><p>The hunting app behind this shop: maps, public land, wind, pressure, moon and feeding times, a camera rangefinder estimate, and gear checklists in one place.</p>'
+            f'<h2 style="margin:.2em 0;color:var(--text)">Your World Hunt for iPhone and Android</h2><p>A hunting map and public land app with wind, pressure, moon and feeding times, a camera rangefinder estimate, and gear checklists in one place.</p>'
             f'<p class="dim"><b>Premium: 7-day free trial</b> for eligible new subscribers, then billed through the App Store on iPhone or Google Play on Android. Cancel any time.</p>'
-            f'<div class="home-cta">{store_btns()}<a class="home-qr" href="get/" aria-label="Scan to get the app on iPhone or Android">'
-            f'<span class="home-qr-card"><img src="assets/qr-get.png" width="112" height="112" alt="QR code that opens Get Your World Hunt — picks the App Store or Google Play for your phone"></span>'
-            f'<span class="home-qr-cap"><b>Scan with your phone</b><small>iPhone or Android</small></span></a>'
-            f'<a class="btn" href="how-to-use.html">How to use the app</a></div></div></section>'
-            f'<h2>Field School guides</h2><div class="grid">{gcards}</div>'
+            f'<div class="home-cta">{store_btns()}{qr}<a class="btn" href="how-to-use.html">How to use the app</a></div></div></section>'
             f'<h2>Your hunting command center</h2><p>Your World Hunt puts the map, the wind, the weather and the plan in one app for iPhone and Android. Mark stands, read public land, watch the pressure trend, plan a trip with Ask Hawk, and pack with built-in gear lists.</p>'
             f'<div class="grid">{feats}</div>{shots(p)}{store_btns()}<div class="btns"><a class="btn" href="features.html">All features</a></div>'
             f'<h2>New to the app?</h2><div class="grid">{pcard("how-to-use.html", "north", "hhow", "How to use Your World Hunt", "Quick start, every tool step by step, and Free vs Premium.", "OPEN THE GUIDE →", tag="App guide", emoji="🧭", big=True)}</div>'
             f'<h2>Plan like an expedition</h2><div class="panel"><p>Every trip in <b>Plan a Hunt</b> earns badges as it comes together:</p><div class="badges">{badges}</div><p class="dim" style="margin:0">🏆 Expedition Ready when all six are lit.</p></div>'
-            f'<h2>Gear lists by hunt</h2><div class="grid tight">{hunts}</div>')
-    page("index.html", "Your World Hunt: Hunting Gear Shop, Maps, Public Land & Wind App", "Shop hunting gear by department and compare Amazon, Bass Pro, Cabela's and more in one tap. Plus the Your World Hunt app: hunting maps, public land, wind, moon and feeding times. Free on the App Store and Google Play.",
-         body, "whitetail", "The Hunter's Gear Shop", "Your World Hunt · Outfitter's Counter", "Every department a hunter needs, compared across the big stores in one tap. From the makers of the Your World Hunt app.",
-         jsonld=[app_ld, site_ld, ORG_LD], prio="1.0", hero_extra=search_form(p) + f'<div class="btns"><a class="btn primary" href="shop/">Shop all departments</a><a class="btn" href="deals.html">Deals</a><a class="btn" href="plan.html">Plan an expedition</a><a class="btn" href="#get-app">Get the app free</a></div>')
+            f'<h2>Field School guides</h2><div class="grid">{gcards}</div>'
+            + shop)
+    page("index.html", "Your World Hunt: Hunting Map & Public Land App", "Your World Hunt is a hunting map app for iPhone and Android, with public land, wind, and moon times. Free on the App Store and Google Play.",
+         body, "whitetail", "Your World Hunt: hunting maps and public land", "Hunting map app · iPhone and Android", "A hunting map and public land app for iPhone and Android, with wind and moon times. Free on the App Store and Google Play.",
+         jsonld=[app_ld, site_ld, ORG_LD], prio="1.0", hero_extra=hero_cta)
 
 def build_features():
     p = ""
@@ -938,7 +948,7 @@ def build_pricing():
               {"@type": "Offer", "name": "Land Pack World", "price": "8.99", "priceCurrency": "USD", "description": "Monthly add-on subscription"}]
     if ANNUAL_LIVE and ANNUAL_PRICE: offers.append({"@type": "Offer", "name": "Premium Yearly (Android)", "price": ANNUAL_PRICE, "priceCurrency": "USD", "description": "Yearly subscription on Google Play with a 7-day free trial for eligible new subscribers; not on iPhone yet"})
     ld = {"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Your World Hunt", "alternateName": "Your World Hunt AI", "operatingSystem": "iOS 17.0+, Android",
-          "applicationCategory": "SportsApplication", "url": SITE + "pricing.html", "downloadUrl": APPSTORE, "sameAs": [PLAY, APPSTORE], "offers": offers}
+          "applicationCategory": "SportsApplication", "url": SITE + "pricing.html", **store_ld(), "offers": offers}
     page("pricing.html", "Pricing: Free, Premium & Add-ons", "Your World Hunt pricing: free hunting map app, Premium at $4.99/month with a 7-day free trial for eligible new subscribers, and add-ons.",
          body, "whitetail", "Pricing", "Free to start", "Start free. Upgrade when you want unlimited marks, feeding times and public land.", jsonld=[ld], prio="0.8")
 
@@ -1000,6 +1010,10 @@ def get_page():
         f'<meta property="og:type" content="website"><meta property="og:site_name" content="Your World Hunt"><meta property="og:title" content="Get Your World Hunt">\n'
         f'<meta property="og:description" content="Download Your World Hunt on the App Store and Google Play."><meta property="og:url" content="{url}">'
         f'<meta property="og:image" content="{SITE}assets/og-hunt-2026.png">\n'
+        '<meta name="twitter:card" content="summary_large_image">\n'
+        '<meta name="twitter:title" content="Get Your World Hunt">\n'
+        '<meta name="twitter:description" content="Download Your World Hunt on the App Store and Google Play.">\n'
+        f'<meta name="twitter:image" content="{SITE}assets/og-hunt-2026.png">\n'
         f'<meta name="theme-color" content="#15130D"><meta name="apple-itunes-app" content="app-id={APPSTORE_ID}">\n'
         f'<link rel="icon" href="{pref}favicon.ico"><link rel="apple-touch-icon" href="{pref}assets/apple-touch-icon.png">\n'
         f'<link rel="stylesheet" href="{pref}assets/site.css">{HOME_QR_CSS}\n{redir}\n{GA_HEAD}'
