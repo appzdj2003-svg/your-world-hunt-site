@@ -18,11 +18,16 @@ p,li{color:#E6DBC0}
 .top .wrap{display:flex;align-items:center;gap:12px;min-height:58px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text);font-weight:900;letter-spacing:.14em;text-transform:uppercase;font-size:.9rem}
 .brand img{width:34px;height:34px;border-radius:9px;border:1px solid var(--edge)}
-.nav{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
-.nav a{color:var(--dim);text-decoration:none;font-weight:800;font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;padding:8px 9px;border-radius:8px}
+.nav{display:flex;gap:2px;flex-wrap:nowrap;margin-left:auto;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.nav a{color:var(--dim);text-decoration:none;font-weight:800;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;padding:8px 7px;border-radius:8px;white-space:nowrap}
 .nav a:hover,.nav a[aria-current]{color:var(--text);background:var(--panelhi)}
 .nav a.shop{color:#1a1208;background:var(--amber)}
-@media (max-width:720px){.nav{width:100%;margin:0 0 8px;overflow-x:auto;flex-wrap:nowrap}.nav a{white-space:nowrap}}
+@media (max-width:980px){.nav{width:100%;margin:0 0 8px}}
+.surv-promo{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin:18px 0 8px;padding:16px 18px;border:2px solid var(--amber);border-radius:var(--r);background:var(--panelhi);text-decoration:none;color:var(--text)}
+.surv-promo:hover{background:var(--panel);color:var(--text)}
+.surv-promo-kicker{font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);font-size:.85rem}
+.surv-promo-copy{flex:1;min-width:200px;color:var(--text);font-size:.95rem;line-height:1.45}
+.surv-promo-cue{font-weight:900;letter-spacing:.1em;text-transform:uppercase;font-size:.8rem;color:#1a1208;background:var(--amber);padding:8px 12px;border-radius:8px;white-space:nowrap}
 /* hero */
 .hero{position:relative;overflow:hidden;min-height:300px;display:flex;align-items:flex-end;border-bottom:3px solid var(--amber)}
 .hero-art{position:absolute;inset:0;width:100%;height:100%}

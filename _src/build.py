@@ -90,7 +90,26 @@ HOME_QR_CSS = (
     '</style>'
 )
 
-NAV = [("index.html", "Home"), ("features.html", "Features"), ("how-to-use.html", "How-To"), ("guides/", "Guides"), ("gear/", "Gear Lists"), ("plan.html", "Trip Planner"), ("deals.html", "Deals"), ("pricing.html", "Pricing"), ("shop/", "Shop")]
+NAV = [("index.html", "Home"), ("features.html", "Features"), ("how-to-use.html", "How-To"), ("guides/", "Guides"), ("gear/", "Gear Lists"), ("plan.html", "Trip Planner"), ("deals.html", "Deals"), ("pricing.html", "Pricing"), ("shop/survival-emergency-food.html", "Survival"), ("shop/", "Shop")]
+
+def nav_links(p, path):
+    """Shared header links. Survival is current on its page; other shop pages keep Shop current."""
+    cur = path.split("/")[0] + "/" if "/" in path else path
+    out = []
+    for h, label in NAV:
+        if h == "shop/survival-emergency-food.html":
+            is_cur = path == "shop/survival-emergency-food.html"
+        elif h == "shop/":
+            is_cur = cur == "shop/" and path != "shop/survival-emergency-food.html"
+        else:
+            is_cur = h == cur
+        href = p + ("" if h == "index.html" else h)
+        if h == "index.html" and p == "":
+            href = "./"
+        aria = " aria-current=page" if is_cur else ""
+        cls = " class=shop" if label == "Shop" else ""
+        out.append(f'<a href="{href}"{aria}{cls}>{label}</a>')
+    return "".join(out)
 
 def bust(doc):
     """Cache-bust local scripts and site.css: ?v=<sha1[:10]> of the file (GitHub Pages caches ~10 min)."""
@@ -128,7 +147,7 @@ def lang_toggle(lang, alt, p):
     en = '<b aria-current="true">English</b>' if lang == "en" else f'<a href="{href}" hreflang="en" lang="en">English</a>'
     es = '<b aria-current="true">Español</b>' if lang == "es" else f'<a href="{href}" hreflang="es" lang="es">Español</a>'
     return f'<nav class="langtoggle" aria-label="{"Idioma" if lang == "es" else "Language"}">{en}<span aria-hidden="true">·</span>{es}</nav>'
-ES_NAV = {"Home": "Inicio", "Features": "Funciones", "How-To": "Cómo usarla", "Guides": "Guías", "Gear Lists": "Listas de equipo", "Trip Planner": "Planificador", "Deals": "Ofertas", "Pricing": "Precios", "Shop": "Tienda"}
+ES_NAV = {"Home": "Inicio", "Features": "Funciones", "How-To": "Cómo usarla", "Guides": "Guías", "Gear Lists": "Listas de equipo", "Trip Planner": "Planificador", "Deals": "Ofertas", "Pricing": "Precios", "Survival": "Supervivencia", "Shop": "Tienda"}
 def es_chrome(doc):
     """Spanish labels for the shared header/footer on es/ pages (links still go to the English site pages)."""
     head, rest = doc.split('<nav class="nav"', 1); nav, rest = rest.split("</nav>", 1)
@@ -138,6 +157,7 @@ def es_chrome(doc):
     f = re.sub(r'href="((?:\.\./)*)guides/([\w-]+)\.html">[^<]*<', lambda m: f'href="{m.group(1)}es/guides/{m.group(2)}.html">{E(ES_G[m.group(2)]["short"] if m.group(2) in ES_G else A26ES.SHORT)}<' if (m.group(2) in ES_G or m.group(2) == A26ES.SLUG) else m.group(0), f)
     f = f.replace('href="../../es/guides/', 'href="../../es/guides/').replace("../../es/guides/", "")
     for a, b in [("<h4>Field School</h4>", "<h4>Escuela de campo</h4>"), ("<h4>Shop</h4>", "<h4>Tienda</h4>"), ("<h4>Legal</h4>", "<h4>Legal</h4>"),
+                 (">Survival &amp; Emergency Food<", ">Supervivencia y comida de emergencia<"),
                  (">Get the app on Google Play<", ">Descarga la app en Google Play<"), (">Download on the App Store<", ">Descárgala en el App Store<"), (">How to use the app<", ">Cómo usar la app (en inglés)<"), (">Sister app: Your World Weather Radar<", ">App hermana: Your World Weather Radar<"), (">Watch on YouTube<", ">Ver en YouTube<"), (">Cookie settings<", ">Configuración de cookies<"), (">Privacy<", ">Privacidad<"),
                  ("We may earn a commission from links on this site. As an Amazon Associate I earn from qualifying purchases. Guides are general information only. Always check seasons, limits, licenses and land access rules with your state wildlife agency or the official authority where you hunt.",
                   "Podemos ganar una comisión por los enlaces de este sitio. Como Asociado de Amazon, gano con las compras que califican. Las guías son solo información general. Revisa siempre las temporadas, los límites, las licencias y las reglas de acceso a la tierra con la agencia de vida silvestre de tu estado o la autoridad oficial donde cazas.")]:
@@ -179,9 +199,7 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
     depth = path.count("/")
     p = SITE if absolute else "../" * depth
     url = SITE + ("" if path == "index.html" else path.replace("index.html", ""))
-    cur = path.split("/")[0] + "/" if "/" in path else path
-    nav = "".join(f'<a href="{p}{h if h!="index.html" else ""}{"" if h!="index.html" else ""}"{" aria-current=page" if h==cur else ""}{" class=shop" if t=="Shop" else ""}>{t}</a>' for h, t in NAV)
-    nav = nav.replace(f'href="{p}"', f'href="{p or "./"}"', 1) if p == "" else nav
+    nav = nav_links(p, path)
     lds = "".join(f'<script type="application/ld+json">{json.dumps(j, ensure_ascii=False)}</script>' for j in (jsonld or []))
     hero = f'''<section class="hero">{scenes.svg(scene, "hs")}<div class="wrap">{f'<span class="kicker">{E(kicker)}</span>' if kicker else ""}<h1>{E(h1 or title)}</h1>{f'<p class="lead">{lead}</p>' if lead else ""}{hero_extra}</div></section>'''
     doc = f'''<!doctype html>
@@ -200,7 +218,7 @@ def page(path, title, desc, body, scene="camp", h1=None, kicker=None, lead=None,
 <footer><div class="wrap"><div class="cols">
 <div><h4>Your World Hunt</h4><ul><li><a href="{PLAY}" target="_blank" rel="noopener">Get the app on Google Play</a></li><li><a href="{APPSTORE}" target="_blank" rel="noopener">Download on the App Store</a></li><li><a href="{p}features.html">Features</a></li><li><a href="{p}how-to-use.html">How to use the app</a></li><li><a class="wxlink" href="{WX_URL}" target="_blank" rel="noopener">Sister app: Your World Weather Radar</a></li><li><a href="{p}pricing.html">Pricing</a></li><li><a href="{p}about.html">About</a></li><li><a href="{p}contact.html">Contact</a></li><li><a class="ytlink" href="{YOUTUBE}" target="_blank" rel="noopener">Watch on YouTube</a></li></ul></div>
 <div><h4>Field School</h4><ul>{"".join(f'<li><a href="{p}guides/{g["slug"]}.html">{E(g["short"])}</a></li>' for g in GUIDES)}</ul></div>
-<div><h4>Shop</h4><ul><li><a href="{p}shop/">Gear Shop</a></li><li><a href="{p}guides/{A26.SLUG}.html">2026 season gear checklist</a></li><li><a href="{p}gear/">Gear lists by hunt</a></li><li><a href="{p}deals.html">Deals &amp; compare</a></li><li><a href="{p}shop/camp-lodging.html">Lodging finder</a></li></ul></div>
+<div><h4>Shop</h4><ul><li><a href="{p}shop/">Gear Shop</a></li><li><a href="{p}shop/survival-emergency-food.html">Survival &amp; Emergency Food</a></li><li><a href="{p}guides/{A26.SLUG}.html">2026 season gear checklist</a></li><li><a href="{p}gear/">Gear lists by hunt</a></li><li><a href="{p}deals.html">Deals &amp; compare</a></li><li><a href="{p}shop/camp-lodging.html">Lodging finder</a></li></ul></div>
 <div><h4>Legal</h4><ul><li><a href="{p}privacy.html">Privacy</a></li><li><a href="{p}terms.html">Terms</a></li><li><a href="{p}affiliate-disclosure.html">Affiliate disclosure</a></li><li><a href="#cookie-settings" data-yw-cookies>Cookie settings</a></li></ul></div>
 </div><p class="fine">We may earn a commission from links on this site. As an Amazon Associate I earn from qualifying purchases. Guides are general information only. Always check seasons, limits, licenses and land access rules with your state wildlife agency or the official authority where you hunt. &copy; {datetime.date.today().year} Your World Apps. Google Play is a trademark of Google LLC. Apple, the Apple logo and App Store are trademarks of Apple Inc. Retailer names are trademarks of their owners and are used only to identify where a link goes.</p></div></footer>
 </body></html>'''
@@ -286,8 +304,13 @@ def build_shop():
     p = "../"
     tiles = "".join(pcard(f"{d[0]}.html", d[3], "sd"+str(i), d[1], d[4], "SHOP NOW →", emoji=d[2]) for i, d in enumerate(shopdata.DEPTS))
     hunts = "".join(pcard(f"../gear/{h[0]}.html", h[3], "sh"+h[0], h[1], "Kit checklist with store links", "VIEW LIST →", emoji=h[2]) for h in shopdata.HUNTS)
+    promo = ('<a class="surv-promo" href="survival-emergency-food.html">'
+             '<span class="surv-promo-kicker">Survival &amp; Emergency Food</span>'
+             '<span class="surv-promo-copy">MREs, freeze-dried meals, family food kits, water filters and first-aid supplies for long hunts, storms and power outages.</span>'
+             '<span class="surv-promo-cue">Shop the section →</span></a>')
     body = (crumbs(p, ("Home", ""), ("Shop", None)) + DISCLOSURE.format(p=p) + search_form(p) +
         '<p class="dim">The search opens the store you pick in a new tab. Amazon searches carry our Associates tag.</p>'
+        + promo +
         f'<h2>Shop top-rated by department</h2><p class="dim" style="font-size:.85rem">Opens the store\'s search sorted by customer rating.</p><div class="grid tight">{tiles}</div>'
         f'<h2>Shop by hunt</h2><div class="grid tight">{hunts}</div>'
         f'<h2>Season essentials</h2><p class="dim">The same featured row as the app\'s Kits &amp; Gear hub.</p>{row(shopdata.SEASON, p)}'
@@ -302,12 +325,33 @@ def build_shop():
         gl = "".join(f'<a class="card" href="../guides/{g["slug"]}.html"><span class="tag">Guide</span><h3>{E(g["title"])}</h3></a>' for g in guides)
         extra = lodging_finder() if slug == "camp-lodging" else (cb_section() if slug == "electronics-trail-cams" else "")
         intro = ""
+        cards = "".join(shopcard(*it) for it in items)
         if slug == "survival-emergency-food":
-            intro = ('<p>Food, water and a few small tools for long hunts, pack-in trips, storms and power outages. '
+            intro = ('<p>Food, water and a few small tools for long hunts, pack-in trips, storms and power outages, plus family-size meal kits for home. '
                      "These are specific products we checked against current retailer pages. We don't show prices, so confirm what's in stock and read the label before you buy.</p>"
                      '<p class="dim" style="font-size:.85rem">“View on Amazon,” Bass Pro and Cabela\'s open that product\'s page (Amazon links use our Associates tag). The store buttons open each store\'s own search.</p>')
+            by_name = {it[0]: it for it in items}
+            sections = []
+            missing = []
+            used = set()
+            for heading, names in shopdata.SURVIVAL_GROUPS:
+                group = []
+                for n in names:
+                    if n in by_name:
+                        group.append(shopcard(*by_name[n]))
+                        used.add(n)
+                    else:
+                        missing.append(n)
+                if group:
+                    sections.append(f'<h2>{E(heading)}</h2><div class="grid">{"".join(group)}</div>')
+            leftover = [it for it in items if it[0] not in used]
+            if leftover:
+                sections.append('<h2>More gear</h2><div class="grid">' + "".join(shopcard(*it) for it in leftover) + "</div>")
+            if missing:
+                raise SystemExit("survival group names missing from items: " + ", ".join(missing))
+            cards = "".join(sections)
         body = (crumbs(p, ("Home", ""), ("Shop", ""), (name, None)) + DISCLOSURE.format(p=p) + search_form(p, f"Search {name.lower()}…") +
-                f'<h2>{emo} {E(name)}</h2>{intro}<div class="grid">{"".join(shopcard(*it) for it in items)}</div>' + extra +
+                f'<h2>{emo} {E(name)}</h2>{intro}' + ("" if slug == "survival-emergency-food" else f'<div class="grid">{cards}</div>') + (cards if slug == "survival-emergency-food" else "") + extra +
                 (f'<h2>Read before you buy</h2><div class="grid">{gl}</div>' if gl else "") +
                 '<h2>Other departments</h2><p>' + " · ".join(f'<a href="{d[0]}.html">{E(d[1])}</a>' for d in shopdata.DEPTS if d[0] != slug) + "</p>")
         page(f"shop/{slug}.html", f"{name} for Hunters: Shop & Compare Stores", f"{blurb} Compare Amazon, Bass Pro Shops, Cabela's, Sportsman's Warehouse, Walmart, Academy and Duluth Trading in one tap.",
@@ -1030,7 +1074,7 @@ def get_page():
         f'<link rel="icon" href="{pref}favicon.ico"><link rel="apple-touch-icon" href="{pref}assets/apple-touch-icon.png">\n'
         f'<link rel="stylesheet" href="{pref}assets/site.css">{HOME_QR_CSS}\n{redir}\n{GA_HEAD}'
         f'<script src="{pref}assets/consent.js" defer></script>\n</head><body>\n'
-        f'<header class="top"><div class="wrap"><a class="brand" href="{pref}"><img src="{pref}assets/icon-192.png" width="34" height="34" alt="">Your World Hunt</a></div></header>\n'
+        f'<header class="top"><div class="wrap"><a class="brand" href="{pref}"><img src="{pref}assets/icon-192.png" width="34" height="34" alt="">Your World Hunt</a><nav class="nav" aria-label="Main">{nav_links(pref, "get/index.html")}</nav></div></header>\n'
         '<main><section class="hero"><div class="wrap"><span class="kicker">Get the app</span><h1>Your World Hunt</h1>\n'
         '<p class="lead">Hunting maps, public land, wind and Ask Hawk - free on iPhone and Android.</p></div></section>\n'
         f'<div class="wrap">{body}</div></main>\n'

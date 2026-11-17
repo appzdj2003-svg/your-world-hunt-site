@@ -2,8 +2,8 @@
 import re
 # (regex on label/query, key, subject for the prompt). First match wins; order specific -> general.
 RULES = [
- (r"xmre|mre\b|meal ready to eat|blueline|blue line", "mre-meals", "a small open case of unbranded meal pouches"),
- (r"classic bucket|freeze-dried food|stroganoff|mountain house", "freeze-dried-food", "a plain food bucket with unbranded freeze-dried meal pouches"),
+ (r"xmre|mre\b|meal ready to eat|blueline|blue line|datrex|ration bar", "mre-meals", "a small open case of unbranded meal pouches"),
+ (r"classic bucket|essential bucket|prepper pack|freeze-dried food|stroganoff|mountain house|peak refuel|backpacker.?s pantry|good to-go|readywise", "freeze-dried-food", "a plain food bucket with unbranded freeze-dried meal pouches"),
  (r"spotting scope", "spotting-scope", "a spotting scope on a short tripod"),
  (r"glassing tripod", "tripod", "a sturdy glassing tripod"),
  (r"neoprene", "dog-vest", "a hunting retriever dog wearing a neoprene vest"),

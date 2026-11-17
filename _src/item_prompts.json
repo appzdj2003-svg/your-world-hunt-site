@@ -413,8 +413,19 @@
   "file": "_src/items_raw/freeze-dried-food.png",
   "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a plain food bucket with unbranded freeze-dried meal pouches",
   "items": [
+   "Backpacker's Pantry Chana Masala",
+   "Good To-Go Mushroom Risotto (Single Serving)",
    "Mountain House Beef Stroganoff with Noodles",
-   "Mountain House Classic Bucket"
+   "Mountain House Breakfast Skillet",
+   "Mountain House Chicken and Dumplings with Vegetables",
+   "Mountain House Chili Mac with Beef",
+   "Mountain House Classic Bucket",
+   "Mountain House Essential Bucket",
+   "Mountain House Lasagna with Meat Sauce",
+   "Mountain House Spaghetti with Meat Sauce",
+   "Peak Refuel Chicken Coconut Curry",
+   "Peak Refuel Chicken Pesto Pasta",
+   "ReadyWise Prepper Pack Emergency Food Supply Bucket"
   ],
   "done": true
  },
@@ -618,6 +629,7 @@
   "file": "_src/items_raw/mre-meals.png",
   "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a small open case of unbranded meal pouches",
   "items": [
+   "Datrex Emergency Survival 2400 Calorie Food Ration Bars (12 bars)",
    "XMRE BlueLine Case of 12 with Flameless Ration Heaters"
   ],
   "done": true
