@@ -132,6 +132,28 @@ table{border-collapse:collapse;width:100%;font-size:.95rem} td,th{border:1px sol
 .row>.card.shopcard .item-card{max-height:180px}
 .item-note{font-size:.8rem;margin-top:24px}
 .sortnote{display:block;margin-top:4px}
+/* Survival buying boosts: Start here, bold Buy buttons, 3-day kit */
+#start-here,#three-day-kit,.shopcard[id]{scroll-margin-top:80px}
+.surv-start,.surv-kit{margin:8px 0 22px}
+.shopcard .rb.buyrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:10px}
+.shopcard .rb.buyrow a.buy{
+  flex:1 1 140px;display:inline-flex;align-items:center;justify-content:center;text-align:center;
+  font-size:.8rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;
+  padding:12px 14px;min-height:46px;border-radius:10px;border:2px solid var(--sunset);
+  background:var(--sunset);color:#160d05
+}
+.shopcard .rb.buyrow a.buy.amz{background:var(--amber);border-color:var(--amber);color:#1a1208}
+.shopcard .rb.buyrow a.buy:hover{background:#f08a3e;border-color:#f08a3e;color:#160d05}
+.start-card .btns{margin:8px 0 0}
+.start-card .btns .btn{flex:1 1 100%;justify-content:center;text-align:center}
+.start-more{margin-top:4px;font-size:.85rem}
+.surv-kit .check{margin:10px 0 16px}
+.surv-kit .kit-cart{margin:16px 0 8px}
+.surv-kit .kit-cart .btn{flex:1 1 100%;max-width:100%;justify-content:center;text-align:center}
+@media (min-width:700px){
+  .start-card .btns .btn{flex:1 1 auto}
+  .surv-kit .kit-cart .btn{flex:0 1 auto;max-width:420px}
+}
 /* how-to guide */
 .tier{display:inline-block;font-size:.66rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;border-radius:4px;padding:2px 8px;margin:0 6px 6px 0;vertical-align:middle}
 .tier.free{color:#14170a;background:var(--moss)}

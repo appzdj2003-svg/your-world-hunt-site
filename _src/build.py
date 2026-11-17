@@ -280,15 +280,42 @@ ITEM_NOTE = '<p class="dim item-note">Item images are illustrations, not the exa
 
 # ---------- shop ----------
 def amz_dp(asin): return f"https://www.amazon.com/dp/{asin}?tag={enc(CFG['amazonTag'])}"
-def shopcard(name, q, note, flags="", asin="", extra=(), p="../"):
-    tag = "Product" if asin or extra else "Category"
+def amz_cart(asins):
+    """Amazon Associates multi-item add-to-cart URL (customer still confirms on Amazon)."""
+    parts = [f"ASIN.{i}={enc(a)}&Quantity.{i}=1" for i, a in enumerate(asins, 1)]
+    return "https://www.amazon.com/gp/aws/cart/add.html?" + "&".join(parts) + f"&AssociateTag={enc(CFG['amazonTag'])}"
+def shop_slug(name):
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
+def item_parts(it):
+    name, q, note = it[0], it[1], it[2]
+    flags = it[3] if len(it) > 3 else ""
+    asin = it[4] if len(it) > 4 else ""
+    extra = it[5] if len(it) > 5 else ()
+    return name, q, note, flags, asin, extra
+def buy_label(retailer, buy=False):
+    if not buy:
+        return "View on Amazon" if retailer == "Amazon" else retailer
+    return "Buy on Amazon" if retailer == "Amazon" else f"Buy at {retailer}"
+def product_btns(asin="", extra=(), buy=False, big=False):
     btns = []
     if asin:
-        btns.append(f'<a class="amz" href="{E(amz_dp(asin))}" target="_blank" rel="sponsored nofollow noopener">View on Amazon</a>')
+        cls = "btn primary big" if big else "buy amz"
+        btns.append(f'<a class="{cls}" href="{E(amz_dp(asin))}" target="_blank" rel="sponsored nofollow noopener">{E(buy_label("Amazon", buy or big))}</a>')
     for label, url in (extra or ()):
-        btns.append(f'<a href="{E(url)}" target="_blank" rel="sponsored nofollow noopener">{E(label)}</a>')
-    prod = f'<div class="rb">{"".join(btns)}</div>' if btns else ""
-    return f'<div class="card shopcard">{item_img(name, q, "card", p)}<span class="tag">{tag}</span><h3>{E(name)}</h3><p>{E(note)}</p>{prod}{rb(q, "a" in flags)}</div>'
+        if big:
+            cls = "btn primary big" if not btns else "btn big"
+        else:
+            cls = "buy"
+        btns.append(f'<a class="{cls}" href="{E(url)}" target="_blank" rel="sponsored nofollow noopener">{E(buy_label(label, buy or big))}</a>')
+    if not btns:
+        return ""
+    wrap = "btns" if big else "rb buyrow"
+    return f'<div class="{wrap}">{"".join(btns)}</div>'
+def shopcard(name, q, note, flags="", asin="", extra=(), p="../", buy=False):
+    tag = "Product" if asin or extra else "Category"
+    prod = product_btns(asin, extra, buy=buy)
+    sid = f' id="{E(shop_slug(name))}"' if buy else ""
+    return f'<div class="card shopcard"{sid}>{item_img(name, q, "card", p)}<span class="tag">{tag}</span><h3>{E(name)}</h3><p>{E(note)}</p>{prod}{rb(q, "a" in flags)}</div>'
 
 def search_form(p, placeholder="Search hunting gear… e.g. treestand harness"):
     opts = "".join(f'<option value="{r}">{RNAME[r]}</option>' for r in ["amazon", "basspro", "cabelas", "sportsmans", "duluth", "walmart", "academy"])
@@ -300,6 +327,45 @@ def search_form(p, placeholder="Search hunting gear… e.g. treestand harness"):
 def row(items, p):
     return '<div class="row">' + "".join(f'<div class="card shopcard">{item_img(n, q, "card", p)}<h3>{E(n)}</h3>{rb(q, "a" in f)}</div>' for n, q, f in items) + "</div>"
 
+def survival_start(by_name, p="../"):
+    cards = []
+    for name, reason in shopdata.SURVIVAL_START:
+        _n, q, _note, _flags, asin, extra = item_parts(by_name[name])
+        cards.append(
+            f'<div class="card shopcard start-card">{item_img(name, q, "card", p)}'
+            f'<span class="tag">Top pick</span><h3>{E(name)}</h3>'
+            f'<p>{E(reason)}</p>{product_btns(asin, extra, buy=True, big=True)}'
+            f'<p class="dim start-more"><a href="#{E(shop_slug(name))}">See full details below</a></p></div>'
+        )
+    return (
+        '<section class="surv-start" aria-labelledby="start-here">'
+        '<h2 id="start-here">Start here</h2>'
+        '<p>Three practical picks for long hunts, storms and power outages: a case of meals for camp, a family food bucket for home, and a water filter you can pack.</p>'
+        f'<div class="grid start-grid">{"".join(cards)}</div></section>'
+    )
+def survival_kit(by_name):
+    lis, asins = [], []
+    for label, name in shopdata.SURVIVAL_KIT:
+        _n, _q, _note, _flags, asin, _extra = item_parts(by_name[name])
+        if asin:
+            asins.append(asin)
+        lis.append(
+            f'<li><span class="box" aria-hidden="true"></span>'
+            f'<div class="txt"><b><a href="#{E(shop_slug(name))}">{E(label)}</a></b>'
+            f'<span>{E(name)}</span></div></li>'
+        )
+    cart = ""
+    if len(asins) >= 2:
+        cart = (
+            f'<p class="btns kit-cart"><a class="btn primary big" href="{E(amz_cart(asins))}" target="_blank" rel="sponsored nofollow noopener">Add the Amazon kit to cart</a></p>'
+            '<p class="dim" style="font-size:.85rem">Opens Amazon with the MRE case, water filter, first-aid kit, fire starter and emergency bivy so you can review them and add them to your cart. Confirm stock and quantities there. The family food bucket is sold at Bass Pro and Cabela\'s, so it is not in this cart.</p>'
+        )
+    return (
+        '<section class="surv-kit" aria-labelledby="three-day-kit">'
+        '<h2 id="three-day-kit">Build a 3-day kit</h2>'
+        '<p>A simple kit for one person on a long hunt or during a storm or power outage: food for about three days, a way to treat water, first aid, a fire starter and a light shelter. Check stock and labels on the retailer\'s site before you buy.</p>'
+        f'<ul class="check">{"".join(lis)}</ul>{cart}</section>'
+    )
 def build_shop():
     p = "../"
     tiles = "".join(pcard(f"{d[0]}.html", d[3], "sd"+str(i), d[1], d[4], "SHOP NOW →", emoji=d[2]) for i, d in enumerate(shopdata.DEPTS))
@@ -329,7 +395,7 @@ def build_shop():
         if slug == "survival-emergency-food":
             intro = ('<p>Food, water and a few small tools for long hunts, pack-in trips, storms and power outages, plus family-size meal kits for home. '
                      "These are specific products we checked against current retailer pages. We don't show prices, so confirm what's in stock and read the label before you buy.</p>"
-                     '<p class="dim" style="font-size:.85rem">“View on Amazon,” Bass Pro and Cabela\'s open that product\'s page (Amazon links use our Associates tag). The store buttons open each store\'s own search.</p>')
+                     '<p class="dim" style="font-size:.85rem">“Buy on Amazon,” “Buy at Bass Pro” and “Buy at Cabela\'s open that product\'s page (Amazon links use our Associates tag). The store buttons open each store\'s own search.</p>')
             by_name = {it[0]: it for it in items}
             sections = []
             missing = []
@@ -338,7 +404,7 @@ def build_shop():
                 group = []
                 for n in names:
                     if n in by_name:
-                        group.append(shopcard(*by_name[n]))
+                        group.append(shopcard(*by_name[n], buy=True))
                         used.add(n)
                     else:
                         missing.append(n)
@@ -346,10 +412,14 @@ def build_shop():
                     sections.append(f'<h2>{E(heading)}</h2><div class="grid">{"".join(group)}</div>')
             leftover = [it for it in items if it[0] not in used]
             if leftover:
-                sections.append('<h2>More gear</h2><div class="grid">' + "".join(shopcard(*it) for it in leftover) + "</div>")
+                sections.append('<h2>More gear</h2><div class="grid">' + "".join(shopcard(*it, buy=True) for it in leftover) + "</div>")
             if missing:
                 raise SystemExit("survival group names missing from items: " + ", ".join(missing))
-            cards = "".join(sections)
+            start_missing = [n for n, _ in shopdata.SURVIVAL_START if n not in by_name]
+            kit_missing = [n for _, n in shopdata.SURVIVAL_KIT if n not in by_name]
+            if start_missing or kit_missing:
+                raise SystemExit("survival start/kit names missing from items: " + ", ".join(start_missing + kit_missing))
+            cards = survival_start(by_name) + survival_kit(by_name) + "".join(sections)
         body = (crumbs(p, ("Home", ""), ("Shop", ""), (name, None)) + DISCLOSURE.format(p=p) + search_form(p, f"Search {name.lower()}…") +
                 f'<h2>{emo} {E(name)}</h2>{intro}' + ("" if slug == "survival-emergency-food" else f'<div class="grid">{cards}</div>') + (cards if slug == "survival-emergency-food" else "") + extra +
                 (f'<h2>Read before you buy</h2><div class="grid">{gl}</div>' if gl else "") +

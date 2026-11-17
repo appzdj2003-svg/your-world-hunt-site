@@ -221,6 +221,26 @@ SURVIVAL_GROUPS = [
  ]),
 ]
 
+# Start-here picks and 3-day kit lines on shop/survival-emergency-food.html
+# (names must match the cards above). Family pick is the Mountain House Essential
+# Bucket: it has current Bass Pro and Cabela's product pages.
+SURVIVAL_START = [
+  ("XMRE BlueLine Case of 12 with Flameless Ration Heaters",
+   "Twelve ready-to-eat meals, each with a heater, for a long hunt or a stay at camp."),
+  ("Mountain House Essential Bucket",
+   "A family-size bucket of freeze-dried meals to keep at home for storms and outages."),
+  ("Sawyer Squeeze Water Filtration System (SP302, Cnoc 1-liter bottle)",
+   "A light filter for drinking from a stream or treating water at camp."),
+]
+# Checklist label -> product name. Amazon-only items can go in the multi-item cart.
+SURVIVAL_KIT = [
+  ("Food for 3 days per person", "XMRE BlueLine Case of 12 with Flameless Ration Heaters"),
+  ("Water filter", "Sawyer Squeeze Water Filtration System (SP302, Cnoc 1-liter bottle)"),
+  ("First aid", "Adventure Medical Kits Sportsman Series 200"),
+  ("Fire", "ust StrikeForce Fire Starter with Tinder"),
+  ("Shelter", "S.O.L. Emergency Bivy"),
+]
+
 
 # Shop-by-hunt tiles -> gear kit pages
 HUNTS = [
