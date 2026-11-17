@@ -373,7 +373,8 @@
   "file": "_src/items_raw/emergency-bivy.png",
   "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a folded emergency bivy",
   "items": [
-   "Emergency blanket / bivy"
+   "Emergency blanket / bivy",
+   "S.O.L. Emergency Bivy"
   ],
   "done": true
  },
@@ -392,7 +393,8 @@
   "file": "_src/items_raw/fire-starter.png",
   "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a ferro rod fire starter with tinder",
   "items": [
-   "Fire starter"
+   "Fire starter",
+   "ust StrikeForce Fire Starter with Tinder"
   ],
   "done": true
  },
@@ -401,7 +403,18 @@
   "file": "_src/items_raw/first-aid.png",
   "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a red first-aid kit pouch",
   "items": [
+   "Adventure Medical Kits Sportsman Series 200",
    "First-aid kit"
+  ],
+  "done": true
+ },
+ {
+  "key": "freeze-dried-food",
+  "file": "_src/items_raw/freeze-dried-food.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a plain food bucket with unbranded freeze-dried meal pouches",
+  "items": [
+   "Mountain House Beef Stroganoff with Noodles",
+   "Mountain House Classic Bucket"
   ],
   "done": true
  },
@@ -597,6 +610,15 @@
   "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a small predator motion decoy on a stake",
   "items": [
    "Motion decoy"
+  ],
+  "done": true
+ },
+ {
+  "key": "mre-meals",
+  "file": "_src/items_raw/mre-meals.png",
+  "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a small open case of unbranded meal pouches",
+  "items": [
+   "XMRE BlueLine Case of 12 with Flameless Ration Heaters"
   ],
   "done": true
  },
@@ -1004,6 +1026,8 @@
   "file": "_src/items_raw/water-filter.png",
   "prompt": "Illustration in a rugged expedition style: muted khaki, olive drab and bronze tones with a warm sunset rim light, dark rugged canvas-textured background, the item centered and filling most of the frame, clean bold illustrated look (not a photo), square 1:1. Generic unbranded item: no text, no logos, no brand marks, no recognizable real product. No firearms, no ammunition. Subject: a backcountry water filter",
   "items": [
+   "LifeStraw Personal Water Filter",
+   "Sawyer Squeeze Water Filtration System (SP302, Cnoc 1-liter bottle)",
    "Water filter"
   ],
   "done": true

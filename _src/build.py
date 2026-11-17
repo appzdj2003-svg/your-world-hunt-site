@@ -261,8 +261,16 @@ def item_img(label, q, size="card", p="../"):
 ITEM_NOTE = '<p class="dim item-note">Item images are illustrations, not the exact products sold.</p>'
 
 # ---------- shop ----------
-def shopcard(name, q, note, flags="", p="../"):
-    return f'<div class="card shopcard">{item_img(name, q, "card", p)}<span class="tag">Category</span><h3>{E(name)}</h3><p>{E(note)}</p>{rb(q, "a" in flags)}</div>'
+def amz_dp(asin): return f"https://www.amazon.com/dp/{asin}?tag={enc(CFG['amazonTag'])}"
+def shopcard(name, q, note, flags="", asin="", extra=(), p="../"):
+    tag = "Product" if asin or extra else "Category"
+    btns = []
+    if asin:
+        btns.append(f'<a class="amz" href="{E(amz_dp(asin))}" target="_blank" rel="sponsored nofollow noopener">View on Amazon</a>')
+    for label, url in (extra or ()):
+        btns.append(f'<a href="{E(url)}" target="_blank" rel="sponsored nofollow noopener">{E(label)}</a>')
+    prod = f'<div class="rb">{"".join(btns)}</div>' if btns else ""
+    return f'<div class="card shopcard">{item_img(name, q, "card", p)}<span class="tag">{tag}</span><h3>{E(name)}</h3><p>{E(note)}</p>{prod}{rb(q, "a" in flags)}</div>'
 
 def search_form(p, placeholder="Search hunting gear… e.g. treestand harness"):
     opts = "".join(f'<option value="{r}">{RNAME[r]}</option>' for r in ["amazon", "basspro", "cabelas", "sportsmans", "duluth", "walmart", "academy"])
@@ -287,21 +295,25 @@ def build_shop():
         f'<h2>After the harvest</h2>{row(shopdata.HARVEST, p)}'
         '<h2>Compare &amp; deals</h2><p>Every card above has a <b>Compare stores</b> row: one tap opens the same search at Amazon, Bass Pro Shops, Cabela\'s, Sportsman\'s Warehouse, Walmart, Academy and Duluth Trading. '
         f'For sale pages and a hunting deals feed, see <a href="../deals.html">Deals &amp; Compare</a>.</p>')
-    page("shop/index.html", "Gear Shop: Hunting Gear by Department", "Shop hunting gear by department or by hunt: optics, boots, tree stands, calls, scent control, archery, trail cams, game processing and more. Compare Amazon, Bass Pro, Cabela's and more in one tap.",
+    page("shop/index.html", "Gear Shop: Hunting Gear by Department", "Shop hunting gear by department or by hunt: optics, boots, tree stands, calls, scent control, archery, trail cams, game processing, survival and emergency food, and more. Compare Amazon, Bass Pro, Cabela's and more in one tap.",
          body, "whitetail", "Gear Shop", "Outfitter's Counter", "Every department a hunter needs, from optics to game bags. Compare stores in one tap. No made-up prices, ratings or hype.", prio="0.9")
     for slug, name, emo, scene, blurb, items in shopdata.DEPTS:
         guides = [g for g in GUIDES if slug in g["depts"]]
         gl = "".join(f'<a class="card" href="../guides/{g["slug"]}.html"><span class="tag">Guide</span><h3>{E(g["title"])}</h3></a>' for g in guides)
         extra = lodging_finder() if slug == "camp-lodging" else (cb_section() if slug == "electronics-trail-cams" else "")
+        intro = ""
+        if slug == "survival-emergency-food":
+            intro = ('<p>Food, water and a few small tools for long hunts, pack-in trips, storms and power outages. '
+                     "These are specific products we checked against current retailer pages. We don't show prices, so confirm what's in stock and read the label before you buy.</p>"
+                     '<p class="dim" style="font-size:.85rem">“View on Amazon,” Bass Pro and Cabela\'s open that product\'s page (Amazon links use our Associates tag). The store buttons open each store\'s own search.</p>')
         body = (crumbs(p, ("Home", ""), ("Shop", ""), (name, None)) + DISCLOSURE.format(p=p) + search_form(p, f"Search {name.lower()}…") +
-                f'<h2>{emo} {E(name)}</h2><div class="grid">{"".join(shopcard(*it) for it in items)}</div>' + extra +
+                f'<h2>{emo} {E(name)}</h2>{intro}<div class="grid">{"".join(shopcard(*it) for it in items)}</div>' + extra +
                 (f'<h2>Read before you buy</h2><div class="grid">{gl}</div>' if gl else "") +
                 '<h2>Other departments</h2><p>' + " · ".join(f'<a href="{d[0]}.html">{E(d[1])}</a>' for d in shopdata.DEPTS if d[0] != slug) + "</p>")
         page(f"shop/{slug}.html", f"{name} for Hunters: Shop & Compare Stores", f"{blurb} Compare Amazon, Bass Pro Shops, Cabela's, Sportsman's Warehouse, Walmart, Academy and Duluth Trading in one tap.",
              body, scene, name, "Gear Shop · Department", E(blurb))
 
 # ---------- CB radio gear (electronics department, #cb-radio) ----------
-def amz_dp(asin): return f"https://www.amazon.com/dp/{asin}?tag={enc(CFG['amazonTag'])}"
 CB_RADIOS = [
  ("Cobra 29 LTD Classic CB radio", "B0BVGTZCLB", "cobra 29 ltd cb radio", "The classic full-size truck CB: 40 channels, instant channel 9 and an external-speaker (EXT SP) jack on the back. A good fit for the hunt truck and convoy driving."),
  ("Uniden Bearcat 980 SSB CB radio", "B0B9WW4L3V", "uniden bearcat 980 cb radio", "40 channels plus sideband, NOAA weather channels and alerts, and an EXT SP jack. Handy for weather and road chatter on long drives to camp."),
@@ -418,7 +430,7 @@ ES_KIT = {"whitetail": "kit para puesto de cola blanca", "elk": "kit para wapit�
           "safari": "kit para safari de especies de llanura", "european": "kit para cacería en finca europea", "day-hunt": "kit esencial para cacería de un día"}
 ES_DEPT = {"optics": "Óptica", "clothing-boots": "Ropa y botas", "stands-blinds": "Puestos y escondites", "calls-decoys": "Llamadores y señuelos", "scent-control": "Control de olor",
            "archery": "Arquería", "firearm-accessories": "Accesorios para armas", "game-processing": "Procesamiento de presas", "camp-lodging": "Campamento y alojamiento",
-           "safety": "Seguridad", "electronics-trail-cams": "Electrónica y cámaras de rastreo", "dog-gear": "Equipo para perros"}
+           "safety": "Seguridad", "survival-emergency-food": "Supervivencia y comida de emergencia", "electronics-trail-cams": "Electrónica y cámaras de rastreo", "dog-gear": "Equipo para perros"}
 DISCLOSURE_ES = ('<p class="disclosure"><strong>Divulgación:</strong> Podemos ganar una comisión por los enlaces de este sitio, sin costo adicional para ti. '
                  '<strong>Como Asociado de Amazon, gano con las compras que califican.</strong> Los enlaces abren la búsqueda de cada tienda. Nunca mostramos precios, calificaciones ni reseñas, así que revisa los detalles en el sitio del vendedor. '
                  '<a href="{p}affiliate-disclosure.html">Detalles (en inglés)</a></p>')
