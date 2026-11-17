@@ -133,7 +133,7 @@ table{border-collapse:collapse;width:100%;font-size:.95rem} td,th{border:1px sol
 .item-note{font-size:.8rem;margin-top:24px}
 .sortnote{display:block;margin-top:4px}
 /* Survival buying boosts: Start here, bold Buy buttons, 3-day kit */
-#start-here,#three-day-kit,.shopcard[id]{scroll-margin-top:80px}
+#start-here,#three-day-kit,#your-3-day-kit,.shopcard[id]{scroll-margin-top:80px}
 .surv-start,.surv-kit{margin:8px 0 22px}
 .shopcard .rb.buyrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:10px}
 .shopcard .rb.buyrow a.buy{
@@ -147,12 +147,18 @@ table{border-collapse:collapse;width:100%;font-size:.95rem} td,th{border:1px sol
 .start-card .btns{margin:8px 0 0}
 .start-card .btns .btn{flex:1 1 100%;justify-content:center;text-align:center}
 .start-more{margin-top:4px;font-size:.85rem}
-.surv-kit .check{margin:10px 0 16px}
-.surv-kit .kit-cart{margin:16px 0 8px}
-.surv-kit .kit-cart .btn{flex:1 1 100%;max-width:100%;justify-content:center;text-align:center}
+.surv-kit .kit-buy{list-style:none;margin:10px 0 16px;padding:0;counter-reset:kit}
+.surv-kit .kit-buy li{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:14px 0;border-bottom:1px solid var(--edge);counter-increment:kit}
+.surv-kit .kit-buy li::before{content:counter(kit);flex:0 0 28px;width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:.85rem;color:#160d05;background:var(--amber)}
+.surv-kit .kit-buy .txt{flex:1 1 180px;min-width:0}
+.surv-kit .kit-buy .txt b{display:block}
+.surv-kit .kit-buy .txt span{font-size:.92rem;color:var(--dim)}
+.surv-kit .kit-buy .btns{margin:0;flex:1 1 100%}
+.surv-kit .kit-buy .btn{flex:1 1 100%;justify-content:center;text-align:center}
 @media (min-width:700px){
   .start-card .btns .btn{flex:1 1 auto}
-  .surv-kit .kit-cart .btn{flex:0 1 auto;max-width:420px}
+  .surv-kit .kit-buy .btns{flex:0 0 auto}
+  .surv-kit .kit-buy .btn{flex:0 0 auto}
 }
 /* how-to guide */
 .tier{display:inline-block;font-size:.66rem;font-weight:900;letter-spacing:.14em;text-transform:uppercase;border-radius:4px;padding:2px 8px;margin:0 6px 6px 0;vertical-align:middle}

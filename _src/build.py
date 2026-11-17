@@ -280,10 +280,6 @@ ITEM_NOTE = '<p class="dim item-note">Item images are illustrations, not the exa
 
 # ---------- shop ----------
 def amz_dp(asin): return f"https://www.amazon.com/dp/{asin}?tag={enc(CFG['amazonTag'])}"
-def amz_cart(asins):
-    """Amazon Associates multi-item add-to-cart URL (customer still confirms on Amazon)."""
-    parts = [f"ASIN.{i}={enc(a)}&Quantity.{i}=1" for i, a in enumerate(asins, 1)]
-    return "https://www.amazon.com/gp/aws/cart/add.html?" + "&".join(parts) + f"&AssociateTag={enc(CFG['amazonTag'])}"
 def shop_slug(name):
     return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-")
 def item_parts(it):
@@ -344,27 +340,20 @@ def survival_start(by_name, p="../"):
         f'<div class="grid start-grid">{"".join(cards)}</div></section>'
     )
 def survival_kit(by_name):
-    lis, asins = [], []
+    lis = []
     for label, name in shopdata.SURVIVAL_KIT:
-        _n, _q, _note, _flags, asin, _extra = item_parts(by_name[name])
-        if asin:
-            asins.append(asin)
+        _n, _q, _note, _flags, asin, extra = item_parts(by_name[name])
         lis.append(
-            f'<li><span class="box" aria-hidden="true"></span>'
-            f'<div class="txt"><b><a href="#{E(shop_slug(name))}">{E(label)}</a></b>'
-            f'<span>{E(name)}</span></div></li>'
-        )
-    cart = ""
-    if len(asins) >= 2:
-        cart = (
-            f'<p class="btns kit-cart"><a class="btn primary big" href="{E(amz_cart(asins))}" target="_blank" rel="sponsored nofollow noopener">Add the Amazon kit to cart</a></p>'
-            '<p class="dim" style="font-size:.85rem">Opens Amazon with the MRE case, water filter, first-aid kit, fire starter and emergency bivy so you can review them and add them to your cart. Confirm stock and quantities there. The family food bucket is sold at Bass Pro and Cabela\'s, so it is not in this cart.</p>'
+            f'<li><div class="txt"><b><a href="#{E(shop_slug(name))}">{E(label)}</a></b>'
+            f'<span>{E(name)}</span></div>{product_btns(asin, extra, buy=True, big=True)}</li>'
         )
     return (
         '<section class="surv-kit" aria-labelledby="three-day-kit">'
         '<h2 id="three-day-kit">Build a 3-day kit</h2>'
         '<p>A simple kit for one person on a long hunt or during a storm or power outage: food for about three days, a way to treat water, first aid, a fire starter and a light shelter. Check stock and labels on the retailer\'s site before you buy.</p>'
-        f'<ul class="check">{"".join(lis)}</ul>{cart}</section>'
+        '<h3 id="your-3-day-kit">Your 3-day kit</h3>'
+        f'<ol class="kit-buy">{"".join(lis)}</ol>'
+        '<p class="dim" style="font-size:.85rem">Each button opens that item on Amazon so you can add it to your cart. Confirm stock and quantities there. The family food bucket is sold at Bass Pro and Cabela\'s, so it is listed with the family meal kits below.</p></section>'
     )
 def build_shop():
     p = "../"
